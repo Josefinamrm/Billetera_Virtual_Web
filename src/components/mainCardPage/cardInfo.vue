@@ -7,37 +7,57 @@
         <p>Código de seguridad: {{ securityCode }}</p>
     </p> -->
 
-  <div class="cardInfo">
-    <h2>Información</h2>
-    <div class="izquierda">
-      <h3>Tarjeta</h3>
-      <h3>Nombre</h3>
-      <h3>Numero</h3>
-      <h3>CVV</h3>
-      <h3>Emitida</h3>
-      <h3>Valido hasta</h3>
+  <div class="app-container">
+    <div class="info">
+      <div class="left-column">
+        <h3>Tarjeta</h3>
+        <p>Visa</p>
+        <h3>Numero</h3>
+        <p>**** **** **** ****</p>
+        <h3>Emitida</h3>
+        <p>**/**</p>
+      </div>
+      <div class="right-column">
+        <h3>Nombre</h3>
+        <p>JUNIOR RAMBAU</p>
+        <h3>CVV</h3>
+        <p>***</p>
+        <h3>Valido hasta</h3>
+        <p>**/**</p>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-div.cardInfo {
+.app-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  margin-left: 30px;
-  width: 300px;
+  margin-left: 10px;
+}
+
+.info {
+  display: flex;
+  gap: 2rem;
 }
 
 h3 {
   color: black;
   font-size: 15px;
   font-weight: bold;
-  margin: 2px;
+  margin-top: 10px;
+}
+
+p {
+  color: rgb(71, 71, 71);
+  font-size: 12px;
+  margin-bottom: 10px;
 }
 
 h2 {
+  margin-bottom: 10px;
   color: #000000;
   font-size: 20px;
 }
