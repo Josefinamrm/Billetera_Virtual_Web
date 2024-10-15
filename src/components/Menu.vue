@@ -166,7 +166,7 @@ export default {
 div.menu {
   display: flex;
   width: 20vw;
-  height: 100vh;
+  height: 85vh;
   flex-direction: column;
   justify-content: space-between;
   font-size: 16px;

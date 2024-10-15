@@ -19,12 +19,7 @@ const vuetify = createVuetify()
 </template>
 
 <style scoped>
-BarraSuperior {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  align-content: flex-start;
-}
+
 
 div.hola {
   display: flex;
