@@ -2,7 +2,7 @@
   <div class="menu">
     <nav>
       <h3>General</h3>
-      <a href="/panel">
+      <a @click="navigateTo('panel')">
         <svg
           width="22"
           height="15"
@@ -68,7 +68,7 @@
         </svg>
         Inversiones</a
       >
-      <a href="/tarjetas">
+      <a @click="navigateTo('cards')">
         <svg
           width="22"
           height="16"
@@ -151,6 +151,16 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    navigateTo(route) {
+      this.$router.push({ name: route });
+    }
+  }
+}
+</script>
 
 <style scoped>
 div.menu {

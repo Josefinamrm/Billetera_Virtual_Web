@@ -1,14 +1,11 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import Menu from './components/Menu.vue'
+import { RouterView } from 'vue-router'
 import BarraSuperior from './components/BarraSuperior.vue'
-import { createVuetify } from 'vuetify' // Importa Vuetify
-import 'vuetify/styles' // Importa los estilos de Vuetify
-import Card from './components/mainCardPage/Card.vue'
-import CardPage from './components/mainCardPage/CardPage.vue'
+import Menu from './components/Menu.vue'
+import { createVuetify } from 'vuetify'
+import 'vuetify/styles'
 
-const vuetify = createVuetify() // Crea una instancia de Vuetify
+const vuetify = createVuetify()
 </script>
 
 <template>
@@ -16,7 +13,7 @@ const vuetify = createVuetify() // Crea una instancia de Vuetify
     <BarraSuperior />
     <div class="hola">
       <Menu />
-      <CardPage />
+      <RouterView />
     </div>
   </v-app>
 </template>

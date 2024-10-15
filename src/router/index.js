@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Login from '../components/Login.vue' // Importa el componente de Login
-import CardPage from '../views/CardPage.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,7 +24,12 @@ const router = createRouter({
     {
       path: '/cards',
       name: 'cards',
-      component: () => import('../views/CardPage.vue')
+      component: () => import('../components/mainCardPage/CardPage.vue')
+    },
+    {
+      path: '/panel',
+      name: 'panel',
+      component: () => import('../components/panelPage/HomePage.vue')
     }
   ]
 })
