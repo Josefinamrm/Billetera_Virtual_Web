@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import Login from '../components/Login.vue'; // Importa el componente de Login
-
+import Login from '../components/Login.vue' // Importa el componente de Login
+import CardPage from '../views/CardPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,18 +9,23 @@ const router = createRouter({
     {
       path: '/',
       name: 'login', // Cambia el nombre a 'login'
-      component: Login, // Cambia el componente a Login
+      component: Login // Cambia el componente a Login
     },
     {
       path: '/main',
       name: 'main',
-      component: HomeView, // Ruta para la página principal
+      component: HomeView // Ruta para la página principal
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('../views/AboutView.vue'),
+      component: () => import('../views/AboutView.vue')
     },
+    {
+      path: '/cards',
+      name: 'cards',
+      component: () => import('../views/CardPage.vue')
+    }
   ]
 })
 

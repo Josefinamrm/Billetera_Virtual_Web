@@ -31,5 +31,6 @@ div {
   /* align-items: center; */
   padding-right: 1rem;
   font-size: 16px;
+  margin-bottom: 20px;
 }
 </style>
