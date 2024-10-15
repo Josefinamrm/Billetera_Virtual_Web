@@ -85,7 +85,6 @@ const transactionGroups = ref([
 }
 .app-container {
   display: flex;
-
   overflow: hidden;
   height: auto;
 }
@@ -93,7 +92,7 @@ const transactionGroups = ref([
 .main-content {
   flex-grow: 1;
   padding: 1rem;
-  background-color: #f0f0f0;
+  width: 100vw;
 }
 
 .financial-dashboard {
