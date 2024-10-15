@@ -39,8 +39,9 @@
             <input type="text" placeholder="Ingrese Alias" class="transfer-input">
             <input type="text" placeholder="Ingrese Monto" class="transfer-input">
             <div class="transfer-buttons">
-              <button class="send-btn">Enviar</button>
-              <button class="request-btn">Solicitar</button>
+              <button @click="initiateTransfer" class="send-btn">Enviar</button>
+              <ConfirmTransferPopup ref="confirmPopup" />
+              <button @click="initiateTransfer" class="request-btn">Solicitar</button>
             </div>
           </div>
         </div>
@@ -51,7 +52,13 @@
 
 <script setup>
 import { ref } from 'vue'
+import ConfirmTransferPopup from '../confirmTransferPopup.vue'
 
+const confirmPopup = ref(null)
+
+const initiateTransfer = () => {
+  confirmPopup.value.showPopup()
+}
 const transactionGroups = ref([
   {
     title: 'Hoy',
