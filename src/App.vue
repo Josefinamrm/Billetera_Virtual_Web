@@ -65,7 +65,7 @@ export default {
   flex: 1;
   overflow-y: auto;
   padding: 1.5rem;
-  margin-top: 20px; /* Add margin to separate top bar from main content */
+  margin-top: 20px;
 }
 
 @media (max-width: 768px) {
