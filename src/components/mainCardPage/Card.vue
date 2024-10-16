@@ -19,7 +19,7 @@ div {
   width: 300px;
   height: 170px;
 }
-.card h3 {
+h3 {
   color: white;
   font-size: 15px;
   margin: 2px;

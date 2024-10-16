@@ -1,13 +1,21 @@
 <script setup>
 import Card from './Card.vue'
 import CardInfo from './cardInfo.vue'
+
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+function goToNewCardPage() {
+  router.push('/nueva-tarjeta')
+}
 </script>
 
 <template>
   <div class="app-container">
     <div class="title">
       <h2>Mis Tarjetas</h2>
-      <button class="add-btn">+ Agregar Tarjetas</button>
+      <button class="add-btn" @click="goToNewCardPage">+ Agregar Tarjetas</button>
     </div>
     <div class="cards-display">
       <!-- PONER EL FOR (V-FOR) Y ESO -->
@@ -70,7 +78,6 @@ h2 {
   justify-content: flex-start;
   align-items: stretch;
   margin: 10px;
-
 }
 
 .cards-display {
@@ -79,7 +86,9 @@ h2 {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  gap: 20px;
+}
+.card {
+  gap: 10px;
 }
 
 @media (max-width: 768px) {

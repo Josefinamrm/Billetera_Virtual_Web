@@ -21,9 +21,14 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
-      path: '/cards',
+      path: '/tarjetas',
       name: 'cards',
       component: () => import('../components/mainCardPage/cardPage.vue')
+    },
+    {
+      path: '/nueva-tarjeta',
+      name: 'newCard',
+      component: () => import('../components/mainCardPage/NewCardPage.vue')
     },
     {
       path: '/panel',
