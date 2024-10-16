@@ -2,7 +2,7 @@
   <div class="menu">
     <nav>
       <h3>General</h3>
-      <a @click="navigateTo('panel')">
+      <a :class="{ selected: isSelected('panel') }" @click="navigateTo('panel')">
         <svg
           width="22"
           height="15"
@@ -19,7 +19,7 @@
         </svg>
         Panel
       </a>
-      <a href="/transferencias">
+      <a :class="{ selected: isSelected('transferencia') }" @click="navigateTo('transferencia')">
         <svg
           width="24"
           height="24"
@@ -68,7 +68,7 @@
         </svg>
         Inversiones</a
       >
-      <a @click="navigateTo('cards')">
+      <a :class="{ selected: isSelected('cards') }" @click="navigateTo('cards')">
         <svg
           width="22"
           height="16"
@@ -85,7 +85,7 @@
         </svg>
         Tarjetas</a
       >
-      <a href="/ajustes">
+      <a :class="{ selected: isSelected('ajustes') }" @click="navigateTo('ajustes')">
         <svg
           width="20"
           height="20"
@@ -157,31 +157,35 @@ export default {
   methods: {
     navigateTo(route) {
       this.$router.push({ name: route });
+    },
+    isSelected(route) {
+      return this.$route.name === route;
     }
   }
 }
 </script>
 
 <style scoped>
-div.menu {
+
+.menu {
   display: flex;
-  width: 20vw;
-  height: 85vh;
   flex-direction: column;
   justify-content: space-between;
+  height: 100%;
   font-size: 16px;
+  padding: 1rem;
 }
-div.down,
+
+.down,
 nav {
   display: flex;
   flex-direction: column;
   color: #000000;
   text-align: left;
-  margin-top: 1rem;
   gap: 0.5rem;
+  cursor: default;
 }
-
-div.down {
+.down {
   margin-bottom: 1rem;
 }
 a {
@@ -205,12 +209,15 @@ a:hover {
 a.botonCierre:hover {
   background-color: #5dce76;
 }
+a.selected {
+  background-color: #e5e5e5;
+}
 a.botonCierre {
   display: block;
   text-align: center;
   background-color: #5dce76;
   font-weight: 700;
-  padding: 0.5rem 0;
+  padding: 0.5rem ;
   margin-bottom: 0.5rem;
 }
 

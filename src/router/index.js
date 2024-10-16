@@ -29,6 +29,11 @@ const router = createRouter({
       path: '/panel',
       name: 'panel',
       component: () => import('../components/panelPage/HomePage.vue')
+    },
+    {
+      path: '/transferencia',
+      name: 'transferencia',
+      component: () => import('../components/transferPage/transferPage.vue')
     }
   ]
 })

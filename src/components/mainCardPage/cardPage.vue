@@ -70,7 +70,7 @@ h2 {
   justify-content: flex-start;
   align-items: stretch;
   margin: 10px;
-  margin-bottom: 30px;
+
 }
 
 .cards-display {

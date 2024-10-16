@@ -1,9 +1,9 @@
 <template>
-  <div class="app-container">
-    <div class="main-content">
-      <div class="financial-dashboard">
-        <div class="transactions-section">
-          <h2>Transacciones</h2>
+  <div class="home-page">
+    <div class="financial-dashboard">
+      <div class="transactions-section">
+        <h2>Transacciones</h2>
+        <div class="transaction-list">
           <div v-for="(group, index) in transactionGroups" :key="index" class="transaction-group">
             <h3>{{ group.title }}</h3>
             <div v-for="transaction in group.transactions" :key="transaction.id" class="transaction-item">
@@ -20,33 +20,33 @@
             </div>
           </div>
         </div>
-        <div class="right-column">
-          <div class="cards-section">
-            <h2>Mis Tarjetas</h2>
-            <button class="add-card-btn">+ Agregar Tarjetas</button>
-            <div class="card">
-              <div class="card-type">VISA</div>
-              <div class="card-number">**** **** **** 1121</div>
-              <div class="card-name">JUNIOR RAMBAU</div>
-            </div>
+      </div>
+      <div class="right-column">
+        <div class="cards-section">
+          <h2>Mis Tarjetas</h2>
+          <button class="add-card-btn">+ Agregar Tarjetas</button>
+          <div class="card">
+            <div class="card-type">VISA</div>
+            <div class="card-number">**** **** **** 1121</div>
+            <div class="card-name">JUNIOR RAMBAU</div>
           </div>
-          <div class="transfers-section">
-            <h2>Transferencias</h2>
-            <div class="balance">
-              <div>Balance Actual</div>
-              <div class="balance-amount">$20.000</div>
-            </div>
-            <input type="text" placeholder="Ingrese Alias" class="transfer-input">
-            <input type="text" placeholder="Ingrese Monto" class="transfer-input">
-            <div class="transfer-buttons">
-              <button @click="initiateTransfer" class="send-btn">Enviar</button>
-              <ConfirmTransferPopup ref="confirmPopup" />
-              <button @click="initiateTransfer" class="request-btn">Solicitar</button>
-            </div>
+        </div>
+        <div class="transfers-section">
+          <h2>Transferencias</h2>
+          <div class="balance">
+            <div>Balance Actual</div>
+            <div class="balance-amount">$20.000</div>
+          </div>
+          <input type="text" placeholder="Ingrese Alias" class="transfer-input">
+          <input type="text" placeholder="Ingrese Monto" class="transfer-input">
+          <div class="transfer-buttons">
+            <button @click="initiateTransfer" class="send-btn">Enviar</button>
+            <button @click="initiateTransfer" class="request-btn">Solicitar</button>
           </div>
         </div>
       </div>
     </div>
+    <ConfirmTransferPopup ref="confirmPopup" />
   </div>
 </template>
 
@@ -59,6 +59,7 @@ const confirmPopup = ref(null)
 const initiateTransfer = () => {
   confirmPopup.value.showPopup()
 }
+
 const transactionGroups = ref([
   {
     title: 'Hoy',
@@ -87,29 +88,30 @@ const transactionGroups = ref([
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-* {
-  font-family: 'Inter', sans-serif;
-}
-.app-container {
-  display: flex;
-  overflow: hidden;
-  height: auto;
-}
 
-.main-content {
-  flex-grow: 1;
+.home-page {
+  font-family: 'Inter', sans-serif;
+  height: 100%;
+  overflow: hidden;
   padding: 1rem;
-  width: 100vw;
+  cursor: default;
 }
 
 .financial-dashboard {
   display: flex;
   gap: 2rem;
-  padding: 2rem;
-  font-family: 'Inter', sans-serif;
+  height: 100%;
 }
 
 .transactions-section {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.transaction-list {
+  overflow-y: auto;
   flex: 1;
 }
 
@@ -118,6 +120,7 @@ const transactionGroups = ref([
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  overflow-y: auto;
 }
 
 h2 {
@@ -259,16 +262,8 @@ h3 {
 }
 
 @media (max-width: 768px) {
-  .app-container {
-    flex-direction: column;
-  }
-
-  .main-content {
+  .home-page {
     padding: 0.5rem;
-  }
-
-  .financial-dashboard {
-    padding: 1rem;
   }
 }
 </style>
