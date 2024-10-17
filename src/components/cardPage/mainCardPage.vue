@@ -87,9 +87,6 @@ h2 {
   justify-content: flex-start;
   align-items: center;
 }
-.card {
-  gap: 10px;
-}
 
 @media (max-width: 768px) {
   .cards-display {

@@ -23,12 +23,12 @@ const router = createRouter({
     {
       path: '/tarjetas',
       name: 'cards',
-      component: () => import('../components/mainCardPage/cardPage.vue')
+      component: () => import('../components/cardPage/mainCardPage.vue')
     },
     {
       path: '/nueva-tarjeta',
       name: 'newCard',
-      component: () => import('../components/mainCardPage/NewCardPage.vue')
+      component: () => import('../components/cardPage/NewCardPage.vue')
     },
     {
       path: '/panel',
