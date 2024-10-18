@@ -1,6 +1,7 @@
 <template>
   <div class="login-container">
-    <h2 class="text-center">Login</h2>
+    <h2 class="text-center title">Iniciar Sesión</h2>
+    <h3 class="text-center subtitle">Bienvenido</h3>
     <form @submit.prevent="handleLogin">
       <div class="form-group">
         <input type="email" id="email" v-model="email" placeholder="Ingrese su email" required>
@@ -26,16 +27,29 @@ const handleLogin = () => {
 </script>
 
 <style scoped>
+.title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
 .login-container {
   max-width: 300px;
-  margin: 0 auto;
+  background-color: rgba(108, 210, 130, 0.18);
+  margin: auto;
   padding: 20px;
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .form-group {
   margin-bottom: 15px;
+  background-color: #EBEBEB;
+  border-radius: 30px;
+  padding: 8px;
 }
 
 label {
@@ -44,10 +58,10 @@ label {
 }
 
 input {
-  width: 100%;
   padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: none;
+  border-radius: 30px;
+  background-color: #EBEBEB;
 }
 
 button {
@@ -62,5 +76,10 @@ button {
 
 button:hover {
   background-color: #45a049;
+}
+
+.subtitle {
+  color: #BFBFBF;
+  font-size: 14px;
 }
 </style>
