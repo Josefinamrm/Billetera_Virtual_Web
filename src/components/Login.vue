@@ -45,6 +45,7 @@ const handleRegister = () => {
 }
 
 .login-container {
+  width: 400px;
   background-color: rgba(108, 210, 130, 0.18);
   margin: auto;
   padding: 20px;
@@ -55,15 +56,20 @@ const handleRegister = () => {
 }
 
 .form-group {
-  margin-bottom: 15px;
+  font-size: 12px;
+  width: 80%;
+  margin-bottom: 10px;
   background-color: #EBEBEB;
   border-radius: 30px;
   border: 1px solid black;
-  padding: 8px;
+  padding: 7px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 input {
-  padding: 8px;
+  width: 100%;
+  padding: 7px;
   border-radius: 30px;
   background-color: #EBEBEB;
   outline: none;
@@ -71,7 +77,8 @@ input {
 }
 
 button {
-  width: 100%;
+  font-size: 12px;
+  width: 80%;
   padding: 10px;
   background-color: #4CAF50;
   color: black;
@@ -80,6 +87,9 @@ button {
   cursor: pointer;
   margin-top: 10px;
   margin-bottom: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 button:hover {
@@ -91,7 +101,7 @@ button:hover {
   color: #BFBFBF;
   font-size: 14px;
   margin-top: 3px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .forgot-password {
