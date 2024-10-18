@@ -7,7 +7,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 function goToNewCardPage() {
-  router.push('/nueva-tarjeta')
+  router.push('/user/nueva-tarjeta')
 }
 </script>
 

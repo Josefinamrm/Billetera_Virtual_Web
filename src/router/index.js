@@ -1,44 +1,46 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import Login from '../components/Login.vue' // Importa el componente de Login
+import AuthLayout from '../layouts/AuthLayout.vue'
+import GuestLayout from '../layouts/GuestLayout.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'login', // Cambia el nombre a 'login'
-      component: Login // Cambia el componente a Login
+      component: GuestLayout,
+      children: [
+        {
+          path: '',
+          name: 'login',
+          component: () => import('../components/Login.vue')
+        }
+      ]
     },
     {
-      path: '/main',
-      name: 'main',
-      component: HomeView // Ruta para la página principal
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue')
-    },
-    {
-      path: '/tarjetas',
-      name: 'cards',
-      component: () => import('../components/cardPage/mainCardPage.vue')
-    },
-    {
-      path: '/nueva-tarjeta',
-      name: 'newCard',
-      component: () => import('../components/cardPage/NewCardPage.vue')
-    },
-    {
-      path: '/panel',
-      name: 'panel',
-      component: () => import('../components/panelPage/HomePage.vue')
-    },
-    {
-      path: '/transferencia',
-      name: 'transferencia',
-      component: () => import('../components/transferPage/transferPage.vue')
+      path: '/user',
+      component: AuthLayout,
+      children: [
+        {
+          path: 'tarjetas',
+          name: 'cards',
+          component: () => import('../components/cardPage/mainCardPage.vue')
+        },
+        {
+          path: 'nueva-tarjeta',
+          name: 'newCard',
+          component: () => import('../components/cardPage/NewCardPage.vue')
+        },
+        {
+          path: 'panel',
+          name: 'panel',
+          component: () => import('../components/panelPage/HomePage.vue')
+        },
+        {
+          path: 'transferencia',
+          name: 'transferencia',
+          component: () => import('../components/transferPage/transferPage.vue')
+        }
+      ]
     }
   ]
 })

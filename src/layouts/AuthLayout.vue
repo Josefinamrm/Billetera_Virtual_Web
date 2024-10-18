@@ -1,23 +1,21 @@
 <script setup>
 import { RouterView } from 'vue-router'
+import BarraSuperior from '../components/BarraSuperior.vue'
+import Menu from '../components/Menu.vue'
 </script>
 
 <template>
-  <RouterView />
+  <div class="app-container">
+    <Menu class="sidebar" />
+    <div class="main-content">
+      <BarraSuperior />
+      <div class="router-view-container">
+        <router-view></router-view>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script>
-import Menu from './components/Menu.vue'
-import BarraSuperior from './components/BarraSuperior.vue'
-
-export default {
-  name: 'App',
-  components: {
-    Menu,
-    BarraSuperior
-  }
-}
-</script>
 
 <style>
 .app-container {
