@@ -105,7 +105,7 @@
       >
     </nav>
     <div class="down">
-      <a class="botonCierre" href="/cierre">Cerrar sesión</a>
+      <a class="botonCierre" href="/">Cerrar sesión</a>
       <a href="/ayuda">
         <svg
           width="24"
