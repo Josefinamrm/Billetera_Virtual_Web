@@ -44,6 +44,10 @@ const router = createRouter({
           path: 'transferencia',
           name: 'transferencia',
           component: () => import('../components/transferPage/transferPage.vue')
+        },
+        {
+          path: 'inversiones',
+          name: 'inversiones',
         }
       ]
     }

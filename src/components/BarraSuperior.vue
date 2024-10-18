@@ -35,11 +35,10 @@ export default {
   background-color: #e5e5e5;
   border-radius: 5px;
   margin-top: 20px;
-  margin-right: 50px;
   position: fixed;
   top: 0;
-  right: 0;
-  width: 1560px;
+  right: 50px;
+  left: 250px;
   z-index: 1000;
 }
 

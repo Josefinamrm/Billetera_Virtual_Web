@@ -6,19 +6,6 @@ import { RouterView } from 'vue-router'
   <RouterView />
 </template>
 
-<script>
-import Menu from './components/Menu.vue'
-import BarraSuperior from './components/BarraSuperior.vue'
-
-export default {
-  name: 'App',
-  components: {
-    Menu,
-    BarraSuperior
-  }
-}
-</script>
-
 <style>
 .app-container {
   display: flex;
