@@ -48,6 +48,12 @@ const router = createRouter({
         {
           path: 'inversiones',
           name: 'inversiones',
+        //  component: () => import('../components/inversionPage/inversionPage.vue')
+        },
+        {
+          path: 'perfil',
+          name: 'perfil',
+          component: () => import('../components/profilePage/mainProfilePage.vue')
         }
       ]
     }

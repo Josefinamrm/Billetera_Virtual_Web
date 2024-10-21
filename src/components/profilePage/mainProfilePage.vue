@@ -1,0 +1,126 @@
+<template>
+  <div class="background-shape"></div>
+  <div class="profile-container">
+    <h1>Tu perfil</h1>
+    <div class="profile-sections">
+      <section v-for="(section, index) in sections" :key="index" class="profile-section">
+        <h2>{{ section.title }}</h2>
+        <p>{{ section.description }}</p>
+      </section>
+    </div>
+
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'UserProfile',
+  data() {
+    return {
+      sections: [
+        {
+          title: 'Información personal',
+          description: 'Información de tu documento de identidad y tu actividad fiscal.'
+        },
+        {
+          title: 'Datos de tu cuenta',
+          description: 'Email, teléfono, nombre de usuario, CVU y Alias.'
+        },
+        {
+          title: 'Seguridad',
+          description: 'Configura la seguridad de tu cuenta.'
+        },
+        {
+          title: 'Direcciones',
+          description: 'Direcciones guardadas en tu cuenta.'
+        },
+        {
+          title: 'Privacidad',
+          description: 'Preferencia y control sobre el uso de tus datos.'
+        }
+      ]
+    }
+  }
+}
+</script>
+
+<style scoped>
+.profile-container {
+  font-family: Arial, sans-serif;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 10px;
+  position: relative;
+  overflow: hidden;
+
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.profile-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.profile-section {
+  background-color: #D9D9D9;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.background-shape {
+  position: absolute;
+  bottom: -100px;
+  right: -100px;
+  width: 300px;
+  height: 400px;
+  background-color: #7cebb3;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+@media (max-width: 600px) {
+  .profile-container {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .profile-section {
+    padding: 12px;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
+
+  p {
+    font-size: 12px;
+  }
+
+  .background-shape {
+    width: 200px;
+    height: 200px;
+    bottom: -50px;
+    right: -50px;
+  }
+}
+</style>

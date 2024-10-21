@@ -85,7 +85,7 @@
         </svg>
         Tarjetas</a
       >
-      <a :class="{ selected: isSelected('ajustes') }" @click="navigateTo('ajustes')">
+      <a :class="{ selected: isSelected('ajustes') }" @click="navigateTo('perfil')">
         <svg
           width="20"
           height="20"
