@@ -125,15 +125,15 @@ const expiration = ref('')
 const security = ref('')
 
 // Definimos la función para navegar a la página de tarjetas
-function goToMainCardPage() {
-  router.push('./tarjetas')
+function goToLastVisitedPage() {
+  router.back()
 }
 </script>
 
 <template>
   <div class="app-container">
     <div class="title">
-      <button class="back" @click="goToMainCardPage"><h2><-</h2></button>
+      <button class="back" @click="goToLastVisitedPage"><h2><-</h2></button>
       <h2>Nueva Tarjeta</h2>
     </div>
 

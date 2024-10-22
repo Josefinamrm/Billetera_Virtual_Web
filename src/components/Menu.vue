@@ -44,7 +44,7 @@
 
         Transferencias</a
       >
-      <a href="/inversiones">
+      <a :class="{ selected: isSelected('inversiones') }" @click="navigateTo('inversiones')">
         <svg
           width="24"
           height="24"
