@@ -40,19 +40,7 @@
     </div>
     <div class="right-column">
       <div class="transfers">
-        <h2>Transferencias</h2>
-        <div class="balance-section">
-          <p class="label">Balance Actual</p>
-          <p class="amount">${{ currentBalance }}</p>
-        </div>
-        <form @submit.prevent="submitTransfer">
-          <input v-model="transferAlias" type="text" placeholder="Ingrese Alias" />
-          <input v-model="transferAmount" type="number" placeholder="Ingrese Monto" />
-          <div class="form-buttons">
-            <button type="submit" class="btn btn-primary">Enviar</button>
-            <button type="button" class="btn btn-secondary">Solicitar</button>
-          </div>
-        </form>
+        <transfer-component/>
       </div>
       <div class="payments">
         <h2>Pagos de Servicios</h2>
@@ -81,6 +69,7 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
+import TransferComponent from '@/components/transferComponent.vue'
 
 const expenses = reactive({
   Ene: 85000,
@@ -126,9 +115,6 @@ const totalExpenses = computed(() => {
   return Object.values(expenses).reduce((acc, expense) => acc + expense, 0)
 })
 
-const currentBalance = computed(() => {
-  return 20000
-})
 
 // New code for payments
 const selectedService = ref('')
