@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AuthLayout from '../layouts/AuthLayout.vue'
 import GuestLayout from '../layouts/GuestLayout.vue'
+import LandingPage from '../components/LandingPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,13 +12,24 @@ const router = createRouter({
       children: [
         {
           path: '',
-          name: 'login',
-          component: () => import('../components/Login.vue')
-        },
-        {
-          path: 'register',
-          name: 'register',
-          component: () => import('../components/Register.vue')
+          component: LandingPage,
+          children: [
+            {
+              path: '',
+              name: 'landing',
+              component: () => import('../components/LandingPageContent.vue')
+            },
+            {
+              path: 'login',
+              name: 'login',
+              component: () => import('../components/Login.vue')
+            },
+            {
+              path: 'register',
+              name: 'register',
+              component: () => import('../components/Register.vue')
+            }
+          ]
         }
       ]
     },
@@ -48,7 +60,7 @@ const router = createRouter({
         {
           path: 'inversiones',
           name: 'inversiones',
-        //  component: () => import('../components/inversionPage/inversionPage.vue')
+         // component: () => import('../components/inversionPage/inversionPage.vue')
         },
         {
           path: 'perfil',
