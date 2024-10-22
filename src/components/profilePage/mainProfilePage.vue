@@ -1,14 +1,15 @@
 <template>
-  <div class="background-shape"></div>
-  <div class="profile-container">
-    <h1>Tu perfil</h1>
-    <div class="profile-sections">
-      <section v-for="(section, index) in sections" :key="index" class="profile-section">
-        <h2>{{ section.title }}</h2>
-        <p>{{ section.description }}</p>
-      </section>
+  <div class="viewport" :style="{ height: windowHeight + 'px' }">
+    <div class="background-shape"></div>
+    <div class="profile-container">
+      <h1>Tu perfil</h1>
+      <div class="profile-sections">
+        <section v-for="(section, index) in sections" :key="index" class="profile-section">
+          <h2>{{ section.title }}</h2>
+          <p>{{ section.description }}</p>
+        </section>
+      </div>
     </div>
-
   </div>
 </template>
 
@@ -17,6 +18,7 @@ export default {
   name: 'UserProfile',
   data() {
     return {
+      windowHeight: 0,
       sections: [
         {
           title: 'Información personal',
@@ -40,19 +42,40 @@ export default {
         }
       ]
     }
+  },
+  mounted() {
+    this.updateWindowHeight()
+    window.addEventListener('resize', this.updateWindowHeight)
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.updateWindowHeight)
+  },
+  methods: {
+    updateWindowHeight() {
+      this.windowHeight = window.innerHeight
+    }
   }
 }
 </script>
 
 <style scoped>
+.viewport {
+  position: fixed;
+  top: 90px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
 .profile-container {
   font-family: Arial, sans-serif;
   max-width: 1300px;
   margin: 0 auto;
   padding: 10px;
-  position: relative;
-  overflow: hidden;
-
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 h1 {
@@ -85,7 +108,7 @@ p {
 }
 
 .background-shape {
-  position: absolute;
+  position: fixed;
   bottom: -100px;
   right: -100px;
   width: 300px;

@@ -1,6 +1,6 @@
 <template>
   <div class="barra-superior">
-    <a @click="navigateTo('profile')">
+    <a @click="navigateTo('perfil')">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="24px"
@@ -40,6 +40,7 @@ export default {
   right: 50px;
   left: 250px;
   z-index: 1000;
+
 }
 
 .barra-superior a {
@@ -49,6 +50,7 @@ export default {
   color: #5f6368;
   text-decoration: none;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .barra-superior svg {
