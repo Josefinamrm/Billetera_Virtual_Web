@@ -23,8 +23,8 @@
       </div>
       <div class="right-column">
         <div class="cards-section">
-          <h2>Mis Tarjetas</h2>
-          <button class="add-card-btn">+ Agregar Tarjetas</button>
+          <h2>Tarjetas</h2>
+          <add-card-btn/>
           <div class="card">
             <div class="card-type">VISA</div>
             <div class="card-number">**** **** **** 1121</div>
@@ -53,7 +53,7 @@
 <script setup>
 import { ref } from 'vue'
 import ConfirmTransferPopup from '../confirmTransferPopup.vue'
-
+import AddCardBtn from '@/components/addCardBtn.vue'
 const confirmPopup = ref(null)
 
 const initiateTransfer = () => {
@@ -175,15 +175,7 @@ h3 {
   color: #F44336;
 }
 
-.add-card-btn {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  cursor: pointer;
-  margin-bottom: 1rem;
-}
+
 
 .card {
   background-color: #333;

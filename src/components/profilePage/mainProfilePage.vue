@@ -1,6 +1,7 @@
 <template>
+  <div class="background-shape"></div>
   <div class="viewport" :style="{ height: windowHeight + 'px' }">
-    <div class="background-shape"></div>
+
     <div class="profile-container">
       <h1>Tu perfil</h1>
       <div class="profile-sections">
@@ -61,22 +62,29 @@ export default {
 <style scoped>
 .viewport {
   position: fixed;
-  top: 90px;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   overflow: hidden;
+  cursor: default;
+  max-width: 2000px;
+  width: auto;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
 }
 
 .profile-container {
   font-family: Arial, sans-serif;
-  max-width: 1300px;
-  margin: 0 auto;
+  max-width: 1500px;
   padding: 10px;
   height: 100%;
+  width: 1350px;
   overflow-y: auto;
+  margin-top: 250px;
   -webkit-overflow-scrolling: touch;
 }
+
 
 h1 {
   font-size: 24px;

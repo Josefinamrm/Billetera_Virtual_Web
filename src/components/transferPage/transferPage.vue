@@ -45,7 +45,6 @@
           <p class="label">Balance Actual</p>
           <p class="amount">${{ currentBalance }}</p>
         </div>
-        <h3>Transferencias</h3>
         <form @submit.prevent="submitTransfer">
           <input v-model="transferAlias" type="text" placeholder="Ingrese Alias" />
           <input v-model="transferAmount" type="number" placeholder="Ingrese Monto" />
@@ -160,9 +159,8 @@ const submitPayment = () => {
 .dashboard {
   display: flex;
   gap: 2rem;
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 0.5rem;
+  max-width: 1800px;
   font-family: Arial, sans-serif;
   cursor: default;
 }
@@ -187,15 +185,17 @@ const submitPayment = () => {
   padding: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
+.transfers{
+  height: 390px;
+}
 h2 {
-  font-size: 1.2rem;
+  font-size: 1.7rem;
   margin-bottom: 1rem;
   color: #333;
 }
 
 h3 {
-  font-size: 1rem;
+  font-size: 5rem;
   margin-top: 1rem;
   margin-bottom: 0.5rem;
   color: #333;
@@ -325,7 +325,7 @@ input, .select-input {
 
 .contact-info span {
   color: #666;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 .btn {
