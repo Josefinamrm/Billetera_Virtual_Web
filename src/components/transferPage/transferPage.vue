@@ -188,6 +188,10 @@ const submitPayment = () => {
 .transfers{
   height: 390px;
 }
+.payments{
+  height: 316px;
+
+}
 h2 {
   font-size: 1.7rem;
   margin-bottom: 1rem;

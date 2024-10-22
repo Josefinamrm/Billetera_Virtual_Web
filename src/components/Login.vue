@@ -29,7 +29,7 @@ const handleLogin = () => {
   // Aquí puedes implementar la lógica de autenticación
   console.log('Login attempt:', { email: email.value, password: password.value });
   // Si la autenticación es exitosa, navega a la página de usuario
-  router.push('/user');
+  router.push('/user/panel');
 };
 
 const handleRegister = () => {
