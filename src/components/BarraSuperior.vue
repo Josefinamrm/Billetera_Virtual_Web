@@ -35,6 +35,7 @@ export default {
   background-color: #e5e5e5;
   border-radius: 5px;
   margin-top: 20px;
+  margin-left: 40px;
   position: fixed;
   top: 0;
   right: 50px;
