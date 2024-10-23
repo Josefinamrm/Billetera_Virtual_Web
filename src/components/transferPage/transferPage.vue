@@ -80,8 +80,6 @@ const expenses = reactive({
   Jun: 26000,
 })
 const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun']
-const transferAlias = ref('')
-const transferAmount = ref('')
 const contacts = [
   { id: 1, name: 'John Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
   { id: 2, name: 'Jim Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
@@ -105,11 +103,6 @@ const hideTooltip = () => {
   tooltipVisible.value = false
 }
 
-const submitTransfer = () => {
-  console.log('Transfer submitted:', transferAlias.value, transferAmount.value)
-  transferAlias.value = ''
-  transferAmount.value = ''
-}
 
 const totalExpenses = computed(() => {
   return Object.values(expenses).reduce((acc, expense) => acc + expense, 0)
@@ -251,15 +244,6 @@ h3 {
   white-space: pre-wrap;
 }
 
-.balance-section {
-  margin-bottom: 1rem;
-}
-
-.buttons {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
 
 form {
   display: flex;
@@ -274,11 +258,7 @@ input, .select-input {
   font-size: 0.9rem;
 }
 
-.form-buttons {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
+
 
 .contacts ul {
   list-style: none;
@@ -320,10 +300,10 @@ input, .select-input {
 
 .btn {
   padding: 0.5rem 1rem;
-  border-radius: 4px;
   cursor: pointer;
   font-size: 0.9rem;
   transition: background-color 0.3s, color 0.3s;
+  border-radius: 20px;
 }
 
 .btn-outline {
@@ -338,24 +318,16 @@ input, .select-input {
 }
 
 .btn-primary {
-  background-color: #4CAF50;
+  background-color: #5DCE76;
   border: none;
   color: white;
+  border-radius: 20px;
 }
 
 .btn-primary:hover {
   background-color: #45a049;
 }
 
-.btn-secondary {
-  background-color: #D9D9D9;
-  border: none;
-  color: #333;
-}
-
-.btn-secondary:hover {
-  background-color: #e0e0e0;
-}
 
 .payment-methods {
   display: flex;
@@ -371,6 +343,7 @@ input, .select-input {
   width: 100%;
   color:white;
   background-color: black;
+  border-radius: 20px;
 
 }
 

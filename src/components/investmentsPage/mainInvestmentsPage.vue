@@ -142,7 +142,6 @@ const withdraw = () => {
   margin: 0 auto;
   width: 1500px;
   padding: 2rem;
-  background-color: #F3F4F6;
   display: flex;
   flex-direction: column;
   overflow: hidden;

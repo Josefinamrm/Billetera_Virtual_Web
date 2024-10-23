@@ -15,7 +15,7 @@ function goToNewCardPage() {
 
 <style scoped>
 .add-card-btn {
-  background-color: #4CAF50;
+  background-color: #5DCE76;
   color: white;
   border: none;
   padding: 0.5rem 1rem;

@@ -61,12 +61,14 @@ h2 {
 }
 
 .send-btn {
-  background-color: #4CAF50;
+  background-color: #5DCE76;
   color: white;
+  border-radius: 20px;
 }
 
 .request-btn {
   background-color: #333;
   color: white;
+  border-radius: 20px;
 }
 </style>
