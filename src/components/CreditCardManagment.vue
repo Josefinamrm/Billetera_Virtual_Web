@@ -8,102 +8,78 @@
       </button>
     </header>
 
-    <div class="card-display">
-      <CreditCard
-        v-for="card in cards"
-        :key="card.number"
-        :card-number="card.number"
-        :card-name="card.name"
-        :expiry-date="card.validUntil"
-        :cvv="card.cvv"
-        :theme="card.theme"
-      />
+    <div class="visibility-toggle">
+      <button @click="toggleVisibility" class="toggle-button">
+        <EyeIcon v-if="!isHidden" />
+        <EyeOffIcon v-else />
+        {{ isHidden ? 'Show' : 'Hide' }} Card Details
+      </button>
     </div>
 
-    <section class="information">
-      <h2 class="section-title">
-        Informacion
-        <InfoIcon class="icon" />
-      </h2>
-      <div class="card-info-grid">
-        <div v-for="card in cards" :key="card.number" class="card-info">
-          <div class="info-row">
-            <span class="info-label">Tarjeta</span>
-            <span class="info-value">{{ card.type }}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Nombre</span>
-            <span class="info-value">{{ card.name }}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Numero</span>
-            <span class="info-value">{{ maskCardNumber(card.number) }}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">CVV</span>
-            <span class="info-value">***</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Emitida</span>
-            <span class="info-value">{{ card.issuedDate }}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Valido Hasta</span>
-            <span class="info-value">{{ card.validUntil }}</span>
+    <div class="card-scroll-container">
+      <div class="card-scroll">
+        <div v-for="card in cards" :key="card.number" class="card-item">
+          <CreditCardDisplay
+            :card-number="card.number"
+            :card-name="card.name"
+            :card-expiry="card.validUntil"
+            :is-hidden="isHidden"
+          />
+          <div class="card-info" :class="{ 'data-hidden': isHidden }">
+            <p><strong>Card Number:</strong> {{ card.number }}</p>
+            <p><strong>Card Name:</strong> {{ card.name }}</p>
+            <p><strong>Expiry Date:</strong> {{ card.validUntil }}</p>
+            <p><strong>CVV:</strong> {{ card.cvv }}</p>
+            <p><strong>Emission Date:</strong> {{ card.emissionDate }}</p>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { PlusIcon, InfoIcon } from 'lucide-vue-next'
-import CreditCard from './creditcard/CreditCard.vue'
+import { PlusIcon, EyeIcon, EyeOffIcon } from 'lucide-vue-next'
+import CreditCardDisplay from './creditcard/CreditCardDisplay.vue'
+
+const isHidden = ref(false)
+
+const toggleVisibility = () => {
+  isHidden.value = !isHidden.value
+}
 
 const cards = ref([
   {
-    type: 'Visa Black',
-    name: 'Junior Rambau',
     number: '4593 1111 1111 1111',
-    cvv: '123',
-    issuedDate: '10/21',
+    name: 'Junior Rambau',
     validUntil: '10/25',
-    theme: 'visa',
+    cvv: '123',
+    emissionDate: '01/22',
   },
   {
-    type: 'American Express',
+    number: '5182 8224 6310 005',
     name: 'Junior Rambau',
-    number: '3782 8224 6310 005',
-    cvv: '1234',
-    issuedDate: '11/22',
     validUntil: '11/26',
-    theme: 'amex',
+    cvv: '456',
+    emissionDate: '02/23',
   },
   {
-    type: 'Visa Silver',
-    name: 'Junior Rambau',
     number: '4111 1111 1111 1111',
-    cvv: '321',
-    issuedDate: '12/23',
+    name: 'Junior Rambau',
     validUntil: '12/27',
-    theme: 'visa',
+    cvv: '789',
+    emissionDate: '03/24',
   },
 ])
-
-const maskCardNumber = (number) => {
-  return number.replace(/\d(?=\d{4})/g, '*')
-}
 </script>
 
 <style scoped>
 .credit-card-management {
-  max-width: 64rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 1.5rem;
-  font-family: sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Arial', sans-serif;
 }
 
 .header {
@@ -114,23 +90,26 @@ const maskCardNumber = (number) => {
 }
 
 .title {
-  font-size: 1.875rem;
+  font-size: 2.5rem;
   font-weight: bold;
-  color: #1f2937;
+  color: #333;
 }
 
 .add-button {
   display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background-color: #10b981;
+  background-color: #4CAF50;
   color: white;
-  border-radius: 9999px;
-  transition: background-color 0.2s;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .add-button:hover {
-  background-color: #059669;
+  background-color: #45a049;
 }
 
 .icon {
@@ -139,62 +118,61 @@ const maskCardNumber = (number) => {
   margin-right: 0.5rem;
 }
 
-.card-display {
+.visibility-toggle {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
 }
 
-.information {
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  padding: 1.5rem;
-}
-
-.section-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 1.5rem;
+.toggle-button {
   display: flex;
   align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.card-info-grid {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+.toggle-button:hover {
+  background-color: #e0e0e0;
+}
+
+.card-scroll-container {
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.card-scroll {
+  display: flex;
   gap: 2rem;
+  padding: 1rem;
 }
 
-@media (min-width: 768px) {
-  .card-info-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+.card-item {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .card-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  width: 100%;
 }
 
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.card-info p {
+  margin: 0.5rem 0;
 }
 
-.info-label {
-  font-size: 0.875rem;
-  color: #6b7280;
-}
-
-.info-value {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #1f2937;
+.data-hidden p {
+  filter: blur(4px);
 }
 </style>
