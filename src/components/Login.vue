@@ -9,10 +9,9 @@
       <div class="form-group">
         <input type="password" id="password" v-model="password" placeholder="Ingrese su contraseña" required>
       </div>
-      <h4 class="text-center forgot-password">¿Olvido su contraseña?</h4>
       <button type="submit">Ingresar</button>
       <button type="button" class="register-button" @click="handleRegister">Registrarse</button>
-      <h4 class="text-center enter-with">O ingresa con</h4>
+      <h4 class="text-center enter-with">¿Olvido su contraseña?</h4>
     </form>
   </div>
 </template>
@@ -26,16 +25,13 @@ const password = ref('');
 const router = useRouter();
 
 const handleLogin = () => {
-  // Aquí puedes implementar la lógica de autenticación
   console.log('Login attempt:', { email: email.value, password: password.value });
-  // Si la autenticación es exitosa, navega a la página de usuario
   router.push('/user/panel');
 };
 
 const handleRegister = () => {
   router.push('/register');
 };
-
 </script>
 
 <style scoped>
@@ -53,12 +49,16 @@ const handleRegister = () => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  height: 400px;
+}
+.h3 {
+margin-bottom: 10px;
 }
 
 .form-group {
   font-size: 12px;
   width: 80%;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   background-color: #EBEBEB;
   border-radius: 30px;
   border: 1px solid black;
@@ -74,13 +74,14 @@ input {
   background-color: #EBEBEB;
   outline: none;
   border: none;
+
 }
 
 button {
   font-size: 12px;
   width: 80%;
   padding: 10px;
-  background-color: #4CAF50;
+  background-color: #5DCE76;
   color: black;
   border: none;
   border-radius: 20px;
@@ -92,38 +93,35 @@ button {
   margin-right: auto;
 }
 
-button:hover {
-  background-color: black;
-  color: white;
-}
 
 .subtitle {
-  color: #BFBFBF;
+  color: black;
   font-size: 14px;
   margin-top: 3px;
-  margin-bottom: 8px;
+  margin-bottom: 30px;
 }
 
 .forgot-password {
-  color:black;
+  color: black;
   font-size: 14px;
   margin-bottom: 10px;
-}  
+}
 
 .register-button {
-  background-color: black;
+  background-color: #333;
   color: white;
 }
 
-.register-button:hover {
-  background-color: #4CAF50;
-  color: black;
+button:hover,register-button:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s;
 }
+
 
 .enter-with {
   color: black;
   font-size: 14px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 20px;
+
 }
 </style>

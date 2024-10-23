@@ -23,7 +23,7 @@
       </div>
       <button type="submit">Registrarse</button>
       <h5 class="text-center enter-with">
-        <router-link to="/" class="login-link">¿Ya tienes una cuenta?</router-link>
+        <router-link to="/login" class="login-link">¿Ya tienes una cuenta?</router-link>
       </h5>
     </form>
   </div>
@@ -96,8 +96,8 @@ input {
 button {
   width: 80%;
   padding: 10px;
-  background-color: #4CAF50;
-  color: black;
+  background-color: #333;
+  color: white;
   border: none;
   border-radius: 20px;
   cursor: pointer;
@@ -115,12 +115,15 @@ button:hover {
 }
 
 .subtitle {
-  color: #BFBFBF;
+  color: black;
   font-size: 14px;
   margin-top: 3px;
   margin-bottom: 8px;
 }
 
+.login-link {
+  color: black;
+}
 .enter-with {
   color: black;
   font-size: 14px;
