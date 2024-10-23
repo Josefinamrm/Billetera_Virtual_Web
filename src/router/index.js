@@ -40,7 +40,7 @@ const router = createRouter({
         {
           path: 'tarjetas',
           name: 'cards',
-          component: () => import('../components/cardPage/mainCardPage.vue')
+          component: () => import('../components/CreditCardManagment.vue')
         },
         {
           path: 'nueva-tarjeta',
