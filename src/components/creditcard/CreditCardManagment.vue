@@ -1,7 +1,7 @@
 <template>
   <div class="credit-card-management">
     <header class="header">
-      <h1 class="title">Mis Tarjetas</h1>
+      <h1 class="title">Tarjetas</h1>
       <button class="add-button" @click="$router.push('/user/nueva-tarjeta')">
         <PlusIcon class="icon" />
         Agregar Tarjetas
@@ -12,7 +12,7 @@
       <button @click="toggleVisibility" class="toggle-button">
         <EyeIcon v-if="!isHidden" />
         <EyeOffIcon v-else />
-        {{ isHidden ? 'Show' : 'Hide' }} Card Details
+        {{ isHidden ? ' Mostrar' : ' Ocultar' }} Detalles de las Tarjetas
       </button>
     </div>
 
@@ -41,7 +41,7 @@
 <script setup>
 import { ref } from 'vue'
 import { PlusIcon, EyeIcon, EyeOffIcon } from 'lucide-vue-next'
-import CreditCardDisplay from './creditcard/CreditCardDisplay.vue'
+import CreditCardDisplay from './CreditCardDisplay.vue'
 
 const isHidden = ref(false)
 
@@ -71,12 +71,20 @@ const cards = ref([
     cvv: '789',
     emissionDate: '03/24',
   },
+  {
+    number: '4111 1111 1111 1111',
+    name: 'Junior Rambau',
+    validUntil: '12/27',
+    cvv: '789',
+    emissionDate: '03/24',
+  },
+
 ])
 </script>
 
 <style scoped>
 .credit-card-management {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 2rem;
   font-family: 'Arial', sans-serif;

@@ -117,7 +117,7 @@ h1 {
 
 .form-container {
   flex: 1;
-  margin-right: 20px;
+  margin-right: 200px;
   display: flex;
   flex-direction: column;
 }
@@ -126,7 +126,6 @@ h1 {
   width: 400px;
   margin-left: 20px;
 }
-
 .card-form {
   display: flex;
   flex-direction: column;
