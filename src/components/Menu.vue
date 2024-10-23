@@ -1,7 +1,7 @@
 <template>
   <div class="menu">
     <nav>
-      <h3>General</h3>
+      <h3>LOGO</h3>
       <a :class="{ selected: isSelected('panel') }" @click="navigateTo('panel')">
         <svg
           width="22"
@@ -17,7 +17,7 @@
             fill="#141414"
           />
         </svg>
-        Panel
+        General
       </a>
       <a :class="{ selected: isSelected('transferencia') }" @click="navigateTo('transferencia')">
         <svg
