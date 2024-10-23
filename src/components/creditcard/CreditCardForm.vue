@@ -65,12 +65,10 @@ const cvv = ref('')
 const document = ref('')
 
 function goBack() {
-  // Implement your navigation logic here
   console.log('Go back')
 }
 
 function submitForm() {
-  // Implement your form submission logic here
   console.log('Form submitted', {
     cardNumber: cardNumber.value,
     cardHolder: cardHolder.value,
@@ -84,10 +82,11 @@ function submitForm() {
 <style scoped>
 .app-container {
   font-family: Arial, sans-serif;
-  max-width: 1000px; /* Increased max-width for more space */
+  max-width: 1000px;
   width: auto;
+  height: auto;
   justify-items: left;
-  padding: 40px; /* Increased padding */
+  padding: 40px;
   display: flex;
   flex-direction: column;
 }
@@ -112,20 +111,20 @@ h1 {
 
 .content {
   display: flex;
-  justify-content: flex-start; /* Align items to the left */
-  overflow: hidden; /* Prevent overflow */
+  justify-content: flex-start;
+  overflow: hidden;
 }
 
 .form-container {
-  flex: 1; /* Take available space */
-  margin-right: 20px; /* Space between form and card preview */
+  flex: 1;
+  margin-right: 20px;
   display: flex;
   flex-direction: column;
 }
 
 .card-preview {
-  width: 320px; /* Slightly increase width for card preview */
-  margin-left: 20px; /* Space between form and card preview */
+  width: 400px;
+  margin-left: 20px;
 }
 
 .card-form {
@@ -137,7 +136,7 @@ h1 {
 .form-group {
   display: flex;
   flex-direction: column;
-  width: 100%; /* Ensures inputs take full width */
+  width: 100%;
 }
 
 label {
@@ -161,6 +160,6 @@ input {
   border-radius: 20px;
   cursor: pointer;
   font-size: 16px;
-  width: 100%; /* Submit button takes full width */
+  width: 100%;
 }
 </style>
