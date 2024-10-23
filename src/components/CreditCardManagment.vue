@@ -2,7 +2,7 @@
   <div class="credit-card-management">
     <header class="header">
       <h1 class="title">Mis Tarjetas</h1>
-      <button class="add-button">
+      <button class="add-button" @click="$router.push('/user/nueva-tarjeta')">
         <PlusIcon class="icon" />
         Agregar Tarjetas
       </button>

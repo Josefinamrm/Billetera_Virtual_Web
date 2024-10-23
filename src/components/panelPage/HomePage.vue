@@ -25,10 +25,15 @@
         <div class="cards-section">
           <h2>Tarjetas</h2>
           <add-card-btn/>
-          <div class="card">
-            <div class="card-type">VISA</div>
-            <div class="card-number">**** **** **** 1121</div>
-            <div class="card-name">JUNIOR RAMBAU</div>
+          <div class="card-scroll">
+            <div v-for="card in cards" :key="card.number" class="card-item">
+              <CreditCardDisplay
+                :card-number="card.number"
+                :card-name="card.name"
+                :card-expiry="card.validUntil"
+                :is-hidden="false"
+              />
+            </div>
           </div>
         </div>
         <transfer-component/>
@@ -43,9 +48,9 @@ import { ref } from 'vue'
 import ConfirmTransferPopup from '../confirmTransferPopup.vue'
 import AddCardBtn from '@/components/addCardBtn.vue'
 import TransferComponent from '@/components/transferComponent.vue'
+import CreditCardDisplay from '@/components/creditcard/CreditCardDisplay.vue'
+
 const confirmPopup = ref(null)
-
-
 
 const transactionGroups = ref([
   {
@@ -70,6 +75,30 @@ const transactionGroups = ref([
       { id: 7, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' }
     ]
   }
+])
+
+const cards = ref([
+  {
+    number: '4593 1111 1111 1111',
+    name: 'Junior Rambau',
+    validUntil: '10/25',
+    cvv: '123',
+    emissionDate: '01/22',
+  },
+  {
+    number: '5182 8224 6310 005',
+    name: 'Junior Rambau',
+    validUntil: '11/26',
+    cvv: '456',
+    emissionDate: '02/23',
+  },
+  {
+    number: '4111 1111 1111 1111',
+    name: 'Junior Rambau',
+    validUntil: '12/27',
+    cvv: '789',
+    emissionDate: '03/24',
+  },
 ])
 </script>
 
@@ -160,7 +189,19 @@ h3 {
 
 
 
-.card {
+.card-scroll {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem 0;
+}
+
+.card-item {
+  flex: 0 0 auto;
+}
+
+/* Remove or comment out the existing .card styles */
+/*.card {
   background-color: #333;
   color: white;
   padding: 1.5rem;
@@ -180,21 +221,5 @@ h3 {
 
 .card-name {
   font-size: 0.9rem;
-}
-
-@media (max-width: 1024px) {
-  .financial-dashboard {
-    flex-direction: column;
-  }
-
-  .right-column {
-    order: -1;
-  }
-}
-
-@media (max-width: 768px) {
-  .home-page {
-    padding: 0.5rem;
-  }
-}
+}*/
 </style>
