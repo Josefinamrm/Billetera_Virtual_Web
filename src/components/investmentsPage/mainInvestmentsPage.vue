@@ -9,7 +9,7 @@
       <div class="dashboard-layout">
         <section class="summary-section">
           <div class="summary-card">
-            <h2>Inversion Actual</h2>
+            <h2>Inversión Actual</h2>
             <p class="balance-amount">{{ currentInvestment }}</p>
             <p class="balance-change" :class="{ 'positive': isPositiveChange, 'negative': !isPositiveChange }">
               {{ balanceChange }}
@@ -137,31 +137,27 @@ const withdraw = () => {
 <style scoped>
 .investment-dashboard {
   font-family: 'Roboto', sans-serif;
-  max-width: 1500px;
-  height: auto;
-  margin: 0 auto;
-  width: 1500px;
-  padding: 2rem;
+  max-width: 1800px;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-
+  height: auto;
 }
 
 header {
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   text-align: center;
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
   color: #111827;
   margin-bottom: 0.5rem;
   font-weight: 700;
 }
 
 h2 {
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 2vw, 1.25rem);
   color: #374151;
   margin-bottom: 1rem;
   font-weight: 600;
@@ -169,32 +165,31 @@ h2 {
 
 p {
   color: #6B7280;
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
 }
 
 main {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
   flex: 1;
-  overflow: visible;
 }
 
 .dashboard-layout {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .summary-section {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  flex: 1;
-  padding-left: 0;
+  flex: 1 1 300px;
 }
 
 .right-section {
-  flex: 2;
+  flex: 2 1 400px;
   display: flex;
   flex-direction: column;
 }
@@ -204,7 +199,6 @@ main {
   background-color: white;
   border-radius: 1rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  padding: 0.18rem;
   margin-bottom: 1rem;
 }
 
@@ -214,7 +208,8 @@ main {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   padding: 1.5rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  height: 180px;
+  height: auto;
+  min-height: 180px;
 }
 
 .summary-card:hover {
@@ -223,14 +218,14 @@ main {
 }
 
 .balance-amount, .profit-amount {
-  font-size: 1.75rem;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
   font-weight: bold;
   color: #111827;
   margin-bottom: 0.5rem;
 }
 
 .balance-change, .profit-period {
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
 }
 
 .positive {
@@ -242,22 +237,25 @@ main {
 }
 
 .chart-container {
-  height: 300px;
+  height: 200px;
 }
 
 .action-section {
   flex: 0 0 auto;
+  height: 10px;
 }
 
 .input-group {
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 
 .amount-input {
   position: relative;
   flex-grow: 1;
+  min-width: 200px;
 }
 
 input {
@@ -285,6 +283,7 @@ input:focus {
 .button-group {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 button {
@@ -295,6 +294,7 @@ button {
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 1rem;
+  flex: 1 1 auto;
 }
 
 .invest-btn {
@@ -360,6 +360,7 @@ button:disabled {
 
   .summary-card {
     flex: 1 1 calc(50% - 0.5rem);
+    min-width: 250px;
   }
 
   .right-section {
@@ -386,6 +387,28 @@ button:disabled {
 
   button {
     width: 100%;
+  }
+}
+
+@media (min-width: 1800px) {
+  .investment-dashboard {
+    max-width: 2000px;
+  }
+
+  .dashboard-layout {
+    gap: 2rem;
+  }
+
+  .summary-card {
+    padding: 2rem;
+  }
+
+  .chart-section {
+    padding: 0.5rem;
+  }
+
+  .chart-container {
+    height: 400px;
   }
 }
 </style>

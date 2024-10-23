@@ -1,14 +1,22 @@
 <template>
-  <div class="background-shape"></div>
-  <div class="viewport" :style="{ height: windowHeight + 'px' }">
-
-    <div class="profile-container">
-      <h1>Tu perfil</h1>
-      <div class="profile-sections">
-        <section v-for="(section, index) in sections" :key="index" class="profile-section">
-          <h2>{{ section.title }}</h2>
-          <p>{{ section.description }}</p>
-        </section>
+  <div class="background-wrapper">
+    <div class="viewport">
+      <div class="profile-container">
+        <h1>Tu perfil</h1>
+        <div class="profile-sections">
+          <button
+            v-for="(section, index) in sections"
+            :key="index"
+            class="profile-section"
+            @click="handleSectionClick(index)"
+          >
+            <div class="section-content">
+              <h2>{{ section.title }}</h2>
+              <p>{{ section.description }}</p>
+            </div>
+            <span class="arrow">&gt;</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -19,7 +27,6 @@ export default {
   name: 'UserProfile',
   data() {
     return {
-      windowHeight: 0,
       sections: [
         {
           title: 'Información personal',
@@ -44,47 +51,44 @@ export default {
       ]
     }
   },
-  mounted() {
-    this.updateWindowHeight()
-    window.addEventListener('resize', this.updateWindowHeight)
-  },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.updateWindowHeight)
-  },
   methods: {
-    updateWindowHeight() {
-      this.windowHeight = window.innerHeight
+    handleSectionClick(index) {
+      console.log(`Clicked on section: ${this.sections[index].title}`)
+      // Add your navigation or action logic here
     }
   }
 }
 </script>
 
 <style scoped>
-.viewport {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  overflow: hidden;
-  cursor: default;
-  max-width: 2000px;
-  width: auto;
+.background-wrapper {
+  min-height: 70vh;
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+
+}
+
+.viewport {
+  flex: 1;
+  width: 100%;
+  max-width: 2000px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .profile-container {
   font-family: Arial, sans-serif;
-  max-width: 1500px;
-  padding: 10px;
-  height: 100%;
-  width: 1350px;
-  overflow-y: auto;
-  margin-top: 250px;
-  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  max-width: 1350px;
+  padding: 20px;
+  box-sizing: border-box;
 }
-
 
 h1 {
   font-size: 24px;
@@ -101,7 +105,22 @@ h1 {
   background-color: #D9D9D9;
   border-radius: 8px;
   padding: 15px;
-  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.profile-section:hover {
+  background-color: #C0C0C0;
+}
+
+.section-content {
+  flex-grow: 1;
 }
 
 h2 {
@@ -115,8 +134,13 @@ p {
   margin: 0;
 }
 
+.arrow {
+  font-size: 24px;
+  margin-left: 10px;
+}
+
 .background-shape {
-  position: fixed;
+  position: absolute;
   bottom: -100px;
   right: -100px;
   width: 300px;
@@ -126,7 +150,7 @@ p {
   z-index: -1;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .profile-container {
     padding: 15px;
   }
@@ -152,6 +176,39 @@ p {
     height: 200px;
     bottom: -50px;
     right: -50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .profile-section {
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 14px;
+  }
+
+  p {
+    font-size: 11px;
+  }
+
+  .arrow {
+    font-size: 18px;
+  }
+
+  .background-shape {
+    width: 150px;
+    height: 150px;
+    bottom: -30px;
+    right: -30px;
   }
 }
 </style>
