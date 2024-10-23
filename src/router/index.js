@@ -45,7 +45,7 @@ const router = createRouter({
         {
           path: 'nueva-tarjeta',
           name: 'newCard',
-          component: () => import('../components/cardPage/NewCardPage.vue')
+          component: () => import('../components/creditcard/CreditCardForm.vue')
         },
         {
           path: 'panel',

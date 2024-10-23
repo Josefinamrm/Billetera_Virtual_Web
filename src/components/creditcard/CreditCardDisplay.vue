@@ -190,12 +190,11 @@ const cardType = computed(() => {
   font-weight: bold;
 }
 
-/* Blur effect for hidden data */
 .data-hidden .card-number,
 .data-hidden .card-name,
 .data-hidden .card-expiry,
 .data-hidden .cvv {
   filter: blur(4px);
-  pointer-events: none; /* Prevent interaction */
+  pointer-events: none;
 }
 </style>

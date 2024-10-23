@@ -1,82 +1,87 @@
 <template>
-  <div class="flex flex-col items-center font-sans">
-    <CreditCardDisplay
-      :card-number="cardNumber"
-      :card-name="cardName"
-      :card-expiry="cardExpiry"
-      :card-cvv="cardCvv"
-      :is-card-flipped="isCardFlipped"
-    />
+  <div class="app-container">
+    <!-- Back Button and Title -->
+    <div class="title">
+      <button class="back" @click="goToLastVisitedPage"><h2><-</h2></button>
+      <h2>Nueva Tarjeta</h2>
+    </div>
 
-    <form @submit.prevent="handleSubmit" class="w-[380px] space-y-4">
-      <div>
-        <label for="cardNumber" class="block text-xs uppercase tracking-wider text-primary">Card Number</label>
-        <input
-          id="cardNumber"
-          v-model="cardNumber"
-          @focus="handleFocus"
-          @blur="handleBlur"
-          maxlength="19"
-          placeholder="0000 0000 0000 0000"
-          class="w-full mt-1 px-3 py-2 bg-background border border-input rounded-md text-sm shadow-sm placeholder-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
-        />
-      </div>
-      <div>
-        <label for="cardName" class="block text-xs uppercase tracking-wider text-primary">Cardholder Name</label>
-        <input
-          id="cardName"
-          v-model="cardName"
-          @focus="handleFocus"
-          @blur="handleBlur"
-          placeholder="e.g. Jane Appleseed"
-          class="w-full mt-1 px-3 py-2 bg-background border border-input rounded-md text-sm shadow-sm placeholder-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
-        />
-      </div>
-      <div class="flex gap-4">
-        <div class="flex-1">
-          <label for="cardExpiry" class="block text-xs uppercase tracking-wider text-primary">Expiry Date (MM/YY)</label>
-          <input
-            id="cardExpiry"
-            v-model="cardExpiry"
-            @focus="handleFocus"
-            @blur="handleBlur"
-            maxlength="5"
-            placeholder="MM/YY"
-            class="w-full mt-1 px-3 py-2 bg-background border border-input rounded-md text-sm shadow-sm placeholder-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
-          />
+    <!-- Form and Card Display -->
+    <div class="newCard">
+      <!-- Card Input Form -->
+      <div class="attributes">
+        <div class="number">
+          <label for="number">Número de Tarjeta</label>
+          <div class="text-box">
+            <input type="text" id="number" v-model="cardNumber" @focus="handleFocus" @blur="handleBlur" maxlength="19" placeholder="0000 0000 0000 0000" />
+          </div>
         </div>
-        <div class="flex-1">
-          <label for="cardCvv" class="block text-xs uppercase tracking-wider text-primary">CVV</label>
-          <input
-            id="cardCvv"
-            v-model="cardCvv"
-            @focus="handleFocus"
-            @blur="handleBlur"
-            maxlength="3"
-            placeholder="e.g. 123"
-            class="w-full mt-1 px-3 py-2 bg-background border border-input rounded-md text-sm shadow-sm placeholder-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
-          />
+
+        <div class="name">
+          <label for="name">Nombre del titular de la tarjeta</label>
+          <div class="text-box">
+            <input type="text" id="name" v-model="cardName" placeholder="e.g. Jane Appleseed" />
+          </div>
+        </div>
+
+        <div class="identification">
+          <label for="identification">Documento del titular</label>
+          <div class="text-box">
+            <input type="text" id="identification" v-model="identification" placeholder="123456789" />
+          </div>
+        </div>
+
+        <div class="expiration">
+          <label for="expiration">Vencimiento</label>
+          <div class="text-box">
+            <input type="text" id="expiration" v-model="cardExpiry" maxlength="5" placeholder="MM/YY" />
+          </div>
+        </div>
+
+        <div class="security">
+          <label for="security">Código de seguridad</label>
+          <div class="text-box">
+            <input type="text" id="security" v-model="cardCvv" @focus="handleFocus" @blur="handleBlur" maxlength="3" placeholder="123" />
+          </div>
         </div>
       </div>
-      <button type="submit" class="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
-        Confirm
-      </button>
-    </form>
+
+      <!-- Credit Card Display -->
+      <CreditCardDisplay
+        class="card"
+        :card-number="cardNumber"
+        :card-name="cardName"
+        :card-expiry="cardExpiry"
+        :card-cvv="cardCvv"
+        :is-card-flipped="isCardFlipped"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import CreditCardDisplay from './CreditCardDisplay.vue'
 
+// Ref variables for card inputs
 const cardNumber = ref('')
 const cardName = ref('')
+const identification = ref('')
 const cardExpiry = ref('')
 const cardCvv = ref('')
 const isCardFlipped = ref(false)
 
+// Router for navigating back
+const router = useRouter()
+
+function goToLastVisitedPage() {
+  router.back()
+}
+
+// Flip card when focusing on CVV input
 const handleFocus = (e) => {
-  if (e.target.id === 'cardCvv') {
+  if (e.target.id === 'security') {
     isCardFlipped.value = true
   }
 }
@@ -84,21 +89,55 @@ const handleFocus = (e) => {
 const handleBlur = () => {
   isCardFlipped.value = false
 }
-
-const handleSubmit = () => {
-  console.log('Form submitted', {
-    cardNumber: cardNumber.value,
-    cardName: cardName.value,
-    cardExpiry: cardExpiry.value,
-    cardCvv: cardCvv.value
-  })
-}
 </script>
 
 <style scoped>
-@media (max-width: 768px) {
-  .w-\[380px\] {
-    width: 300px;
-  }
+h2 {
+  color: black;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.text-box {
+  width: min-content;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #e0e0e0;
+  border-radius: 5px;
+  margin-bottom: 25px;
+  padding: 5px;
+}
+
+label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #000000;
+}
+
+.newCard {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 150px;
+  padding-left: 50px;
+}
+
+.card {
+  width: 300px;
+  height: 200px;
+  margin-left: 20px;
 }
 </style>
