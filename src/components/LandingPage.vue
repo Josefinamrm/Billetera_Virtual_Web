@@ -11,7 +11,7 @@
       <div class="text-content">
         <h1 class="title">Una Nueva Billetera Virtual</h1>
         <p class="subtitle">Maneja tu plata de de la mejor y más segura manera.</p>
-        <RouterLink to="/register" class="btn btn-primary btn-large">Abrir Cuenta</RouterLink>
+        <RouterLink to="/register" class="btn btn-primary btn-large">Registrarse</RouterLink>
       </div>
 
       <div class="phone-container">
@@ -23,26 +23,17 @@
       </div>
     </main>
 
-    <!-- Background Waves -->
-    <div class="background-waves">
-      <svg class="wave wave-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-        <path fill="#5dce76" fill-opacity="1" d="M0,224L30,202.7C60,181,120,139,180,144C240,149,300,203,360,213.3C420,224,480,192,540,181.3C600,171,660,181,720,176C780,171,840,149,900,133.3C960,117,1020,107,1080,117.3C1140,128,1200,160,1260,160C1320,160,1380,128,1410,112L1440,96L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z"></path>
-      </svg>
-      <svg class="wave wave-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-        <path fill="#4eb964" fill-opacity="1" d="M0,192L40,181.3C80,171,160,149,240,170.7C320,192,400,256,480,272C560,288,640,256,720,218.7C800,181,880,139,960,133.3C1040,128,1120,160,1200,186.7C1280,213,1360,235,1400,240L1440,245.3L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z"></path>
-      </svg>
-    </div>
-
     <RouterView />
   </div>
 </template>
-
 
 <script>
 export default {
   name: 'LandingPage'
 }
-</script><style scoped>
+</script>
+
+<style scoped>
 * {
   margin: 0;
   padding: 0;
@@ -50,12 +41,10 @@ export default {
 }
 
 html, body {
-  height: 100%;
-  overflow-x: hidden;
-}
-
-:root {
-  overflow-y: hidden; /* Prevent vertical scrolling */
+  height: 100vh;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
 }
 
 .landing-page {
@@ -63,7 +52,8 @@ html, body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  position: relative;
+  position: relative; /* Changed from fixed to relative */
+  width: 100%;
   background-color: #ffffff;
   overflow: hidden;
 }
@@ -84,19 +74,20 @@ nav {
 .content {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 2rem;
-  max-width: 1200px;
+  align-items: flex-start;
+  padding: 0;
+  max-width: 1400px;
   margin: 0 auto;
   height: calc(100vh - 70px);
   position: relative;
   z-index: 1;
+  padding-top: 8vh;
 }
 
 .text-content {
-  flex: 1;
-  max-width: 500px;
-  padding-right: 2rem;
+  flex: 0 1 500px;
+  margin-left: -5%; /* Moved text more to the left */
+  margin-top: 2vh; /* Moved text higher */
 }
 
 .title {
@@ -147,68 +138,45 @@ nav {
 
 .phone-container {
   flex: 1;
-  max-width: 400px;
+  max-width: 450px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
+  margin-right: 3%; /* Adjusted margin */
+  z-index: 2; /* Ensure image is on top */
 }
 
 .phone-image {
   width: auto;
-  height: 70vh;
-  max-height: 600px;
+  height: 75vh;
+  max-height: 650px;
   object-fit: contain;
+  z-index: 2; /* Ensure image stays above other elements */
 }
 
-/* Background Waves */
-.background-waves {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 40%;
-  z-index: 0;
-  overflow: hidden;
-}
-
-.wave {
-  position: absolute;
-  width: 100%;
-  height: auto;
-  bottom: 0;
-  left: 0;
-  z-index: -1;
-}
-
-.wave-1 {
-  bottom: 20%; /* Adjusted positioning */
-}
-
-.wave-2 {
-  bottom: 0;
-}
-
-/* Responsive Design */
 @media (max-width: 768px) {
   .content {
     flex-direction: column;
     text-align: center;
     padding: 1rem;
+    align-items: center;
+    padding-top: 2vh;
   }
 
   .text-content {
-    padding-right: 0;
+    margin-left: 0;
+    margin-top: 0;
   }
 
   .phone-container {
     width: 100%;
     height: auto;
+    justify-content: center;
+    margin-right: 0;
   }
 
   .phone-image {
     height: 50vh;
-    width: auto;
   }
 }
 
@@ -223,10 +191,6 @@ nav {
 
   .phone-image {
     height: 45vh;
-  }
-
-  .wave {
-    height: 30%;
   }
 }
 </style>

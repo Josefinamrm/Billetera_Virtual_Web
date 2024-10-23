@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AuthLayout from '../layouts/AuthLayout.vue'
 import GuestLayout from '../layouts/GuestLayout.vue'
-import LandingPage from '../components/LandingPage.vue'
+import LandingLayout from '@/layouts/LandingLayout.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,12 +12,12 @@ const router = createRouter({
       children: [
         {
           path: '',
-          component: LandingPage,
+          component: LandingLayout,
           children: [
             {
               path: '',
               name: 'landing',
-              component: () => import('../components/LandingPageContent.vue')
+              component: () => import('../components/LandingPage.vue')
             },
             {
               path: 'login',
