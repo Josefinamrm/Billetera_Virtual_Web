@@ -57,7 +57,7 @@
       password: password.value
     });
     // Redirigimos al usuario después del registro
-    router.push('/user');
+    router.push('/user/panel');
   };
 
   const goToLogin = () => {

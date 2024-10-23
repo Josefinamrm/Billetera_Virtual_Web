@@ -60,7 +60,7 @@ const router = createRouter({
         {
           path: 'inversiones',
           name: 'inversiones',
-         // component: () => import('../components/inversionPage/inversionPage.vue')
+          component: () => import('../components/investmentsPage/mainInvestmentsPage.vue')
         },
         {
           path: 'perfil',
