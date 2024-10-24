@@ -7,12 +7,12 @@
           <h1>Seguridad</h1>
         </div>
         <div class="page">
-          <div class="section" @click="showForm">Cambiar Contraseña</div>
+          <div class="section" @click="showForm">Cambiar contraseña</div>
           <div class="change-password-container" v-if="visible">
             <form class="change-password-form">
               <div class="form-group">
                 <label for="current-password">Contraseña actual</label>
-                <input type="password" id="current-password" placeholder="Ingresar..." required />
+                <input type="password" id="current-password" placeholder="Ingresar..."required/>
                 <h4 class="text-center enter-with">¿Olvido su contraseña?</h4>
               </div>
               <div class="form-group">
@@ -42,16 +42,26 @@
 <script setup>
 import router from '@/router'
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/userStore'
 
+const userStore = useUserStore();
 const visible = ref(false)
 const passError = ref(false)
-
 const goBack = () => {
   router.go(-1)
 }
 
 const showForm = () => {
   visible.value = !visible.value
+}
+
+const verifyCurrentPassword = () => {
+  const currentPassword = document.getElementById('current-password').value;
+  if (currentPassword !== userStore.userData.password) {
+    alert('La contraseña actual ingresada es incorrecta');
+    return false;
+  }
+  return true;
 }
 
 const passwordsMatchError = () => {
@@ -65,7 +75,11 @@ const passwordsMatchError = () => {
 }
 
 const submitForm = () => {
+  if (!verifyCurrentPassword()) {
+    return;
+  }
   if (!passError.value) {
+    userStore.userData.password = document.getElementById('new-password').value;
     console.log('Password changed')
   }
 }
