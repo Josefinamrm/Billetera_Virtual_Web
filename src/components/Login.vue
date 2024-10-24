@@ -19,25 +19,45 @@
       <button type="button" class="register-button" @click="handleRegister">Registrarse</button>
       <h4 class="text-center enter-with">¿Olvido su contraseña?</h4>
     </form>
+
+    <!-- Error Message Popup -->
+    <div v-if="showErrorMessage" class="error-popup">
+      <p>{{ errorMessage }}</p>
+      <button @click="closeErrorPopup">Cerrar</button>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/userStore'; // Import userStore
 
-const email = ref('')
-const password = ref('')
-const router = useRouter()
+const email = ref('');
+const password = ref('');
+const showErrorMessage = ref(false);
+const errorMessage = ref('');
+const router = useRouter();
+const userStore = useUserStore(); // Initialize userStore
 
 const handleLogin = () => {
-  console.log('Login attempt:', { email: email.value, password: password.value })
-  router.push('/user/panel')
-}
+  const user = userStore.userData; // Get user data from the store
+  if (user && user.email === email.value && user.password === password.value) {
+    console.log('Login successful');
+    router.push('/user/panel');
+  } else {
+    errorMessage.value = 'Error al iniciar sesión: credenciales inválidas.';
+    showErrorMessage.value = true;
+  }
+};
 
 const handleRegister = () => {
-  router.push('/register')
-}
+  router.push('/register');
+};
+
+const closeErrorPopup = () => {
+  showErrorMessage.value = false;
+};
 </script>
 
 <style scoped>
@@ -55,10 +75,7 @@ const handleRegister = () => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: 400px;
-}
-.h3 {
-  margin-bottom: 10px;
+  height: auto; /* Adjust height for flexibility */
 }
 
 .form-group {
@@ -105,19 +122,12 @@ button {
   margin-bottom: 30px;
 }
 
-.forgot-password {
-  color: black;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
 .register-button {
   background-color: #333;
   color: white;
 }
 
-button:hover,
-register-button:hover {
+button:hover {
   transform: scale(1.1);
   transition: transform 0.2s;
 }
@@ -128,7 +138,28 @@ register-button:hover {
   margin-top: 20px;
 }
 
-h4 {
-  color: #2c3e50;
+.error-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.error-popup p {
+  margin: 0 0 10px 0;
+}
+
+.error-popup button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>
