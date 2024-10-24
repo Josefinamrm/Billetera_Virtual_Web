@@ -10,19 +10,19 @@
         <section class="summary-section">
           <div class="summary-card">
             <h2>Inversión Actual</h2>
-            <p class="balance-amount">{{ currentInvestment }}</p>
+            <p class="balance-amount">{{ inversionTotal }}</p>
             <p class="balance-change" :class="{ 'positive': isPositiveChange, 'negative': !isPositiveChange }">
               {{ balanceChange }}
             </p>
           </div>
           <div class="summary-card">
             <h2>Ganancias Totales</h2>
-            <p class="profit-amount">{{ totalProfit }}</p>
+            <p class="profit-amount">{{ gananciasTotales }}</p>
             <p class="profit-period">{{ profitPeriod }}</p>
           </div>
           <div class="summary-card">
             <h2>Balance Actual</h2>
-            <p class="profit-amount">{{ currentBalance }}</p>
+            <p class="profit-amount">{{ balanceTotal }}</p>
           </div>
         </section>
 
@@ -61,20 +61,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import Chart from 'chart.js/auto'
+import { ref, onMounted, computed } from 'vue';
+import { useFinancialStore } from '../../stores/userFinancialStore.js'; // Import the Pinia store
+import Chart from 'chart.js/auto';
 
-const chartCanvas = ref(null)
-const amount = ref('')
-const message = ref('')
-const isSuccess = ref(true)
+const chartCanvas = ref(null);
+const amount = ref('');
+const message = ref('');
+const isSuccess = ref(true);
 
-const currentBalance = ref('$75.000')
-const balanceChange = ref('+$5.000 (7.14%)')
-const isPositiveChange = computed(() => balanceChange.value.startsWith('+'))
-const currentInvestment = ref('$50.000')
-const totalProfit = ref('$25.000')
-const profitPeriod = ref('Últimos 6 meses')
+const financialStore = useFinancialStore(); // Use the Pinia store
+
+// Map Pinia store values
+const currentBalance = computed(() => `$${financialStore.balanceTotal}`);
+const balanceChange = ref('0');  // Placeholder for balance change
+const isPositiveChange = computed(() => balanceChange.value.startsWith('+'));
+const currentInvestment = computed(() => `$${financialStore.inversionTotal}`);
+const totalProfit = computed(() => `$${financialStore.gananciasTotales}`);
+const profitPeriod = ref('Últimos 6 meses');
 
 const chartData = {
   labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul'],
@@ -86,10 +90,10 @@ const chartData = {
     tension: 0.4,
     fill: true
   }]
-}
+};
 
 onMounted(() => {
-  const ctx = chartCanvas.value.getContext('2d')
+  const ctx = chartCanvas.value.getContext('2d');
   new Chart(ctx, {
     type: 'line',
     data: chartData,
@@ -118,22 +122,23 @@ onMounted(() => {
         }
       }
     }
-  })
-})
+  });
+});
 
 const invest = () => {
-  message.value = `Inversión de $${amount.value} realizada con éxito.`
-  isSuccess.value = true
-  amount.value = ''
-}
+  financialStore.updateInversionTotal(Number(amount.value)); // Update store
+  message.value = `Inversión de $${amount.value} realizada con éxito.`;
+  isSuccess.value = true;
+  amount.value = '';
+};
 
 const withdraw = () => {
-  message.value = `Rescate de $${amount.value} realizado con éxito.`
-  isSuccess.value = true
-  amount.value = ''
-}
+  financialStore.updateInversionTotal(-Number(amount.value)); // Update store
+  message.value = `Rescate de $${amount.value} realizado con éxito.`;
+  isSuccess.value = true;
+  amount.value = '';
+};
 </script>
-
 <style scoped>
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
