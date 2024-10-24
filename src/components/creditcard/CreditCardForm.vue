@@ -89,7 +89,8 @@
 import { ref, computed, onMounted } from 'vue';
 import CreditCard from './CreditCardDisplay.vue';
 import { useCardStore } from '@/stores/cardStore';
-import { useUserStore } from '@/stores/userStore'; // Import userStore
+import { useUserStore } from '@/stores/userStore';
+import router from '@/router/index.js' // Import userStore
 
 const cardNumber = ref('');
 const cardHolder = ref('');
@@ -145,7 +146,7 @@ function formatExpiry() {
 }
 
 function goBack() {
-  console.log('Regresar');
+  router.back();
 }
 
 function submitForm() {
