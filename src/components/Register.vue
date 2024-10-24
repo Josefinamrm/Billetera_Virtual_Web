@@ -32,6 +32,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '../stores/userStore.js'; // Adjust the path as necessary
 
 const nombre = ref('');
 const apellido = ref('');
@@ -41,23 +42,30 @@ const password = ref('');
 const confirmPassword = ref('');
 
 const router = useRouter();
+const userStore = useUserStore(); // Use the Pinia store
 
 const handleRegister = () => {
   if (password.value !== confirmPassword.value) {
     alert('Las contraseñas no coinciden');
     return;
   }
-  console.log('Registro de usuario:', {
+
+  // Prepare user data
+  const userData = {
     nombre: nombre.value,
     apellido: apellido.value,
     documento: documento.value,
     email: email.value,
-    password: password.value
-  });
+    password: password.value,
+  };
+
+  // Set user data in the store and save it to localStorage
+  userStore.setUser(userData);
+
+  console.log('Registro de usuario:', userData);
   router.push('/user/panel');
 };
 </script>
-
 <style scoped>
 .register-container {
   width: 400px;
