@@ -13,6 +13,7 @@
               <div class="form-group">
                 <label for="current-password">Contraseña actual</label>
                 <input type="password" id="current-password" placeholder="Ingresar..." required />
+                <h4 class="text-center enter-with">¿Olvido su contraseña?</h4>
               </div>
               <div class="form-group">
                 <label for="new-password">Nueva contraseña</label>
