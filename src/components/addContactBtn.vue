@@ -41,8 +41,10 @@ const agregarContacto = () => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 .agregar-contacto {
-  font-family: Arial, sans-serif;
+  font-family: Inter, sans-serif;
 }
 
 .btn {
@@ -79,8 +81,9 @@ const agregarContacto = () => {
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
 .popup {
