@@ -4,7 +4,6 @@
       <div class="profile-container">
         <div class="title">
           <h1>Tu Perfil</h1>
-          <button class="change-profile" @click="signOut">Cambiar Perfil</button>
         </div>
         <div class="profile-sections">
           <button

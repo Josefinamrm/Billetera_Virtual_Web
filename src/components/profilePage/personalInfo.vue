@@ -19,6 +19,9 @@
 
 <script>
 import router from '@/router'
+import { useUserStore } from '@/stores/userStore';
+const userStore = useUserStore();
+console.log("Hola", userStore.userData);
 export default {
   name: 'UserInfo',
   data() {
@@ -26,15 +29,15 @@ export default {
       userInfo: [
         {
           title: 'Nombre: ',
-          value: 'nombre'
+          value: userStore.userData.nombre
         },
         {
           title: 'Apellido: ',
-          value: 'apellido'
+          value: userStore.userData.apellido
         },
         {
           title: 'DNI: ',
-          value: '1234567890'
+          value: userStore.userData.documento
         },
         {
           title: 'Fecha de Nacimiento: ',
