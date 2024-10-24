@@ -22,6 +22,7 @@
 
 <script setup>
 import { ref, reactive } from 'vue';
+import { useContactStore } from '@/stores/contactStore'; // Import the Pinia store
 
 const showPopup = ref(false);
 const nuevoContacto = reactive({
@@ -31,10 +32,23 @@ const nuevoContacto = reactive({
   alias: ''
 });
 
+// Get the contact store
+const contactStore = useContactStore();
+
+// Function to add a contact using the Pinia store
 const agregarContacto = () => {
-  // Aquí iría la lógica para agregar el contacto
-  console.log('Nuevo contacto:', nuevoContacto);
-  // Resetear el formulario
+  // Use Pinia to add the new contact
+  contactStore.addContact({
+    name: nuevoContacto.nombre,
+    phone: nuevoContacto.telefono,
+    cbu: nuevoContacto.cbu,
+    alias: nuevoContacto.alias
+  });
+
+  // Log the new contact for debugging
+  console.log('Nuevo contacto agregado:', nuevoContacto);
+
+  // Reset the form
   Object.keys(nuevoContacto).forEach(key => nuevoContacto[key] = '');
   showPopup.value = false;
 };

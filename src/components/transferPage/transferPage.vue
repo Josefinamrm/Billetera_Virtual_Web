@@ -4,23 +4,25 @@
       <div class="contacts">
         <div class="header">
           <h2>Contactos</h2>
-          <AddContactBtn />
+          <AddContactBtn @add-contact="addContact" />
         </div>
         <div class="contacts-list">
-          <ul>
+          <ul v-if="contacts && contacts.length">
             <li v-for="contact in contacts" :key="contact.id">
-              <img :src="contact.avatar" :alt="contact.name" class="avatar" />
               <div class="contact-info">
                 <strong>{{ contact.name }}</strong>
                 <span>{{ contact.phone }}</span>
               </div>
-              <button type="button" class="btn btn-primary">Enviar</button>
-              <button type="button" class="btn btn-outline">Solicitar</button>
+              <button type="button" class="btn btn-primary" @click="sendContact(contact)">Enviar</button>
+              <button type="button" class="btn btn-outline" @click="requestContact(contact)">Solicitar</button>
               <button type="button" class="btn btn-delete" @click="confirmDelete(contact)">
                 <i class="fas fa-trash-alt"></i>
               </button>
             </li>
           </ul>
+          <div v-else class="no-contacts">
+            No hay contactos disponibles
+          </div>
         </div>
       </div>
     </div>
@@ -31,90 +33,174 @@
       <div class="payments">
         <h2>Pagos de Servicios</h2>
         <form @submit.prevent="submitPayment">
-          <select v-model="selectedService" class="select-input">
+          <select v-model="selectedService" class="select-input" required>
             <option value="" disabled selected>Seleccione un servicio</option>
             <option v-for="service in services" :key="service.id" :value="service.id">
               {{ service.name }}
             </option>
           </select>
-          <input v-model="paymentAmount" type="number" placeholder="Ingrese Monto" class="number-input" />
+          <input 
+            v-model.number="paymentAmount" 
+            type="number" 
+            placeholder="Ingrese Monto" 
+            class="number-input"
+            required
+            min="0"
+          />
           <div class="payment-methods">
-            <button type="button" @click="paymentMethod = 'card'" :class="['btn', paymentMethod === 'card' ? 'btn-primary' : 'btn-outline']">
+            <button 
+              type="button" 
+              @click="paymentMethod = 'card'" 
+              :class="['btn', paymentMethod === 'card' ? 'btn-primary' : 'btn-outline']"
+            >
               Tarjeta
             </button>
-            <button type="button" @click="paymentMethod = 'account'" :class="['btn', paymentMethod === 'account' ? 'btn-primary' : 'btn-outline']">
+            <button 
+              type="button" 
+              @click="paymentMethod = 'account'" 
+              :class="['btn', paymentMethod === 'account' ? 'btn-primary' : 'btn-outline']"
+            >
               Crédito en Cuenta
             </button>
           </div>
-          <button type="submit" class="btn submit-btn">Pagar</button>
+          <button type="submit" class="btn submit-btn" :disabled="!isPaymentFormValid">
+            Pagar
+          </button>
         </form>
       </div>
     </div>
 
-    <div v-if="showConfirmation" class="confirmation-popup">
-      <div class="confirmation-content">
-        <p>¿Estás seguro de que quieres eliminar este contacto?</p>
-        <div class="confirmation-buttons">
-          <button @click="deleteContact" class="btn confirm-button">Eliminar</button>
-          <button @click="cancelDelete" class="btn cancel-button">Cancelar</button>
+    <!-- Confirmation Modal -->
+    <Teleport to="body">
+      <div v-if="showConfirmation" class="confirmation-popup">
+        <div class="confirmation-content">
+          <p>¿Estás seguro de que quieres eliminar este contacto?</p>
+          <div class="confirmation-buttons">
+            <button @click="deleteContact" class="btn confirm-button">Eliminar</button>
+            <button @click="cancelDelete" class="btn cancel-button">Cancelar</button>
+          </div>
         </div>
       </div>
-    </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import TransferComponent from '@/components/transferComponent.vue'
-import AddContactBtn from '@/components/addContactBtn.vue'
+import { ref, computed, onMounted, watch } from 'vue';
+import { useContactStore } from '@/stores/contactStore';
+import TransferComponent from '@/components/transferComponent.vue';
+import AddContactBtn from '@/components/addContactBtn.vue';
 
-const contacts = ref([
-  { id: 1, name: 'John Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
-  { id: 2, name: 'Jim Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
-  { id: 3, name: 'Jane Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
-  { id: 4, name: 'Janet Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
-])
+const contactStore = useContactStore();
 
-const selectedService = ref('')
-const paymentAmount = ref('')
-const paymentMethod = ref('card')
-const showConfirmation = ref(false)
-const contactToDelete = ref(null)
+// Reactive states
+const selectedService = ref('');
+const paymentAmount = ref('');
+const paymentMethod = ref('card');
+const showConfirmation = ref(false);
+const contactToDelete = ref(null);
 
+// Services data
 const services = [
   { id: 1, name: 'Electricidad' },
   { id: 2, name: 'Agua' },
   { id: 3, name: 'Gas' },
   { id: 4, name: 'Internet' },
   { id: 5, name: 'Teléfono' },
-]
+];
 
-const submitPayment = () => {
-  console.log('Payment submitted:', {
-    service: selectedService.value,
-    amount: paymentAmount.value,
-    method: paymentMethod.value
-  })
-  selectedService.value = ''
-  paymentAmount.value = ''
-  paymentMethod.value = 'card'
-}
+// Computed properties
+const contacts = computed(() => {
+  const storeContacts = contactStore.contacts;
+  console.log('Current contacts:', storeContacts);
+  return storeContacts;
+});
+
+const isPaymentFormValid = computed(() => {
+  return selectedService.value && 
+         paymentAmount.value && 
+         paymentAmount.value > 0 && 
+         paymentMethod.value;
+});
+
+// Lifecycle hooks
+onMounted(async () => {
+  try {
+    await contactStore.loadContacts();
+    console.log('Contacts loaded successfully');
+  } catch (error) {
+    console.error('Error loading contacts:', error);
+  }
+});
+
+// Watch for store changes
+watch(() => contactStore.contacts, (newContacts) => {
+  console.log('Contacts updated:', newContacts);
+}, { deep: true });
+
+// Methods
+const addContact = async (newContact) => {
+  try {
+    await contactStore.addContact(newContact);
+    console.log('Contact added successfully');
+  } catch (error) {
+    console.error('Error adding contact:', error);
+  }
+};
 
 const confirmDelete = (contact) => {
-  contactToDelete.value = contact
-  showConfirmation.value = true
-}
+  contactToDelete.value = contact;
+  showConfirmation.value = true;
+};
 
-const deleteContact = () => {
-  contacts.value = contacts.value.filter(c => c.id !== contactToDelete.value.id)
-  showConfirmation.value = false
-  contactToDelete.value = null
-}
+const deleteContact = async () => {
+  if (contactToDelete.value) {
+    try {
+      await contactStore.deleteContact(contactToDelete.value.id);
+      console.log('Contact deleted successfully');
+    } catch (error) {
+      console.error('Error deleting contact:', error);
+    } finally {
+      showConfirmation.value = false;
+      contactToDelete.value = null;
+    }
+  }
+};
 
 const cancelDelete = () => {
-  showConfirmation.value = false
-  contactToDelete.value = null
-}
+  showConfirmation.value = false;
+  contactToDelete.value = null;
+};
+
+const sendContact = (contact) => {
+  console.log('Sending contact:', contact);
+  // Implement send logic here
+};
+
+const requestContact = (contact) => {
+  console.log('Requesting contact:', contact);
+  // Implement request logic here
+};
+
+const submitPayment = async () => {
+  if (!isPaymentFormValid.value) return;
+
+  try {
+    // Implement payment submission logic here
+    console.log('Payment submitted:', {
+      service: selectedService.value,
+      amount: paymentAmount.value,
+      method: paymentMethod.value,
+    });
+    
+    // Reset form
+    selectedService.value = '';
+    paymentAmount.value = '';
+    paymentMethod.value = 'card';
+  } catch (error) {
+    console.error('Error submitting payment:', error);
+  }
+};
 </script>
 
 <style scoped>
@@ -225,12 +311,6 @@ input, .select-input {
   border-bottom: none;
 }
 
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
 .contact-info {
   flex-grow: 1;
 }
@@ -312,69 +392,48 @@ input, .select-input {
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 1000;
+  align-items: center;
 }
 
 .confirmation-content {
   background-color: white;
   padding: 2rem;
-  border-radius: 10px;
+  border-radius: 8px;
   text-align: center;
-}
-
-.confirm-button,
-.cancel-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
 .confirmation-buttons {
   display: flex;
+  gap: 1rem;
   justify-content: center;
   margin-top: 1rem;
-  gap: 1rem;
 }
 
 .confirm-button {
-  background-color: #f44336;
+  background-color: #ff4d4d;
   color: white;
 }
 
-.confirm-button:hover {
-  background-color: #d32f2f;
-}
-
 .cancel-button {
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: #ccc;
 }
 
-.cancel-button:hover {
-  background-color: #e0e0e0;
+.no-contacts {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
 }
-@media (max-width: 768px) {
-  .dashboard {
-    flex-direction: column;
-    height: auto;
-    overflow: auto;
-  }
 
-  .contacts-list {
-    max-height: 50vh;
-  }
+/* Add disabled button styles */
+.btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
 
-  .contacts li {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .contacts button {
-    margin-top: 0.5rem;
-  }
+/* Add loading state styles if needed */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
 }
 </style>
