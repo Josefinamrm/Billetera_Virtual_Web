@@ -4,22 +4,22 @@
     <h3 class="text-center subtitle">Bienvenido</h3>
     <form @submit.prevent="handleRegister">
       <div class="form-group">
-        <input type="text" id="nombre" v-model="nombre" placeholder="Ingrese su nombre" required>
+        <input type="text" id="nombre" v-model="nombre" placeholder="Ingrese su nombre *" required>
       </div>
       <div class="form-group">
-        <input type="text" id="apellido" v-model="apellido" placeholder="Ingrese su apellido" required>
+        <input type="text" id="apellido" v-model="apellido" placeholder="Ingrese su apellido *" required>
       </div>
       <div class="form-group">
-        <input type="number" id="documento" v-model="documento" placeholder="Ingrese su documento" required>
+        <input type="number" id="documento" v-model="documento" placeholder="Ingrese su documento *" required>
       </div>
       <div class="form-group">
-        <input type="email" id="email" v-model="email" placeholder="Ingrese su email" required>
+        <input type="email" id="email" v-model="email" placeholder="Ingrese su email *" required>
       </div>
       <div class="form-group">
-        <input type="password" id="password" v-model="password" placeholder="Ingrese su contraseña" required>
+        <input type="password" id="password" v-model="password" placeholder="Ingrese su contraseña *" required>
       </div>
       <div class="form-group">
-        <input type="password" id="confirmPassword" v-model="confirmPassword" placeholder="Vuelva a ingresar su contraseña" required>
+        <input type="password" id="confirmPassword" v-model="confirmPassword" placeholder="Vuelva a ingresar su contraseña *" required>
       </div>
       <button type="submit">Registrarse</button>
       <h5 class="text-center enter-with">
@@ -42,15 +42,17 @@ const password = ref('');
 const confirmPassword = ref('');
 
 const router = useRouter();
-const userStore = useUserStore(); // Use the Pinia store
+const userStore = useUserStore();
 
 const handleRegister = () => {
+  if (password.value.length < 8) {
+    alert('La contraseña debe tener al menos 8 caracteres');
+    return;
+  }
   if (password.value !== confirmPassword.value) {
     alert('Las contraseñas no coinciden');
     return;
   }
-
-  // Prepare user data
   const userData = {
     nombre: nombre.value,
     apellido: apellido.value,
@@ -59,9 +61,7 @@ const handleRegister = () => {
     password: password.value,
   };
 
-  // Set user data in the store and save it to localStorage
   userStore.setUser(userData);
-
   console.log('Registro de usuario:', userData);
   router.push('/user/panel');
 };
@@ -75,7 +75,7 @@ const handleRegister = () => {
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 100; /* Ensure it stays above the waves */
+  z-index: 100;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }

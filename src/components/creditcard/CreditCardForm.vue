@@ -88,6 +88,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import CreditCard from './CreditCardDisplay.vue'
+import router from '@/router/index.js'
 
 const cardNumber = ref('')
 const cardHolder = ref('')
@@ -132,7 +133,7 @@ function formatExpiry() {
 }
 
 function goBack() {
-  console.log('Regresar')
+  router.back()
 }
 
 function submitForm() {
