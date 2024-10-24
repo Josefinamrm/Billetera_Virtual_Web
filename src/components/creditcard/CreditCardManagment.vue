@@ -2,7 +2,7 @@
   <div class="credit-card-management">
     <header class="header">
       <h1 class="title">Tarjetas</h1>
-    <add-card-btn />
+      <add-card-btn @add-card="addNewCard" />
     </header>
 
     <div class="visibility-toggle">
@@ -15,14 +15,14 @@
 
     <div class="card-scroll-container">
       <div class="card-scroll">
-        <div v-for="(card, index) in cards" :key="card.number" class="card-item">
+        <div v-for="(card, index) in cardStore.cards" :key="card.number" class="card-item">
           <CreditCardDisplay
             :card-number="card.number"
             :card-name="card.name"
             :card-expiry="card.validUntil"
             :is-hidden="isHidden"
             :cvv="card.cvv"
-             />
+          />
           <button @click="confirmRemoveCard(index)" class="remove-button">
             <TrashIcon class="icon" />
           </button>
@@ -43,67 +43,42 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { EyeIcon, EyeOffIcon, TrashIcon } from 'lucide-vue-next'
-import CreditCardDisplay from './CreditCardDisplay.vue'
-import AddCardBtn from '@/components/addCardBtn.vue'
+import { ref } from 'vue';
+import { EyeIcon, EyeOffIcon, TrashIcon } from 'lucide-vue-next';
+import CreditCardDisplay from './CreditCardDisplay.vue';
+import AddCardBtn from '@/components/addCardBtn.vue';
+import { useCardStore } from '@/stores/cardStore'; // Adjust the path as necessary
 
-const isHidden = ref(false)
-const showConfirmDialog = ref(false)
-const cardIndexToRemove = ref(null)
+const cardStore = useCardStore();
+const isHidden = ref(false);
+const showConfirmDialog = ref(false);
+const cardIndexToRemove = ref(null);
 
 const toggleVisibility = () => {
-  isHidden.value = !isHidden.value
-}
-
-const cards = ref([
-  {
-    number: '4593 1111 1111 1111',
-    name: 'Junior Rambau',
-    validUntil: '10/25',
-    cvv: '123',
-    emissionDate: '01/22',
-  },
-  {
-    number: '5182 8224 6310 005',
-    name: 'Junior Rambau',
-    validUntil: '11/26',
-    cvv: '456',
-    emissionDate: '02/23',
-  },
-  {
-    number: '4111 1111 1111 1111',
-    name: 'Junior Rambau',
-    validUntil: '12/27',
-    cvv: '789',
-    emissionDate: '03/24',
-  },
-  {
-    number: '4111 1111 1111 1111',
-    name: 'Junior Rambau',
-    validUntil: '12/27',
-    cvv: '789',
-    emissionDate: '03/24',
-  },
-])
+  isHidden.value = !isHidden.value;
+};
 
 const confirmRemoveCard = (index) => {
-  cardIndexToRemove.value = index
-  showConfirmDialog.value = true
-}
+  cardIndexToRemove.value = index;
+  showConfirmDialog.value = true;
+};
 
 const removeCard = () => {
   if (cardIndexToRemove.value !== null) {
-    cards.value.splice(cardIndexToRemove.value, 1)
-    cardIndexToRemove.value = null
+    cardStore.removeCard(cardIndexToRemove.value); // Use the store method
+    cardIndexToRemove.value = null;
   }
-  showConfirmDialog.value = false
-}
+  showConfirmDialog.value = false;
+};
 
 const cancelRemoveCard = () => {
-  cardIndexToRemove.value = null
-  showConfirmDialog.value = false
-}
+  cardIndexToRemove.value = null;
+  showConfirmDialog.value = false;
+};
+
+const addNewCard = (newCard) => {
+  cardStore.addCard(newCard); // Use the store method
+};
 </script>
 
 <style scoped>

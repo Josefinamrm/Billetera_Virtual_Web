@@ -32,9 +32,6 @@
               maxlength="19"
               placeholder="Ingresar..."
             />
-            <span v-if="cardNumber && !isCardNumberValid" class="error"
-              >Número de tarjeta no válido</span
-            >
           </div>
 
           <div class="form-group">
@@ -52,15 +49,11 @@
               maxlength="5"
               placeholder="MM/AA"
             />
-            <span v-if="expiry && !isExpiryValid" class="error"
-              >Fecha de vencimiento no válida</span
-            >
           </div>
 
           <div class="form-group">
             <label for="cvv">Código de seguridad</label>
             <input type="text" id="cvv" v-model="cvv" maxlength="3" placeholder="Ingresar..." />
-            <span v-if="cvv && !isCVVValid" class="error">CVV no válido</span>
           </div>
 
           <div class="form-group">
@@ -82,44 +75,64 @@
         />
       </div>
     </div>
+
+    <!-- Popup Message -->
+    <div v-if="showErrorMessage" class="error-popup">
+      <div class="error-popup-content">
+        <p>{{ errorMessage }}</p>
+        <button @click="closeErrorPopup" class="close-button">Cerrar</button>
+      </div>
+    </div>
   </div>
 </template>
-
 <script setup>
-import { ref, computed } from 'vue'
-import CreditCard from './CreditCardDisplay.vue'
+import { ref, computed, onMounted } from 'vue';
+import CreditCard from './CreditCardDisplay.vue';
+import { useCardStore } from '@/stores/cardStore';
+import { useUserStore } from '@/stores/userStore'; // Import userStore
 
-const cardNumber = ref('')
-const cardHolder = ref('')
-const expiry = ref('')
-const cvv = ref('')
-const document = ref('')
+const cardNumber = ref('');
+const cardHolder = ref('');
+const expiry = ref('');
+const cvv = ref('');
+const document = ref('');
+const showErrorMessage = ref(false);
+const errorMessage = ref('');
+
+// Pinia stores
+const cardStore = useCardStore();
+const userStore = useUserStore(); // Initialize userStore
+
+// Load existing cards from local storage on mount
+onMounted(() => {
+  cardStore.loadCardsFromLocalStorage();
+});
 
 const isCardNumberValid = computed(() => {
   const regex =
-    /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})$/
-  return regex.test(cardNumber.value.replace(/\s/g, ''))
-})
+    /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})$/;
+  return regex.test(cardNumber.value.replace(/\s/g, ''));
+});
 
 const isExpiryValid = computed(() => {
-  const regex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/
-  if (!regex.test(expiry.value)) return false
-  const [month, year] = expiry.value.split('/').map(Number)
-  const currentYear = new Date().getFullYear() % 100
-  const currentMonth = new Date().getMonth() + 1
-  return year > currentYear || (year === currentYear && month >= currentMonth)
-})
+  const regex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/;
+  if (!regex.test(expiry.value)) return false;
+  const [month, year] = expiry.value.split('/').map(Number);
+  const currentYear = new Date().getFullYear() % 100;
+  const currentMonth = new Date().getMonth() + 1;
+  return year > currentYear || (year === currentYear && month >= currentMonth);
+});
 
 const isCVVValid = computed(() => {
-  const regex = /^[0-9]{3}$/
-  return regex.test(cvv.value)
-})
+  const regex = /^[0-9]{3}$/;
+  return regex.test(cvv.value);
+});
 
 function formatCardNumber() {
   cardNumber.value = cardNumber.value
     .replace(/\s+/g, '')
     .replace(/(\d{4})/g, '$1 ')
-    .trim()
+    .trim();
 }
 
 function formatExpiry() {
@@ -128,25 +141,54 @@ function formatExpiry() {
     .replace(/^(0[1-9]|1[0-2])$/g, '$1/') // 11 -> 11/
     .replace(/^([0-1])([3-9])$/g, '0$1/$2') // 13 -> 01/3
     .replace(/^(\d{2})(\d{2})$/g, '$1/$2') // 1125 -> 11/25
-    .replace(/\/\//g, '/')
+    .replace(/\/\//g, '/');
 }
 
 function goBack() {
-  console.log('Regresar')
+  console.log('Regresar');
 }
 
 function submitForm() {
   if (isCardNumberValid.value && isExpiryValid.value && isCVVValid.value) {
-    console.log('Formulario enviado', {
-      cardNumber: cardNumber.value,
-      cardHolder: cardHolder.value,
-      expiry: expiry.value,
+    // Check if the document matches the user's document
+    if (document.value !== userStore.userData.documento) {
+      errorMessage.value = 'El documento no coincide con el registrado.';
+      showErrorMessage.value = true;
+      return;
+    }
+
+    const newCard = {
+      number: cardNumber.value,
+      name: cardHolder.value,
+      validUntil: expiry.value,
       cvv: cvv.value,
-      document: document.value
-    })
+      emissionDate: document.value,
+    };
+
+    // Add new card to the Pinia store
+    cardStore.addCard(newCard);
+
+    // Save to local storage
+    cardStore.saveCardsToLocalStorage();
+
+    console.log('Formulario enviado', newCard);
+    resetForm();
   } else {
-    console.log('El formulario contiene datos no válidos')
+    errorMessage.value = 'El formulario contiene datos no válidos.';
+    showErrorMessage.value = true;
   }
+}
+
+function closeErrorPopup() {
+  showErrorMessage.value = false;
+}
+
+function resetForm() {
+  cardNumber.value = '';
+  cardHolder.value = '';
+  expiry.value = '';
+  cvv.value = '';
+  document.value = '';
 }
 </script>
 
@@ -234,9 +276,28 @@ input {
   width: 100%;
 }
 
-.error {
-  color: red;
-  font-size: 0.8rem;
-  margin-top: 5px;
+.error-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.error-popup p {
+  margin: 0 0 10px 0;
+}
+
+.error-popup button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>
