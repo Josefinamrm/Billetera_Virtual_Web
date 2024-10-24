@@ -26,6 +26,31 @@ const initiateTransfer = () => {
 </template>
 
 <style scoped>
+.transfer-component {
+  max-width: 50vw;
+  min-width: 30vw;
+  margin: 0 auto;
+}
+
+.transfer-input {
+  font-size: 1rem;
+  padding: 0.75rem;
+}
+
+.balance-amount {
+  font-size: 2rem;
+}
+
+.transfer-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.send-btn, .request-btn {
+  padding: 0.75rem 2rem;
+  font-size: 1.2rem;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 .transfer-component {

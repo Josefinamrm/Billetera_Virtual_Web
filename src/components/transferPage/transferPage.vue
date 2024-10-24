@@ -3,17 +3,19 @@
     <div class="left-column">
       <div class="contacts">
         <h2>Contactos</h2>
-        <ul>
-          <li v-for="contact in contacts" :key="contact.id">
-            <img :src="contact.avatar" :alt="contact.name" class="avatar" />
-            <div class="contact-info">
-              <strong>{{ contact.name }}</strong>
-              <span>{{ contact.phone }}</span>
-            </div>
-            <button type="button" class="btn btn-primary">Enviar</button>
-            <button type="button" class="btn btn-outline">Solicitar</button>
-          </li>
-        </ul>
+        <div class="contacts-list">
+          <ul>
+            <li v-for="contact in contacts" :key="contact.id">
+              <img :src="contact.avatar" :alt="contact.name" class="avatar" />
+              <div class="contact-info">
+                <strong>{{ contact.name }}</strong>
+                <span>{{ contact.phone }}</span>
+              </div>
+              <button type="button" class="btn btn-primary">Enviar</button>
+              <button type="button" class="btn btn-outline">Solicitar</button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="right-column">
@@ -38,7 +40,7 @@
               Crédito en Cuenta
             </button>
           </div>
-          <button type="submit" class="btn  submit-btn">Pagar</button>
+          <button type="submit" class="btn submit-btn">Pagar</button>
         </form>
       </div>
     </div>
@@ -49,17 +51,14 @@
 import { ref } from 'vue'
 import TransferComponent from '@/components/transferComponent.vue'
 
-
 const contacts = [
   { id: 1, name: 'John Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
   { id: 2, name: 'Jim Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
   { id: 3, name: 'Jane Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
+  { id: 3, name: 'Jane Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
+
 ]
 
-
-
-
-// New code for payments
 const selectedService = ref('')
 const paymentAmount = ref('')
 const paymentMethod = ref('card')
@@ -92,12 +91,8 @@ const submitPayment = () => {
   max-width: 1800px;
   font-family: Arial, sans-serif;
   cursor: default;
-}
-
-.left-column, .right-column {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  height: auto;
+  overflow: hidden;
 }
 
 .left-column {
@@ -111,16 +106,35 @@ const submitPayment = () => {
 .contacts, .payments {
   background: white;
   border-radius: 8px;
-  padding: 2rem;
+  padding: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-.transfers{
-  height: 390px;
+.payments {
+  margin-top: 1rem;
 }
-.payments{
-  height: 340px;
+.contacts {
+  display: flex;
+  flex-direction: column;
+}
 
+.contacts-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 70vh;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+
+.contacts-list::-webkit-scrollbar {
+  display: none;
+}
+
+
+
+.payments {
+  height: 340px;
+}
+
 h2 {
   font-size: 1.7rem;
   margin-bottom: 1rem;
@@ -133,7 +147,6 @@ h3 {
   margin-bottom: 0.5rem;
   color: #333;
 }
-
 
 form {
   display: flex;
@@ -150,8 +163,6 @@ input, .select-input {
   font-size: 16px;
   background-color: #f0f0f0;
 }
-
-
 
 .contacts ul {
   list-style: none;
@@ -221,7 +232,6 @@ input, .select-input {
   background-color: #45a049;
 }
 
-
 .payment-methods {
   display: flex;
   gap: 0.5rem;
@@ -234,21 +244,21 @@ input, .select-input {
 
 .submit-btn {
   width: 100%;
-  color:white;
-  background-color: #333;;
+  color: white;
+  background-color: #333;
   border-radius: 20px;
-
 }
 
 @media (max-width: 768px) {
   .dashboard {
     flex-direction: column;
+    height: auto;
+    overflow: auto;
   }
 
-  .left-column, .right-column {
-    width: 100%;
+  .contacts-list {
+    max-height: 50vh; /* Ajusta la altura máxima en dispositivos móviles */
   }
-
 
   .contacts li {
     flex-direction: column;

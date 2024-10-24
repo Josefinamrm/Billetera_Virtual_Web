@@ -2,7 +2,7 @@
   <div class="background-wrapper">
     <div class="viewport">
       <div class="profile-container">
-        <h1>Tu perfil</h1>
+        <h1>Tu Perfil</h1>
         <div class="profile-sections">
           <button
             v-for="(section, index) in sections"
