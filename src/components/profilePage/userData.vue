@@ -3,7 +3,7 @@
     <div class="user-data-container">
       <div class="title">
         <button class="back-button" @click="goBack"><-</button>
-        <h1>Datos personales</h1>
+        <h1>Cuenta</h1>
       </div>
       <div class="user-data-content">
         <div class="section" v-for="(data, index) in userData" :key="index">
