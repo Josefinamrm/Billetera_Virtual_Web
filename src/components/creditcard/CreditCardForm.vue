@@ -14,7 +14,8 @@
         <form @submit.prevent="submitForm" class="card-form">
           <div class="form-group">
             <label for="cardNumber">Número de tarjeta</label>
-            <input type="text" id="cardNumber" v-model="cardNumber" placeholder="Ingresar..." />
+            <input type="text" id="cardNumber" v-model="cardNumber" @input="formatCardNumber" placeholder="Ingresar..." />
+            <span v-if="!isCardNumberValid" class="error">Número de tarjeta no válido</span>
           </div>
 
           <div class="form-group">
@@ -24,12 +25,14 @@
 
           <div class="form-group">
             <label for="expiry">Vencimiento</label>
-            <input type="text" id="expiry" v-model="expiry" placeholder="MM/AA" />
+            <input type="text" id="expiry" v-model="expiry" @input="formatExpiry" placeholder="MM/AA" />
+            <span v-if="!isExpiryValid" class="error">Fecha de vencimiento no válida</span>
           </div>
 
           <div class="form-group">
             <label for="cvv">Código de seguridad</label>
             <input type="text" id="cvv" v-model="cvv" placeholder="Ingresar..." />
+            <span v-if="!isCVVValid" class="error">CVV no válido</span>
           </div>
 
           <div class="form-group">
@@ -55,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import CreditCard from './CreditCardDisplay.vue'
 
 const cardNumber = ref('')
@@ -64,18 +67,53 @@ const expiry = ref('')
 const cvv = ref('')
 const document = ref('')
 
+const isCardNumberValid = computed(() => {
+  const regex = /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})$/
+  return regex.test(cardNumber.value.replace(/\s/g, ''))
+})
+
+const isExpiryValid = computed(() => {
+  const regex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/
+  if (!regex.test(expiry.value)) return false
+  const [month, year] = expiry.value.split('/').map(Number)
+  const currentYear = new Date().getFullYear() % 100
+  const currentMonth = new Date().getMonth() + 1
+  return (year > currentYear || (year === currentYear && month >= currentMonth))
+})
+
+const isCVVValid = computed(() => {
+  const regex = /^[0-9]{3}$/
+  return regex.test(cvv.value)
+})
+
+function formatCardNumber() {
+  cardNumber.value = cardNumber.value.replace(/\s+/g, '').replace(/(\d{4})/g, '$1 ').trim()
+}
+
+function formatExpiry() {
+  expiry.value = expiry.value.replace(/^([1-9]\/|[2-9])$/g, '0$1') // 3 -> 03
+    .replace(/^(0[1-9]|1[0-2])$/g, '$1/') // 11 -> 11/
+    .replace(/^([0-1])([3-9])$/g, '0$1/$2') // 13 -> 01/3
+    .replace(/^(\d{2})(\d{2})$/g, '$1/$2') // 1125 -> 11/25
+    .replace(/\/\//g, '/')
+}
+
 function goBack() {
   console.log('Go back')
 }
 
 function submitForm() {
-  console.log('Form submitted', {
-    cardNumber: cardNumber.value,
-    cardHolder: cardHolder.value,
-    expiry: expiry.value,
-    cvv: cvv.value,
-    document: document.value
-  })
+  if (isCardNumberValid.value && isExpiryValid.value && isCVVValid.value) {
+    console.log('Form submitted', {
+      cardNumber: cardNumber.value,
+      cardHolder: cardHolder.value,
+      expiry: expiry.value,
+      cvv: cvv.value,
+      document: document.value
+    })
+  } else {
+    console.log('Form contains invalid data')
+  }
 }
 </script>
 
@@ -126,6 +164,7 @@ h1 {
   width: 400px;
   margin-left: 20px;
 }
+
 .card-form {
   display: flex;
   flex-direction: column;
@@ -160,5 +199,11 @@ input {
   cursor: pointer;
   font-size: 16px;
   width: 100%;
+}
+
+.error {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 5px;
 }
 </style>

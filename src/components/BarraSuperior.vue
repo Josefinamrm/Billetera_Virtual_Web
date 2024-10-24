@@ -30,7 +30,7 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  height: 60px;
+  height: 60px; /* Keeping the height the same */
   padding: 0 1rem;
   background-color: #e5e5e5;
   border-radius: 5px;
@@ -38,10 +38,9 @@ export default {
   margin-left: 40px;
   position: fixed;
   top: 0;
-  right: 50px;
-  left: 250px;
+  right: 20px; /* Adjusted width */
+  left: 270px; /* Adjusted width */
   z-index: 1000;
-
 }
 
 .barra-superior a {
@@ -58,3 +57,4 @@ export default {
   margin-right: 0.5rem;
 }
 </style>
+
