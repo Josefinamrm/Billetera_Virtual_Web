@@ -81,8 +81,8 @@ const transactionGroups = ref([
     transactions: [
       { id: 6, name: 'Cine', date: 'Agosto 20, 6:22 PM', amount: 200, avatar: '../../Public/img.png' },
       { id: 7, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' },
-      { id: 7, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' },
-      { id: 7, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' }
+      { id: 8, name: 'Jane Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' },
+      { id: 9, name: 'Jim Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' }
     ]
   }
 ])
@@ -132,12 +132,12 @@ const totalExpenses = computed(() => {
 
 .financial-dashboard {
   display: flex;
+  flex-direction: column;
   gap: 2rem;
   height: 100%;
 }
 
 .left-column {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -172,6 +172,7 @@ const totalExpenses = computed(() => {
 
 h2 {
   margin-bottom: 1rem;
+  font-size: 1.5rem;
 }
 
 h3 {
@@ -279,5 +280,70 @@ h3 {
   pointer-events: none;
   z-index: 1000;
   white-space: pre-wrap;
+}
+
+@media (min-width: 768px) {
+  .financial-dashboard {
+    flex-direction: row;
+  }
+
+  .left-column {
+    flex: 1;
+  }
+
+  .transactions-section {
+    flex: 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .home-page {
+    padding: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  h3 {
+    font-size: 1rem;
+  }
+
+  .amount {
+    font-size: 1.5rem;
+  }
+
+  .chart {
+    height: 100px;
+  }
+
+  .transaction-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .transaction-amount {
+    align-self: flex-end;
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .months {
+    font-size: 0.7rem;
+  }
+
+  .transaction-name {
+    font-size: 0.9rem;
+  }
+
+  .transaction-date {
+    font-size: 0.7rem;
+  }
 }
 </style>

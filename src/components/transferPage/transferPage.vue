@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="right-column">
-      <div class="transfers">
+      <div>
         <transfer-component/>
       </div>
       <div class="payments">
@@ -108,17 +108,17 @@ const submitPayment = () => {
   flex: 1;
 }
 
-.contacts, .transfers, .payments {
+.contacts, .payments {
   background: white;
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 .transfers{
   height: 390px;
 }
 .payments{
-  height: 316px;
+  height: 340px;
 
 }
 h2 {
