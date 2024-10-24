@@ -89,7 +89,8 @@
 import { ref, computed, onMounted } from 'vue';
 import CreditCard from './CreditCardDisplay.vue';
 import { useCardStore } from '@/stores/cardStore';
-import { useUserStore } from '@/stores/userStore'; // Import userStore
+import { useUserStore } from '@/stores/userStore';
+import router from '@/router/index.js' // Import userStore
 
 const cardNumber = ref('');
 const cardHolder = ref('');
@@ -98,9 +99,6 @@ const cvv = ref('');
 const document = ref('');
 const showErrorMessage = ref(false);
 const errorMessage = ref('');
-import { ref, computed } from 'vue'
-import CreditCard from './CreditCardDisplay.vue'
-import router from '@/router/index.js'
 
 // Pinia stores
 const cardStore = useCardStore();
@@ -148,7 +146,7 @@ function formatExpiry() {
 }
 
 function goBack() {
-  router.back()
+  router.back();
 }
 
 function submitForm() {
