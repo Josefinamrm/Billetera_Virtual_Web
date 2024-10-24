@@ -5,7 +5,7 @@
       <add-card-btn @add-card="addNewCard" />
     </header>
 
-    <div class="visibility-toggle">
+    <div v-if="cardStore.cards.length > 0" class="visibility-toggle">
       <button @click="toggleVisibility" class="toggle-button">
         <EyeIcon v-if="!isHidden" />
         <EyeOffIcon v-else />
@@ -14,7 +14,7 @@
     </div>
 
     <div class="card-scroll-container">
-      <div class="card-scroll">
+      <div v-if="cardStore.cards.length > 0" class="card-scroll">
         <div v-for="(card, index) in cardStore.cards" :key="card.number" class="card-item">
           <CreditCardDisplay
             :card-number="card.number"
@@ -27,6 +27,9 @@
             <TrashIcon class="icon" />
           </button>
         </div>
+      </div>
+      <div v-else class="no-cards-message">
+        <p>No hay tarjetas guardadas.</p>
       </div>
     </div>
 
@@ -241,5 +244,14 @@ const addNewCard = (newCard) => {
 
 .cancel-button:hover {
   background-color: #e0e0e0;
+}
+
+.no-cards-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Adjust height as needed */
+  font-size: 1.5rem;
+  color: #666;
 }
 </style>

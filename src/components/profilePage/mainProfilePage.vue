@@ -2,7 +2,9 @@
   <div class="background-wrapper">
     <div class="viewport">
       <div class="profile-container">
-        <h1>Tu Perfil</h1>
+        <div class="title">
+          <h1>Tu Perfil</h1>
+        </div>
         <div class="profile-sections">
           <button
             v-for="(section, index) in sections"
@@ -41,14 +43,6 @@ export default {
         {
           title: 'Seguridad',
           description: 'Configura la seguridad de tu cuenta.'
-        },
-        {
-          title: 'Direcciones',
-          description: 'Direcciones guardadas en tu cuenta.'
-        },
-        {
-          title: 'Privacidad',
-          description: 'Preferencia y control sobre el uso de tus datos.'
         }
       ]
     }
@@ -57,6 +51,9 @@ export default {
     handleSectionClick(index) {
       console.log(`Clicked on section: ${this.sections[index].title}`)
       router.push(`/user/${this.sections[index].title.toLowerCase().replace(/\s/g, '-')}`)
+    },
+    signOut() {
+      router.push('/login')
     }
   }
 }
@@ -213,5 +210,17 @@ p {
     bottom: -30px;
     right: -30px;
   }
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 15px;
+}
+
+.change-profile:hover {
+  color: #4caf50;
 }
 </style>

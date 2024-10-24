@@ -3,7 +3,7 @@
     <div class="user-data-container">
       <div class="title">
         <button class="back-button" @click="goBack"><-</button>
-        <h1>Datos personales</h1>
+        <h1>Cuenta</h1>
       </div>
       <div class="user-data-content">
         <div class="section" v-for="(data, index) in userData" :key="index">
@@ -44,6 +44,8 @@
 
 <script>
 import router from '@/router'
+import { useUserStore } from '@/stores/userStore'
+const userStore = useUserStore();
 export default {
   name: 'UserData',
   data() {
@@ -51,12 +53,12 @@ export default {
       userData: [
         {
           title: 'Usuario: ',
-          value: 'nombre',
+          value: userStore.userData.apellido + userStore.userData.nombre,
           editable: false
         },
         {
           title: 'Email: ',
-          value: 'nombre@mail.com',
+          value: userStore.userData.email,
           editable: false
         },
         {

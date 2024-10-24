@@ -10,7 +10,7 @@
     <main class="content">
       <div class="text-content">
         <h1 class="title">Una Nueva Billetera Virtual</h1>
-        <p class="subtitle">Maneja tu plata de de la mejor y más segura manera.</p>
+        <p class="subtitle">Maneja tu plata de la mejor y más segura manera.</p>
         <RouterLink to="/register" class="btn btn-primary btn-large">Registrarse</RouterLink>
       </div>
 
