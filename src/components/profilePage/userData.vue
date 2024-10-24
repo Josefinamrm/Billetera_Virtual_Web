@@ -1,7 +1,10 @@
 <template>
   <div class="user-data">
     <div class="user-data-container">
-      <h1 class="title">Datos personales</h1>
+      <div class="title">
+        <button class="back-button" @click="goBack"><-</button>
+        <h1>Datos personales</h1>
+      </div>
       <div class="user-data-content">
         <div class="section" v-for="(data, index) in userData" :key="index">
           <div class="info">
@@ -36,11 +39,11 @@
         </div>
       </div>
     </div>
-    <div class="user-data-content"></div>
   </div>
 </template>
 
 <script>
+import router from '@/router'
 export default {
   name: 'UserData',
   data() {
@@ -77,6 +80,9 @@ export default {
   methods: {
     editData(index) {
       this.userData[index].editable = !this.userData[index].editable
+    },
+    goBack() {
+      router.go(-1)
     }
   }
 }
@@ -100,7 +106,17 @@ h1 {
   align-items: flex-start;
   font-family: 'Inter', sans-serif;
 }
+.title {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 15px;
+}
 
+button {
+  font-weight: bolder;
+  font-size: 20px;
+}
 .user-data-content {
   display: flex;
   flex-direction: column;
@@ -126,7 +142,9 @@ h1 {
 }
 
 .user-data-container {
-  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  /* font-family: Arial, sans-serif; */
   width: 100%;
   max-width: 1350px;
   padding: 20px;
