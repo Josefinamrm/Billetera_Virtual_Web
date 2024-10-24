@@ -66,6 +66,18 @@ const router = createRouter({
           path: 'perfil',
           name: 'perfil',
           component: () => import('../components/profilePage/mainProfilePage.vue')
+          // children: [
+          //   {
+          //     path: 'seguridad',
+          //     name: 'seguridad',
+          //     component: () => import('../components/profilePage/securityPage.vue')
+          //   }
+          // ]
+        },
+        {
+          path: 'seguridad',
+          name: 'seguridad',
+          component: () => import('../components/profilePage/securityPage.vue')
         }
       ]
     }

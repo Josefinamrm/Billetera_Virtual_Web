@@ -4,10 +4,16 @@
     <h3 class="text-center subtitle">Bienvenido</h3>
     <form @submit.prevent="handleLogin">
       <div class="form-group">
-        <input type="email" id="email" v-model="email" placeholder="Ingrese su email" required>
+        <input type="email" id="email" v-model="email" placeholder="Ingrese su email" required />
       </div>
       <div class="form-group">
-        <input type="password" id="password" v-model="password" placeholder="Ingrese su contraseña" required>
+        <input
+          type="password"
+          id="password"
+          v-model="password"
+          placeholder="Ingrese su contraseña"
+          required
+        />
       </div>
       <button type="submit">Ingresar</button>
       <button type="button" class="register-button" @click="handleRegister">Registrarse</button>
@@ -17,21 +23,21 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const email = ref('');
-const password = ref('');
-const router = useRouter();
+const email = ref('')
+const password = ref('')
+const router = useRouter()
 
 const handleLogin = () => {
-  console.log('Login attempt:', { email: email.value, password: password.value });
-  router.push('/user/panel');
-};
+  console.log('Login attempt:', { email: email.value, password: password.value })
+  router.push('/user/panel')
+}
 
 const handleRegister = () => {
-  router.push('/register');
-};
+  router.push('/register')
+}
 </script>
 
 <style scoped>
@@ -52,14 +58,14 @@ const handleRegister = () => {
   height: 400px;
 }
 .h3 {
-margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .form-group {
   font-size: 12px;
   width: 80%;
   margin-bottom: 20px;
-  background-color: #EBEBEB;
+  background-color: #ebebeb;
   border-radius: 30px;
   border: 1px solid black;
   padding: 7px;
@@ -71,17 +77,16 @@ input {
   width: 100%;
   padding: 7px;
   border-radius: 30px;
-  background-color: #EBEBEB;
+  background-color: #ebebeb;
   outline: none;
   border: none;
-
 }
 
 button {
   font-size: 12px;
   width: 80%;
   padding: 10px;
-  background-color: #5DCE76;
+  background-color: #5dce76;
   color: black;
   border: none;
   border-radius: 20px;
@@ -92,7 +97,6 @@ button {
   margin-left: auto;
   margin-right: auto;
 }
-
 
 .subtitle {
   color: black;
@@ -112,16 +116,19 @@ button {
   color: white;
 }
 
-button:hover,register-button:hover {
+button:hover,
+register-button:hover {
   transform: scale(1.1);
   transition: transform 0.2s;
 }
-
 
 .enter-with {
   color: black;
   font-size: 14px;
   margin-top: 20px;
+}
 
+h4 {
+  color: #2c3e50;
 }
 </style>

@@ -2,8 +2,18 @@
   <div class="app-container">
     <div class="header">
       <button class="back-button" @click="goBack">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M15 18l-6-6 6-6"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M15 18l-6-6 6-6" />
         </svg>
       </button>
       <h1>Nueva tarjeta</h1>
@@ -14,8 +24,17 @@
         <form @submit.prevent="submitForm" class="card-form">
           <div class="form-group">
             <label for="cardNumber">Número de tarjeta</label>
-            <input type="text" id="cardNumber" v-model="cardNumber" @input="formatCardNumber" maxlength="19" placeholder="Ingresar..." />
-            <span v-if="cardNumber && !isCardNumberValid" class="error">Número de tarjeta no válido</span>
+            <input
+              type="text"
+              id="cardNumber"
+              v-model="cardNumber"
+              @input="formatCardNumber"
+              maxlength="19"
+              placeholder="Ingresar..."
+            />
+            <span v-if="cardNumber && !isCardNumberValid" class="error"
+              >Número de tarjeta no válido</span
+            >
           </div>
 
           <div class="form-group">
@@ -25,8 +44,17 @@
 
           <div class="form-group">
             <label for="expiry">Vencimiento</label>
-            <input type="text" id="expiry" v-model="expiry" @input="formatExpiry" maxlength="5" placeholder="MM/AA" />
-            <span v-if="expiry && !isExpiryValid" class="error">Fecha de vencimiento no válida</span>
+            <input
+              type="text"
+              id="expiry"
+              v-model="expiry"
+              @input="formatExpiry"
+              maxlength="5"
+              placeholder="MM/AA"
+            />
+            <span v-if="expiry && !isExpiryValid" class="error"
+              >Fecha de vencimiento no válida</span
+            >
           </div>
 
           <div class="form-group">
@@ -68,7 +96,8 @@ const cvv = ref('')
 const document = ref('')
 
 const isCardNumberValid = computed(() => {
-  const regex = /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})$/
+  const regex =
+    /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})$/
   return regex.test(cardNumber.value.replace(/\s/g, ''))
 })
 
@@ -78,7 +107,7 @@ const isExpiryValid = computed(() => {
   const [month, year] = expiry.value.split('/').map(Number)
   const currentYear = new Date().getFullYear() % 100
   const currentMonth = new Date().getMonth() + 1
-  return (year > currentYear || (year === currentYear && month >= currentMonth))
+  return year > currentYear || (year === currentYear && month >= currentMonth)
 })
 
 const isCVVValid = computed(() => {
@@ -87,11 +116,15 @@ const isCVVValid = computed(() => {
 })
 
 function formatCardNumber() {
-  cardNumber.value = cardNumber.value.replace(/\s+/g, '').replace(/(\d{4})/g, '$1 ').trim()
+  cardNumber.value = cardNumber.value
+    .replace(/\s+/g, '')
+    .replace(/(\d{4})/g, '$1 ')
+    .trim()
 }
 
 function formatExpiry() {
-  expiry.value = expiry.value.replace(/^([1-9]\/|[2-9])$/g, '0$1') // 3 -> 03
+  expiry.value = expiry.value
+    .replace(/^([1-9]\/|[2-9])$/g, '0$1') // 3 -> 03
     .replace(/^(0[1-9]|1[0-2])$/g, '$1/') // 11 -> 11/
     .replace(/^([0-1])([3-9])$/g, '0$1/$2') // 13 -> 01/3
     .replace(/^(\d{2})(\d{2})$/g, '$1/$2') // 1125 -> 11/25
@@ -191,7 +224,7 @@ input {
 }
 
 .submit-button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   padding: 10px;
