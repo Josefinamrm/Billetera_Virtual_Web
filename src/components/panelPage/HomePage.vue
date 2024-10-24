@@ -54,6 +54,8 @@
 </template>
 
 <script setup>
+import { ref, reactive, computed } from 'vue'
+import TransferComponent from '@/components/transferComponent.vue'
 import ConfirmTransferPopup from '../confirmTransferPopup.vue'
 
 const confirmPopup = ref(null)
@@ -78,13 +80,12 @@ const transactionGroups = ref([
     title: 'Ultima Semana',
     transactions: [
       { id: 6, name: 'Cine', date: 'Agosto 20, 6:22 PM', amount: 200, avatar: '../../Public/img.png' },
+      { id: 7, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' },
+      { id: 7, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' },
       { id: 7, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' }
     ]
   }
 ])
-
-import { ref, reactive, computed } from 'vue'
-import TransferComponent from '@/components/transferComponent.vue'
 
 const expenses = reactive({
   Ene: 85000,
@@ -95,7 +96,6 @@ const expenses = reactive({
   Jun: 26000,
 })
 const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun']
-
 
 const tooltipVisible = ref(false)
 const tooltipContent = ref('')
@@ -114,7 +114,6 @@ const hideTooltip = () => {
   tooltipVisible.value = false
 }
 
-
 const totalExpenses = computed(() => {
   return Object.values(expenses).reduce((acc, expense) => acc + expense, 0)
 })
@@ -122,7 +121,6 @@ const totalExpenses = computed(() => {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 
 .home-page {
   font-family: 'Inter', sans-serif;
@@ -149,17 +147,27 @@ const totalExpenses = computed(() => {
   flex: 0 0 auto;
 }
 
-
 .transactions-section {
   flex: 1;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 55px;
 }
 
 .transaction-list {
   overflow-y: auto;
   flex: 1;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.transaction-list::-webkit-scrollbar {
+  display: none;
 }
 
 h2 {
@@ -213,15 +221,12 @@ h3 {
   color: #F44336;
 }
 
-
 .expenses {
   background: white;
   border-radius: 8px;
-  padding: 0.2rem;
+  padding: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
-
 
 .amount {
   font-size: 1.8rem;

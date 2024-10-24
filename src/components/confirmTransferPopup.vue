@@ -1,7 +1,7 @@
 <template>
   <div v-if="isVisible" class="popup-overlay">
     <div class="popup-content">
-      <h3>¿Seguro que quiere realizar la transferencia?</h3>
+      <p>¿Seguro que quiere realizar la transferencia?</p>
       <div class="popup-actions">
         <button @click="confirm">Confirmar</button>
         <button @click="cancel">Cancelar</button>
@@ -47,8 +47,8 @@ defineExpose({ showPopup })
 
 .popup-content {
   background-color: white;
-  padding: 20px;
-  border-radius: 8px;
+  padding: 2rem;
+  border-radius: 10px;
   text-align: center;
 }
 

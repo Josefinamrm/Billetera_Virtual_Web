@@ -9,7 +9,7 @@ const initiateTransfer = () => {
 </script>
 
 <template>
-  <div class="transfers-section">
+  <div class="transfer-component transfers-section">
     <h2>Transferencia Rápida</h2>
     <div class="balance">
       <div>Balance Actual</div>
@@ -27,25 +27,37 @@ const initiateTransfer = () => {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.transfer-component {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 h2 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
 }
+
 .transfer-section {
   font-family: 'Inter', sans-serif;
 }
+
 .balance {
   background-color: #f0f0f0;
   padding: 1rem;
   border-radius: 10px;
   margin-bottom: 1rem;
 }
+
 .balance-amount {
   font-size: 1.8rem;
   font-weight: bold;
   margin: 0.25rem 0;
   color: #333;
 }
+
 .transfer-input {
   width: 100%;
   padding: 0.5rem;
@@ -55,10 +67,12 @@ h2 {
   font-size: 16px;
   background-color: #f0f0f0;
 }
+
 .transfer-buttons {
   display: flex;
   gap: 1rem;
 }
+
 .send-btn, .request-btn {
   flex: 1;
   padding: 0.5rem;
