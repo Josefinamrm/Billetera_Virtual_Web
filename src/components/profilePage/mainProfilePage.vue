@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import router from '@/router'
+
 export default {
   name: 'UserProfile',
   data() {
@@ -55,6 +57,7 @@ export default {
     handleSectionClick(index) {
       console.log(`Clicked on section: ${this.sections[index].title}`)
       // Add your navigation or action logic here
+      router.push(`/user/seguridad`)
     }
   }
 }
@@ -68,7 +71,6 @@ export default {
   flex-direction: column;
   position: relative;
   overflow: hidden;
-
 }
 
 .viewport {
@@ -104,7 +106,7 @@ h1 {
 }
 
 .profile-section {
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
   border-radius: 8px;
   padding: 15px;
   display: flex;
@@ -118,7 +120,7 @@ h1 {
 }
 
 .profile-section:hover {
-  background-color: #C0C0C0;
+  background-color: #c0c0c0;
 }
 
 .section-content {
