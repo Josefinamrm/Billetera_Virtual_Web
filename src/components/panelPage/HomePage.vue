@@ -1,8 +1,35 @@
 <template>
   <div class="home-page">
     <div class="financial-dashboard">
+      <div class="left-column">
+        <div class="transfer-section">
+          <transfer-component/>
+        </div>
+        <div class="expenses">
+          <h2>Gastos</h2>
+          <p class="label">Gastos Totales</p>
+          <h3 class="amount">${{ totalExpenses }}</h3>
+          <p class="period">6 meses</p>
+          <div class="chart">
+            <div
+              v-for="(expense, month) in expenses"
+              :key="month"
+              class="bar"
+              :style="{ height: `${expense / 1000}px` }"
+              @mouseover="showTooltip(month, expense, $event)"
+              @mouseout="hideTooltip"
+            ></div>
+          </div>
+          <div class="months">
+            <span v-for="month in months" :key="month">{{ month }}</span>
+          </div>
+          <div v-if="tooltipVisible" class="tooltip" :style="tooltipStyle">
+            {{ tooltipContent }}
+          </div>
+        </div>
+      </div>
       <div class="transactions-section">
-        <h2>Transacciones</h2>
+        <h2>Actividad Reciente</h2>
         <div class="transaction-list">
           <div v-for="(group, index) in transactionGroups" :key="index" class="transaction-group">
             <h3>{{ group.title }}</h3>
@@ -21,34 +48,13 @@
           </div>
         </div>
       </div>
-      <div class="right-column">
-        <div class="cards-section">
-          <h2>Tarjetas</h2>
-          <add-card-btn/>
-          <div class="card-scroll">
-            <div v-for="card in cards" :key="card.number" class="card-item">
-              <CreditCardDisplay
-                :card-number="card.number"
-                :card-name="card.name"
-                :card-expiry="card.validUntil"
-                :is-hidden="false"
-              />
-            </div>
-          </div>
-        </div>
-        <transfer-component/>
-      </div>
     </div>
     <ConfirmTransferPopup ref="confirmPopup" />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import ConfirmTransferPopup from '../confirmTransferPopup.vue'
-import AddCardBtn from '@/components/addCardBtn.vue'
-import TransferComponent from '@/components/transferComponent.vue'
-import CreditCardDisplay from '@/components/creditcard/CreditCardDisplay.vue'
 
 const confirmPopup = ref(null)
 
@@ -77,33 +83,46 @@ const transactionGroups = ref([
   }
 ])
 
-const cards = ref([
-  {
-    number: '4593 1111 1111 1111',
-    name: 'Junior Rambau',
-    validUntil: '10/25',
-    cvv: '123',
-    emissionDate: '01/22',
-  },
-  {
-    number: '5182 8224 6310 005',
-    name: 'Junior Rambau',
-    validUntil: '11/26',
-    cvv: '456',
-    emissionDate: '02/23',
-  },
-  {
-    number: '4111 1111 1111 1111',
-    name: 'Junior Rambau',
-    validUntil: '12/27',
-    cvv: '789',
-    emissionDate: '03/24',
-  },
-])
+import { ref, reactive, computed } from 'vue'
+import TransferComponent from '@/components/transferComponent.vue'
+
+const expenses = reactive({
+  Ene: 85000,
+  Feb: 18000,
+  Mar: 50000,
+  Abr: 19000,
+  May: 36000,
+  Jun: 26000,
+})
+const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun']
+
+
+const tooltipVisible = ref(false)
+const tooltipContent = ref('')
+const tooltipStyle = ref({})
+
+const showTooltip = (month, expense, event) => {
+  tooltipContent.value = `${month}: $${expense}`
+  tooltipVisible.value = true
+  tooltipStyle.value = {
+    left: `${event.clientX + 10}px`,
+    top: `${event.clientY + 10}px`
+  }
+}
+
+const hideTooltip = () => {
+  tooltipVisible.value = false
+}
+
+
+const totalExpenses = computed(() => {
+  return Object.values(expenses).reduce((acc, expense) => acc + expense, 0)
+})
 </script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 
 .home-page {
   font-family: 'Inter', sans-serif;
@@ -119,6 +138,18 @@ const cards = ref([
   height: 100%;
 }
 
+.left-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.transfer-section {
+  flex: 0 0 auto;
+}
+
+
 .transactions-section {
   flex: 1;
   overflow: hidden;
@@ -131,14 +162,9 @@ const cards = ref([
   flex: 1;
 }
 
-.right-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  overflow-y: auto;
+h2 {
+  margin-bottom: 1rem;
 }
-
 
 h3 {
   font-size: 1.2rem;
@@ -188,38 +214,65 @@ h3 {
 }
 
 
+.expenses {
+  background: white;
+  border-radius: 8px;
+  padding: 0.2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-.card-scroll {
+
+
+.amount {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 0.25rem 0;
+  color: #333;
+}
+
+.period {
+  color: #666;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.chart {
   display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  padding: 1rem 0;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 150px;
+  margin-top: 1rem;
+  position: relative;
 }
 
-.card-item {
-  flex: 0 0 auto;
+.bar {
+  width: 12%;
+  background-color: #4CAF50;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
 }
 
-/* Remove or comment out the existing .card styles */
-/*.card {
-  background-color: #333;
+.bar:hover {
+  opacity: 0.8;
+}
+
+.months {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.tooltip {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.8);
   color: white;
-  padding: 1.5rem;
-  border-radius: 10px;
-  margin-bottom: 1rem;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 1000;
+  white-space: pre-wrap;
 }
-
-.card-type {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-}
-
-.card-number {
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-}
-
-.card-name {
-  font-size: 0.9rem;
-}*/
 </style>

@@ -101,11 +101,8 @@ button {
   border: none;
   border-radius: 20px;
   cursor: pointer;
-  margin-top: 10px;
-  margin-bottom: 10px;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 10px auto;
   font-size: 12px;
 }
 

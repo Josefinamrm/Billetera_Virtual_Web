@@ -61,6 +61,7 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 .background-wrapper {
   min-height: 70vh;
   display: flex;
@@ -80,6 +81,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  font-family: 'Inter', sans-serif;
 }
 
 .profile-container {

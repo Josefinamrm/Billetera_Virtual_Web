@@ -135,8 +135,10 @@ const withdraw = () => {
 </script>
 
 <style scoped>
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 .investment-dashboard {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Inter', sans-serif;
   max-width: 1800px;
   padding: 1rem;
   display: flex;
@@ -146,14 +148,14 @@ const withdraw = () => {
 
 header {
   margin-bottom: 0.5rem;
-  text-align: center;
+  text-align: left;
 }
 
 h1 {
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
-  color: #111827;
   margin-bottom: 0.5rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
 }
 
 h2 {
@@ -229,7 +231,7 @@ main {
 }
 
 .positive {
-  color: #10B981;
+  color: #4CAF50;
 }
 
 .negative {
@@ -269,7 +271,7 @@ input {
 
 input:focus {
   outline: none;
-  border-color: #10B981;
+  border-color: #4CAF50;
 }
 
 .currency-symbol {
@@ -298,12 +300,12 @@ button {
 }
 
 .invest-btn {
-  background-color: #10B981;
+  background-color: #4CAF50;
   color: white;
 }
 
 .invest-btn:hover:not(:disabled) {
-  background-color: #059669;
+  background-color: #4CAF50;
   transform: translateY(-2px);
 }
 
