@@ -1,28 +1,6 @@
 <template>
   <div class="dashboard">
     <div class="left-column">
-      <div class="expenses">
-        <h2>Gastos</h2>
-        <p class="label">Gastos Totales</p>
-        <h3 class="amount">${{ totalExpenses }}</h3>
-        <p class="period">6 meses</p>
-        <div class="chart">
-          <div
-            v-for="(expense, month) in expenses"
-            :key="month"
-            class="bar"
-            :style="{ height: `${expense / 1000}px` }"
-            @mouseover="showTooltip(month, expense, $event)"
-            @mouseout="hideTooltip"
-          ></div>
-        </div>
-        <div class="months">
-          <span v-for="month in months" :key="month">{{ month }}</span>
-        </div>
-        <div v-if="tooltipVisible" class="tooltip" :style="tooltipStyle">
-          {{ tooltipContent }}
-        </div>
-      </div>
       <div class="contacts">
         <h2>Contactos</h2>
         <ul>
@@ -68,45 +46,17 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref } from 'vue'
 import TransferComponent from '@/components/transferComponent.vue'
 
-const expenses = reactive({
-  Ene: 85000,
-  Feb: 18000,
-  Mar: 50000,
-  Abr: 19000,
-  May: 36000,
-  Jun: 26000,
-})
-const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun']
+
 const contacts = [
   { id: 1, name: 'John Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
   { id: 2, name: 'Jim Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
   { id: 3, name: 'Jane Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
 ]
 
-const tooltipVisible = ref(false)
-const tooltipContent = ref('')
-const tooltipStyle = ref({})
 
-const showTooltip = (month, expense, event) => {
-  tooltipContent.value = `${month}: $${expense}`
-  tooltipVisible.value = true
-  tooltipStyle.value = {
-    left: `${event.clientX + 10}px`,
-    top: `${event.clientY + 10}px`
-  }
-}
-
-const hideTooltip = () => {
-  tooltipVisible.value = false
-}
-
-
-const totalExpenses = computed(() => {
-  return Object.values(expenses).reduce((acc, expense) => acc + expense, 0)
-})
 
 
 // New code for payments
@@ -158,7 +108,7 @@ const submitPayment = () => {
   flex: 1;
 }
 
-.expenses, .contacts, .transfers, .payments {
+.contacts, .transfers, .payments {
   background: white;
   border-radius: 8px;
   padding: 1.5rem;
@@ -184,66 +134,6 @@ h3 {
   color: #333;
 }
 
-.label {
-  color: #666;
-  font-size: 0.9rem;
-  margin-bottom: 0.25rem;
-}
-
-.amount {
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin: 0.25rem 0;
-  color: #333;
-}
-
-.period {
-  color: #666;
-  font-size: 0.8rem;
-  margin-bottom: 1rem;
-}
-
-.chart {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  height: 150px;
-  margin-top: 1rem;
-  position: relative;
-}
-
-.bar {
-  width: 12%;
-  background-color: #4CAF50;
-  border-radius: 4px 4px 0 0;
-  cursor: pointer;
-  transition: opacity 0.3s ease;
-}
-
-.bar:hover {
-  opacity: 0.8;
-}
-
-.months {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.5rem;
-  color: #666;
-  font-size: 0.8rem;
-}
-
-.tooltip {
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 5px 10px;
-  border-radius: 4px;
-  font-size: 14px;
-  pointer-events: none;
-  z-index: 1000;
-  white-space: pre-wrap;
-}
-
 
 form {
   display: flex;
@@ -252,10 +142,13 @@ form {
 }
 
 input, .select-input {
+  width: 100%;
   padding: 0.5rem;
+  margin-bottom: 1rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  border-radius: 20px;
+  font-size: 16px;
+  background-color: #f0f0f0;
 }
 
 
@@ -342,7 +235,7 @@ input, .select-input {
 .submit-btn {
   width: 100%;
   color:white;
-  background-color: black;
+  background-color: #333;;
   border-radius: 20px;
 
 }
@@ -356,9 +249,6 @@ input, .select-input {
     width: 100%;
   }
 
-  .chart {
-    height: 100px;
-  }
 
   .contacts li {
     flex-direction: column;
