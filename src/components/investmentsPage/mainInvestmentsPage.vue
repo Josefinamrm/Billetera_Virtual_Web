@@ -209,15 +209,11 @@ main {
   border-radius: 1rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   padding: 1.5rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   height: auto;
   min-height: 180px;
 }
 
-.summary-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
+
 
 .balance-amount, .profit-amount {
   font-size: clamp(1.25rem, 3vw, 1.75rem);
