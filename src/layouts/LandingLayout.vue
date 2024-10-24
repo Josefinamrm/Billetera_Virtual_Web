@@ -1,5 +1,12 @@
 <template>
   <div class="layout-container">
+    <!-- Logo -->
+    <div class="logo-container">
+      <RouterLink to="/" class="inline-block"> <!-- Use RouterLink to navigate to the landing page -->
+        <img src="../components/icons/vecteezy_green-lettuce-illustration_.jpg" alt="Company Logo" class="logo" />
+      </RouterLink>
+    </div>
+
     <!-- Main content area that will render child routes -->
     <RouterView />
 
@@ -39,6 +46,18 @@
   overflow: hidden;
 }
 
+.logo-container {
+  position: absolute;
+  top: 15px;
+  left: 70px; /* Increase the left value to move the logo towards the center */
+  z-index: 10;
+}
+
+.logo {
+  width: 60px;
+  height: auto;
+}
+
 .wave-container {
   position: absolute;
   bottom: 0;
@@ -70,6 +89,15 @@
 @media (max-width: 480px), (max-height: 600px) {
   .wave-container {
     height: 30%;
+  }
+
+  .logo-container {
+    top: 10px;
+    left: 10px;
+  }
+
+  .logo {
+    width: 40px;
   }
 }
 </style>
