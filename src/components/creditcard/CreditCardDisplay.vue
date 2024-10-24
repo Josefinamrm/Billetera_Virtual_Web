@@ -1,6 +1,6 @@
 <template>
   <div class="credit-card" :class="{ 'data-hidden': isHidden }">
-    <div class="card-content">
+    <div class="card-content" :class="{ 'visa-card-content': isVisa, 'mastercard-card-content': isMastercard }">
       <div class="card-front">
         <div class="card-header">
           <img
@@ -8,24 +8,26 @@
             :src="cardLogoImage"
             :alt="cardType"
             class="card-logo"
-            :class="{ 'visa-logo': isVisa }"
+            :class="{ 'visa-logo': isVisa, 'mastercard-logo': isMastercard }"
           />
         </div>
         <div class="card-number">{{ formattedCardNumber }}</div>
+        <div class="card-name">{{ cardName }}</div>
         <div class="card-details">
-          <div class="card-name">{{ cardName }}</div>
-          <div class="card-expiry">{{ cardExpiry }}</div>
-        </div>
-      </div>
-      <div class="card-back">
-        <div class="black-bar"></div>
-        <div class="cvv-container">
-          <div class="cvv" v-if="!isHidden">{{ cvv }}</div>
+          <div class="detail-group">
+            <div class="detail-label">VENCIMIENTO</div>
+            <div class="detail-value">{{ formattedExpiry }}</div>
+          </div>
+          <div class="detail-group">
+            <div class="detail-label">CVV</div>
+            <div class="detail-value">{{ formattedCVV }}</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { computed } from 'vue'
@@ -57,8 +59,15 @@ const props = defineProps({
 })
 
 const formattedCardNumber = computed(() => {
-  const number = props.cardNumber.replace(/\s/g, '')
-  return number.replace(/(\d{4})/g, '$1 ').trim()
+  return props.isHidden ? '•••• •••• •••• ••••' : props.cardNumber.replace(/(\d{4})/g, '$1 ').trim()
+})
+
+const formattedExpiry = computed(() => {
+  return props.isHidden ? '••/••' : props.cardExpiry
+})
+
+const formattedCVV = computed(() => {
+  return props.isHidden ? '•••' : props.cvv
 })
 
 const cardLogoImage = computed(() => {
@@ -70,31 +79,27 @@ const cardLogoImage = computed(() => {
 })
 
 const isVisa = computed(() => props.cardNumber.startsWith('4'))
+const isMastercard = computed(() => /^(51|52|53|54|55)/.test(props.cardNumber.replace(/\s/g, '')))
 
 const cardType = computed(() => {
   if (isVisa.value) return 'Visa'
-  if (cardLogoImage.value === mastercardLogo) return 'Mastercard'
-  if (cardLogoImage.value === amexLogo) return 'American Express'
+  if (isMastercard.value) return 'Mastercard'
+  if (/^(34|37)/.test(props.cardNumber.replace(/\s/g, ''))) return 'American Express'
   return 'Credit Card'
 })
-</script>
-
-<style scoped>
+</script><style scoped>
 .credit-card {
   width: 350px;
   height: 200px;
-  border: 2px solid black;
   border-radius: 10px;
   padding: 20px;
   background-color: white;
-  color: black;
+  color: #2c3e50;
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  perspective: 1000px;
+  font-family: Arial, sans-serif;
+  border: 1px solid black;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .card-content {
@@ -102,99 +107,87 @@ const cardType = computed(() => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
 }
 
-.credit-card:hover .card-content {
-  transform: rotateY(180deg);
+.visa-card-content {
+  margin-top: 5px;
 }
 
-.card-front, .card-back {
-  backface-visibility: hidden;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-}
-
-.card-back {
-  transform: rotateY(180deg);
-  background-color: white;
-  color: black;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding: 10px;
-}
-
-.black-bar {
-  width: 100%;
-  height: 40px;
-  background-color: black;
-  margin-bottom: 10px;
-}
-
-.cvv-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  margin-top: 20px;
-}
-
-.cvv {
-  font-size: 1.2rem;
-  font-weight: bold;
+.mastercard-card-content {
+  margin-top: -10px; /* Add specific margin for Mastercard if needed */
 }
 
 .card-header {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: flex-end;
+  align-items: flex-start;
+  margin-bottom: 10px;
 }
 
 .card-logo {
-  height: 30px;
+  height: 40px;
   object-fit: contain;
 }
 
 .visa-logo {
   height: 20px;
+  margin-top: 5px;
+}
+
+.mastercard-logo {
+  height: 50px;
+  margin-top: -5px; /* Adjust this to lower the image further */
 }
 
 .card-number {
   font-size: 1.5rem;
   letter-spacing: 2px;
   font-weight: bold;
-  text-align: center;
-  word-spacing: 0.5rem;
-  line-height: 1.2;
-  margin: 20px 0;
-}
-
-.card-details {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  text-align: left;
+  margin-bottom: 5px; /* Adjust margin for Mastercard alignment */
+  color: #2c3e50;
 }
 
 .card-name {
   font-size: 1rem;
   text-transform: uppercase;
+  margin-bottom: 15px; /* Adjust margin for Mastercard alignment */
+  color: #2c3e50;
   font-weight: bold;
 }
 
-.card-expiry {
+.card-details {
+  display: flex;
+  justify-content: space-between;
+}
+
+.detail-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  color: #7f8c8d;
+}
+
+.detail-value {
   font-size: 0.9rem;
   font-weight: bold;
+  color: #2c3e50;
+}
+
+.card-number,
+.card-name,
+.card-details {
+  padding-left: 10px;
 }
 
 .data-hidden .card-number,
 .data-hidden .card-name,
-.data-hidden .card-expiry,
-.data-hidden .cvv {
+.data-hidden .detail-value {
   filter: blur(4px);
-  pointer-events: none;
 }
 </style>
