@@ -26,10 +26,13 @@ const initiateTransfer = () => {
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 .transfer-component {
   max-width: 50vw;
   min-width: 30vw;
   margin: 0 auto;
+  font-family: Inter, sans-serif;
 }
 
 .transfer-input {
@@ -65,9 +68,7 @@ h2 {
   margin-bottom: 1rem;
 }
 
-.transfer-section {
-  font-family: 'Inter', sans-serif;
-}
+
 
 .balance {
   background-color: #f0f0f0;

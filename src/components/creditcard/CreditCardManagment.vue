@@ -2,10 +2,7 @@
   <div class="credit-card-management">
     <header class="header">
       <h1 class="title">Tarjetas</h1>
-      <button class="add-button" @click="$router.push('/user/nueva-tarjeta')">
-        <PlusIcon class="icon" />
-        Agregar Tarjetas
-      </button>
+    <add-card-btn />
     </header>
 
     <div class="visibility-toggle">
@@ -24,7 +21,8 @@
             :card-name="card.name"
             :card-expiry="card.validUntil"
             :is-hidden="isHidden"
-          />
+            :cvv="card.cvv"
+             />
           <button @click="confirmRemoveCard(index)" class="remove-button">
             <TrashIcon class="icon" />
           </button>
@@ -46,8 +44,9 @@
 
 <script setup>
 import { ref } from 'vue'
-import { PlusIcon, EyeIcon, EyeOffIcon, TrashIcon } from 'lucide-vue-next'
+import { EyeIcon, EyeOffIcon, TrashIcon } from 'lucide-vue-next'
 import CreditCardDisplay from './CreditCardDisplay.vue'
+import AddCardBtn from '@/components/addCardBtn.vue'
 
 const isHidden = ref(false)
 const showConfirmDialog = ref(false)

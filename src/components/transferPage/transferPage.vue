@@ -2,7 +2,10 @@
   <div class="dashboard">
     <div class="left-column">
       <div class="contacts">
-        <h2>Contactos</h2>
+        <div class="header">
+          <h2>Contactos</h2>
+          <AddContactBtn />
+        </div>
         <div class="contacts-list">
           <ul>
             <li v-for="contact in contacts" :key="contact.id">
@@ -13,6 +16,9 @@
               </div>
               <button type="button" class="btn btn-primary">Enviar</button>
               <button type="button" class="btn btn-outline">Solicitar</button>
+              <button type="button" class="btn btn-delete" @click="confirmDelete(contact)">
+                <i class="fas fa-trash-alt"></i>
+              </button>
             </li>
           </ul>
         </div>
@@ -44,24 +50,36 @@
         </form>
       </div>
     </div>
+
+    <div v-if="showConfirmation" class="confirmation-popup">
+      <div class="confirmation-content">
+        <p>¿Estás seguro de que quieres eliminar este contacto?</p>
+        <div class="confirmation-buttons">
+          <button @click="deleteContact" class="btn confirm-button">Eliminar</button>
+          <button @click="cancelDelete" class="btn cancel-button">Cancelar</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import TransferComponent from '@/components/transferComponent.vue'
+import AddContactBtn from '@/components/addContactBtn.vue'
 
-const contacts = [
+const contacts = ref([
   { id: 1, name: 'John Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
   { id: 2, name: 'Jim Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
   { id: 3, name: 'Jane Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
-  { id: 3, name: 'Jane Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
-
-]
+  { id: 4, name: 'Janet Doe', phone: '+54 911 6721 9021', avatar: '../../Public/img.png' },
+])
 
 const selectedService = ref('')
 const paymentAmount = ref('')
 const paymentMethod = ref('card')
+const showConfirmation = ref(false)
+const contactToDelete = ref(null)
 
 const services = [
   { id: 1, name: 'Electricidad' },
@@ -81,15 +99,34 @@ const submitPayment = () => {
   paymentAmount.value = ''
   paymentMethod.value = 'card'
 }
+
+const confirmDelete = (contact) => {
+  contactToDelete.value = contact
+  showConfirmation.value = true
+}
+
+const deleteContact = () => {
+  contacts.value = contacts.value.filter(c => c.id !== contactToDelete.value.id)
+  showConfirmation.value = false
+  contactToDelete.value = null
+}
+
+const cancelDelete = () => {
+  showConfirmation.value = false
+  contactToDelete.value = null
+}
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+
 .dashboard {
   display: flex;
   gap: 2rem;
   padding: 0.5rem;
   max-width: 1800px;
-  font-family: Arial, sans-serif;
+  font-family: Inter, sans-serif;
   cursor: default;
   height: auto;
   overflow: hidden;
@@ -109,9 +146,11 @@ const submitPayment = () => {
   padding: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 .payments {
   margin-top: 1rem;
 }
+
 .contacts {
   display: flex;
   flex-direction: column;
@@ -129,8 +168,6 @@ const submitPayment = () => {
   display: none;
 }
 
-
-
 .payments {
   height: 340px;
 }
@@ -146,6 +183,13 @@ h3 {
   margin-top: 1rem;
   margin-bottom: 0.5rem;
   color: #333;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 form {
@@ -205,7 +249,6 @@ input, .select-input {
 .btn {
   padding: 0.5rem 1rem;
   cursor: pointer;
-  font-size: 0.9rem;
   transition: background-color 0.3s, color 0.3s;
   border-radius: 20px;
 }
@@ -232,6 +275,18 @@ input, .select-input {
   background-color: #45a049;
 }
 
+.btn-delete {
+  background-color: transparent;
+  border: none;
+  color: #ff4d4d;
+  font-size: 1rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.btn-delete:hover {
+  color: #ff0000;
+}
+
 .payment-methods {
   display: flex;
   gap: 0.5rem;
@@ -249,6 +304,59 @@ input, .select-input {
   border-radius: 20px;
 }
 
+.confirmation-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirmation-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.confirm-button,
+.cancel-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.confirmation-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.confirm-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.confirm-button:hover {
+  background-color: #d32f2f;
+}
+
+.cancel-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.cancel-button:hover {
+  background-color: #e0e0e0;
+}
 @media (max-width: 768px) {
   .dashboard {
     flex-direction: column;
@@ -257,7 +365,7 @@ input, .select-input {
   }
 
   .contacts-list {
-    max-height: 50vh; /* Ajusta la altura máxima en dispositivos móviles */
+    max-height: 50vh;
   }
 
   .contacts li {
