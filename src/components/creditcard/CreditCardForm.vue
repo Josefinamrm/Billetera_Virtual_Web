@@ -14,8 +14,8 @@
         <form @submit.prevent="submitForm" class="card-form">
           <div class="form-group">
             <label for="cardNumber">Número de tarjeta</label>
-            <input type="text" id="cardNumber" v-model="cardNumber" @input="formatCardNumber" placeholder="Ingresar..." />
-            <span v-if="!isCardNumberValid" class="error">Número de tarjeta no válido</span>
+            <input type="text" id="cardNumber" v-model="cardNumber" @input="formatCardNumber" maxlength="19" placeholder="Ingresar..." />
+            <span v-if="cardNumber && !isCardNumberValid" class="error">Número de tarjeta no válido</span>
           </div>
 
           <div class="form-group">
@@ -25,14 +25,14 @@
 
           <div class="form-group">
             <label for="expiry">Vencimiento</label>
-            <input type="text" id="expiry" v-model="expiry" @input="formatExpiry" placeholder="MM/AA" />
-            <span v-if="!isExpiryValid" class="error">Fecha de vencimiento no válida</span>
+            <input type="text" id="expiry" v-model="expiry" @input="formatExpiry" maxlength="5" placeholder="MM/AA" />
+            <span v-if="expiry && !isExpiryValid" class="error">Fecha de vencimiento no válida</span>
           </div>
 
           <div class="form-group">
             <label for="cvv">Código de seguridad</label>
-            <input type="text" id="cvv" v-model="cvv" placeholder="Ingresar..." />
-            <span v-if="!isCVVValid" class="error">CVV no válido</span>
+            <input type="text" id="cvv" v-model="cvv" maxlength="3" placeholder="Ingresar..." />
+            <span v-if="cvv && !isCVVValid" class="error">CVV no válido</span>
           </div>
 
           <div class="form-group">
@@ -99,12 +99,12 @@ function formatExpiry() {
 }
 
 function goBack() {
-  console.log('Go back')
+  console.log('Regresar')
 }
 
 function submitForm() {
   if (isCardNumberValid.value && isExpiryValid.value && isCVVValid.value) {
-    console.log('Form submitted', {
+    console.log('Formulario enviado', {
       cardNumber: cardNumber.value,
       cardHolder: cardHolder.value,
       expiry: expiry.value,
@@ -112,7 +112,7 @@ function submitForm() {
       document: document.value
     })
   } else {
-    console.log('Form contains invalid data')
+    console.log('El formulario contiene datos no válidos')
   }
 }
 </script>
