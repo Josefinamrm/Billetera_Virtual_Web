@@ -263,10 +263,11 @@ main {
 input {
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 1.5rem;
-  border: 2px solid #D1D5DB;
-  border-radius: 0.5rem;
   font-size: 1rem;
   transition: border-color 0.3s ease;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: #f0f0f0;
 }
 
 input:focus {
