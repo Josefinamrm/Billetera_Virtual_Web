@@ -18,20 +18,26 @@
 
     <div class="card-scroll-container">
       <div class="card-scroll">
-        <div v-for="card in cards" :key="card.number" class="card-item">
+        <div v-for="(card, index) in cards" :key="card.number" class="card-item">
           <CreditCardDisplay
             :card-number="card.number"
             :card-name="card.name"
             :card-expiry="card.validUntil"
             :is-hidden="isHidden"
           />
-          <div class="card-info" :class="{ 'data-hidden': isHidden }">
-            <p><strong>Card Number:</strong> {{ card.number }}</p>
-            <p><strong>Card Name:</strong> {{ card.name }}</p>
-            <p><strong>Expiry Date:</strong> {{ card.validUntil }}</p>
-            <p><strong>CVV:</strong> {{ card.cvv }}</p>
-            <p><strong>Emission Date:</strong> {{ card.emissionDate }}</p>
-          </div>
+          <button @click="confirmRemoveCard(index)" class="remove-button">
+            <TrashIcon class="icon" />
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showConfirmDialog" class="confirm-dialog">
+      <div class="confirm-dialog-content">
+        <p>¿Estás seguro de que quieres eliminar esta tarjeta?</p>
+        <div class="confirm-dialog-buttons">
+          <button @click="removeCard" class="confirm-button">Eliminar</button>
+          <button @click="cancelRemoveCard" class="cancel-button">Cancelar</button>
         </div>
       </div>
     </div>
@@ -40,10 +46,12 @@
 
 <script setup>
 import { ref } from 'vue'
-import { PlusIcon, EyeIcon, EyeOffIcon } from 'lucide-vue-next'
+import { PlusIcon, EyeIcon, EyeOffIcon, TrashIcon } from 'lucide-vue-next'
 import CreditCardDisplay from './CreditCardDisplay.vue'
 
 const isHidden = ref(false)
+const showConfirmDialog = ref(false)
+const cardIndexToRemove = ref(null)
 
 const toggleVisibility = () => {
   isHidden.value = !isHidden.value
@@ -78,8 +86,25 @@ const cards = ref([
     cvv: '789',
     emissionDate: '03/24',
   },
-
 ])
+
+const confirmRemoveCard = (index) => {
+  cardIndexToRemove.value = index
+  showConfirmDialog.value = true
+}
+
+const removeCard = () => {
+  if (cardIndexToRemove.value !== null) {
+    cards.value.splice(cardIndexToRemove.value, 1)
+    cardIndexToRemove.value = null
+  }
+  showConfirmDialog.value = false
+}
+
+const cancelRemoveCard = () => {
+  cardIndexToRemove.value = null
+  showConfirmDialog.value = false
+}
 </script>
 
 <style scoped>
@@ -167,20 +192,80 @@ const cards = ref([
   align-items: center;
 }
 
-.card-info {
+.remove-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
   margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid #ccc;
+}
+
+.remove-button:hover {
+  background-color: #d32f2f;
+}
+
+.remove-button .icon {
+  margin-right: 0;
+}
+
+.confirm-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-dialog-content {
+  background-color: white;
+  padding: 2rem;
   border-radius: 10px;
-  background-color: #f9f9f9;
-  width: 100%;
+  text-align: center;
 }
 
-.card-info p {
-  margin: 0.5rem 0;
+.confirm-dialog-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 1rem;
 }
 
-.data-hidden p {
-  filter: blur(4px);
+.confirm-button,
+.cancel-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.confirm-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.confirm-button:hover {
+  background-color: #d32f2f;
+}
+
+.cancel-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.cancel-button:hover {
+  background-color: #e0e0e0;
 }
 </style>
