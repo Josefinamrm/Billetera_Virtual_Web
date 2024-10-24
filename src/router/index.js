@@ -1,7 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { createPinia } from 'pinia'
 import AuthLayout from '../layouts/AuthLayout.vue'
 import GuestLayout from '../layouts/GuestLayout.vue'
 import LandingLayout from '@/layouts/LandingLayout.vue'
+
+// Initialize Pinia
+const pinia = createPinia()
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,13 +70,6 @@ const router = createRouter({
           path: 'perfil',
           name: 'perfil',
           component: () => import('../components/profilePage/mainProfilePage.vue')
-          // children: [
-          //   {
-          //     path: 'seguridad',
-          //     name: 'seguridad',
-          //     component: () => import('../components/profilePage/securityPage.vue')
-          //   }
-          // ]
         },
         {
           path: 'seguridad',
