@@ -56,8 +56,7 @@ export default {
   methods: {
     handleSectionClick(index) {
       console.log(`Clicked on section: ${this.sections[index].title}`)
-      // Add your navigation or action logic here
-      router.push(`/user/seguridad`)
+      router.push(`/user/${this.sections[index].title.toLowerCase().replace(/\s/g, '-')}`)
     }
   }
 }

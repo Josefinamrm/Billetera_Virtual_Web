@@ -12,17 +12,31 @@
             <form class="change-password-form">
               <div class="form-group">
                 <label for="current-password">Contraseña actual</label>
-                <input type="password" id="current-password" />
+                <input
+                  type="password"
+                  id="current-password"
+                  v-model="document"
+                  placeholder="Ingresar..."
+                  required
+                />
                 <h4 class="text-center enter-with">¿Olvido su contraseña?</h4>
               </div>
               <div class="form-group">
                 <label for="new-password">Nueva contraseña</label>
-                <input type="password" id="new-password" />
+                <input type="password" id="new-password" placeholder="Ingresar..." required />
               </div>
               <div class="form-group">
                 <label for="confirm-password">Confirmar nueva contraseña</label>
-                <input type="password" id="confirm-password" />
+                <input
+                  type="password"
+                  id="confirm-password"
+                  placeholder="Ingresar..."
+                  @input="passwordsMatchError"
+                  required
+                />
+                <span v-if="passError" class="error">Las contraseñas deben coincidir</span>
               </div>
+              <button class="submit-button" @click="submitForm">Guardar</button>
             </form>
           </div>
         </div>
@@ -36,6 +50,7 @@ import router from '@/router'
 import { ref } from 'vue'
 
 const visible = ref(false)
+const passError = ref(false)
 
 const goBack = () => {
   router.go(-1)
@@ -43,6 +58,22 @@ const goBack = () => {
 
 const showForm = () => {
   visible.value = !visible.value
+}
+
+const passwordsMatchError = () => {
+  const newPassword = document.getElementById('new-password').value
+  const confirmPassword = document.getElementById('confirm-password').value
+  if (newPassword !== confirmPassword) {
+    passError.value = true
+  } else {
+    passError.value = false
+  }
+}
+
+const submitForm = () => {
+  if (!passError.value) {
+    console.log('Password changed')
+  }
 }
 </script>
 
@@ -82,7 +113,6 @@ button {
 }
 
 .security-container {
-  font-family: Arial, sans-serif;
   width: 100%;
   max-width: 1350px;
   padding: 20px;
@@ -95,8 +125,7 @@ h1 {
 }
 
 .section {
-  display: flex;
-  flex-direction: row;
+  font-weight: bold;
   gap: 15px;
   background-color: #d9d9d9;
   border-radius: 8px;
@@ -163,5 +192,22 @@ h4 {
   font-size: 14px;
   color: #2c3e50;
   margin-top: 5px;
+}
+
+.error {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+
+.submit-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
 }
 </style>
