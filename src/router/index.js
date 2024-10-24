@@ -78,6 +78,11 @@ const router = createRouter({
           path: 'seguridad',
           name: 'seguridad',
           component: () => import('../components/profilePage/securityPage.vue')
+        },
+        {
+          path: 'datos-de-tu-cuenta',
+          name: 'datos-de-tu-cuenta',
+          component: () => import('../components/profilePage/userData.vue')
         }
       ]
     }
