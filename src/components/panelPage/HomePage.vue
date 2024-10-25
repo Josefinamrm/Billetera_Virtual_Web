@@ -224,8 +224,9 @@ onMounted(() => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  overflow: scroll;
+  gap: 0.5rem;
+  overflow: hidden;
+
 }
 
 .transfer-section {

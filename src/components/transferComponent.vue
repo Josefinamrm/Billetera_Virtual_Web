@@ -186,7 +186,7 @@ export default {
   padding: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   height: 41vh;
-  overflow: scroll;
+  overflow: hidden;
 }
 
 h2 {
