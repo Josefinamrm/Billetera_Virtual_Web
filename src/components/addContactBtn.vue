@@ -8,7 +8,7 @@
         <form @submit.prevent="agregarContacto">
           <input v-model="nuevoContacto.nombre" type="text" placeholder="Nombre" required>
           <input v-model="nuevoContacto.telefono" type="tel" placeholder="Teléfono" required>
-          <input  v-model="nuevoContacto.cvu" type="text" placeholder="CVU" required>
+          <input v-model="nuevoContacto.cvu" type="text" placeholder="CVU" required>
           <input v-model="nuevoContacto.alias" type="text" placeholder="Alias" required>
           <div class="popup-buttons">
             <button type="button" @click="showPopup = false" class="btn btn-outline">Cancelar</button>
@@ -21,8 +21,9 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted, watch } from 'vue';
 import { useContactStore } from '@/stores/contactStore';
+import { useUserStore } from '@/stores/userStore';
 
 const showPopup = ref(false);
 const nuevoContacto = reactive({
@@ -33,6 +34,22 @@ const nuevoContacto = reactive({
 });
 
 const contactStore = useContactStore();
+const userStore = useUserStore();
+
+// Cargar los contactos del usuario actual al montar el componente
+onMounted(() => {
+  contactStore.loadContactsFromLocalStorage();
+});
+
+// Verificar si hay un usuario actual y cargar sus contactos
+watch(
+  () => userStore.currentUser,
+  (newUser) => {
+    if (newUser) {
+      contactStore.loadContactsFromLocalStorage();
+    }
+  }
+);
 
 const agregarContacto = () => {
   contactStore.addContact({

@@ -98,44 +98,40 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import CreditCard from './CreditCardDisplay.vue';
-import { useCardStore } from '@/stores/cardStore';
-import { useUserStore } from '@/stores/userStore';
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import CreditCard from './CreditCardDisplay.vue'
+import { useCardStore } from '@/stores/cardStore'
+import { useUserStore } from '@/stores/userStore'
 
-const router = useRouter();
-const cardStore = useCardStore();
-const userStore = useUserStore();
+const router = useRouter()
+const cardStore = useCardStore()
+const userStore = useUserStore()
 
 // Form fields
-const cardNumber = ref('');
-const cardHolder = ref('');
-const expiry = ref('');
-const cvv = ref('');
-const showErrorMessage = ref(false);
-const errorMessage = ref('');
+const cardNumber = ref('')
+const cardHolder = ref('')
+const expiry = ref('')
+const cvv = ref('')
+const showErrorMessage = ref(false)
+const errorMessage = ref('')
+const user = userStore.getUserData()
 
 onMounted(() => {
-  // Load user data on component mount
-  userStore.loadUser();
-
-  // Pre-fill the cardholder name with user's full name
-  const fullName = `${userStore.userData.nombre} ${userStore.userData.apellido}`.trim().toUpperCase();
-  cardHolder.value = fullName;
-});
+  cardHolder.value = `${user.nombre} ${user.apellido}`.trim().toUpperCase()
+})
 
 // Form formatting functions
 const formatCardNumber = () => {
   cardNumber.value = cardNumber.value
     .replace(/\s+/g, '')
     .replace(/(\d{4})/g, '$1 ')
-    .trim();
-};
+    .trim()
+}
 
 const formatCardHolder = () => {
-  cardHolder.value = cardHolder.value.toUpperCase();
-};
+  cardHolder.value = cardHolder.value.toUpperCase()
+}
 
 const formatExpiry = () => {
   expiry.value = expiry.value
@@ -143,37 +139,38 @@ const formatExpiry = () => {
     .replace(/^(0[1-9]|1[0-2])$/g, '$1/')
     .replace(/^([0-1])([3-9])$/g, '0$1/$2')
     .replace(/^(\d{2})(\d{2})$/g, '$1/$2')
-    .replace(/\/\//g, '/');
-};
+    .replace(/\/\//g, '/')
+}
 
-// Navigation
 const goBack = () => {
-  router.back();
-};
+  router.back()
+}
 
 const submitForm = () => {
-  const [month, year] = expiry.value.split('/');
-  const currentYear = new Date().getFullYear() % 100; // Get last two digits
-  const currentMonth = new Date().getMonth() + 1;
+  const [month, year] = expiry.value.split('/')
+  const currentYear = new Date().getFullYear() % 100 // Get last two digits
+  const currentMonth = new Date().getMonth() + 1
 
   if (
     !/^\d{2}\/\d{2}$/.test(expiry.value) ||
     month < '01' ||
     month > '12' ||
-    (parseInt(year) < currentYear || (parseInt(year) === currentYear && parseInt(month) < currentMonth))
+    parseInt(year) < currentYear ||
+    (parseInt(year) === currentYear && parseInt(month) < currentMonth)
   ) {
-    errorMessage.value = 'La fecha de vencimiento debe estar en formato MM/AA, ser válida y no vencida.';
-    showErrorMessage.value = true;
-    return;
+    errorMessage.value =
+      'La fecha de vencimiento debe estar en formato MM/AA, ser válida y no vencida.'
+    showErrorMessage.value = true
+    return
   }
 
-  const registeredName = `${userStore.userData.nombre} ${userStore.userData.apellido}`.trim().toUpperCase();
-  const submittedName = cardHolder.value.trim().toUpperCase();
+  const registeredName = `${user.nombre} ${user.apellido}`.trim().toUpperCase()
+  const submittedName = cardHolder.value.trim().toUpperCase()
 
   if (submittedName !== registeredName) {
-    errorMessage.value = 'El nombre del titular debe coincidir con el nombre registrado.';
-    showErrorMessage.value = true;
-    return;
+    errorMessage.value = 'El nombre del titular debe coincidir con el nombre registrado.'
+    showErrorMessage.value = true
+    return
   }
 
   try {
@@ -182,21 +179,21 @@ const submitForm = () => {
       name: cardHolder.value,
       validUntil: expiry.value,
       cvv: cvv.value
-    };
+    }
 
-    cardStore.addCard(newCard);
-    cardStore.saveCardsToLocalStorage();
-    router.push('/user/tarjetas');
+    cardStore.addCard(newCard)
+    cardStore.saveCardsToLocalStorage()
+    router.push('/user/tarjetas')
   } catch (error) {
-    console.error('Error saving card:', error);
-    errorMessage.value = 'Error al guardar la tarjeta. Por favor intenta nuevamente.';
-    showErrorMessage.value = true;
+    console.error('Error saving card:', error)
+    errorMessage.value = 'Error al guardar la tarjeta. Por favor intenta nuevamente.'
+    showErrorMessage.value = true
   }
-};
+}
 
 const closeErrorPopup = () => {
-  showErrorMessage.value = false;
-};
+  showErrorMessage.value = false
+}
 </script>
 
 <style scoped>

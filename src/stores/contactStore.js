@@ -1,46 +1,69 @@
 // src/stores/contactStore.js
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
-import { v4 as uuidv4 } from 'uuid'; // Import the uuid function
+import { ref, watch } from 'vue';
+import { v4 as uuidv4 } from 'uuid';
+import { useUserStore } from './userStore';
 
 export const useContactStore = defineStore('contactStore', () => {
+  const userStore = useUserStore();
   const contacts = ref([]);
 
-  const loadContacts = () => {
-    const storedContacts = JSON.parse(localStorage.getItem('contacts')) || [];
-    contacts.value = storedContacts;
+  const loadContactsFromLocalStorage = () => {
+    if (userStore.currentUser) {
+      const data = JSON.parse(
+        localStorage.getItem(`contacts_${userStore.currentUser.email}`)
+      );
+      contacts.value = data || [];
+    }
   };
 
   const saveContactsToLocalStorage = () => {
-    localStorage.setItem('contacts', JSON.stringify(contacts.value));
+    if (userStore.currentUser) {
+      localStorage.setItem(
+        `contacts_${userStore.currentUser.email}`,
+        JSON.stringify(contacts.value)
+      );
+    }
   };
 
   const addContact = (newContact) => {
     contacts.value.push({
-      id: uuidv4(), // Generate a unique ID using uuid
+      id: uuidv4(),
       ...newContact,
     });
-    saveContactsToLocalStorage(); // Save contacts to local storage after adding
+    saveContactsToLocalStorage();
   };
 
   const deleteContact = (contactId) => {
     contacts.value = contacts.value.filter(contact => contact.id !== contactId);
-    saveContactsToLocalStorage(); // Update local storage after deletion
+    saveContactsToLocalStorage();
   };
 
   const updateContact = (updatedContact) => {
     const index = contacts.value.findIndex(contact => contact.id === updatedContact.id);
     if (index !== -1) {
       contacts.value[index] = updatedContact;
-      saveContactsToLocalStorage(); // Save contacts to local storage after updating
+      saveContactsToLocalStorage();
     }
   };
 
+  watch(
+    () => userStore.currentUser,
+    (newUser) => {
+      if (newUser) {
+        loadContactsFromLocalStorage();
+      } else {
+        contacts.value = [];
+      }
+    }
+  );
+
   return {
     contacts,
-    loadContacts,
+    loadContactsFromLocalStorage,
     addContact,
     deleteContact,
     updateContact,
+    saveContactsToLocalStorage
   };
 });

@@ -181,9 +181,7 @@ const getTransactionIcon = (transaction) => {
 
 const hasTransactions = computed(() => activityStore.filteredTransactions.length > 0)
 
-const totalBalance = computed(() => {
-  return financialStore.balanceTotal + financialStore.inversionTotal
-})
+
 
 watch(() => activityStore.transactions, () => {
   calculateLast6MonthsExpenses()
