@@ -58,42 +58,22 @@ const props = defineProps({
   }
 })
 const formattedCardNumber = computed(() => {
-  const cardNumber = props.cardNumber.replace(/\s/g, '') // Remove any existing spaces
-
-  // Ensure it's a valid card number (numeric and up to 16 digits)
-  if (!/^\d{0,16}$/.test(cardNumber)) {
-    return 'Número de tarjeta no válido'
-  }
-
-  // Return masked or formatted number based on visibility
+  const cardNumber = props.cardNumber.replace(/\s/g, '').slice(0, 16) // Limit to 16 digits
   return props.isHidden
     ? '•••• •••• •••• ••••'
-    : cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ').trim() // Add spaces every 4 digits
+    : cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ').trim() // Format in groups of 4
 })
 
 const formattedExpiry = computed(() => {
-  const expiry = props.cardExpiry
-
-  // Validate expiry format MM/YY or MM/YYYY
-  if (!/^\d{2}\/\d{2}$/.test(expiry)) {
-    return'Fecha de vencimiento no válida'
-  }
-
-  // Return masked or formatted expiry based on visibility
+  const expiry = props.cardExpiry.slice(0, 5) // Limit to MM/YY format
   return props.isHidden ? '••/••' : expiry
 })
 
 const formattedCVV = computed(() => {
-  const cvv = props.cvv
-
-  // Ensure it's a valid CVV (numeric and exactly 3 digits)
-  if (!/^\d{3}$/.test(cvv)) {
-    return 'CVV no válido'
-  }
-
-  // Return masked or formatted CVV based on visibility
+  const cvv = props.cvv.slice(0, 3) // Limit to 3 digits
   return props.isHidden ? '•••' : cvv
 })
+
 
 
 const cardLogoImage = computed(() => {
@@ -166,7 +146,7 @@ const cardType = computed(() => {
 }
 
 .card-number {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   letter-spacing: 2px;
   font-weight: bold;
   text-align: left;
