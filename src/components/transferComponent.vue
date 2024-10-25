@@ -185,7 +185,7 @@ export default {
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  height: 41vh;
+  height: 39vh;
   overflow: hidden;
 }
 
@@ -210,7 +210,7 @@ h2 {
 
 .transfer-input {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.5rem;
   margin-bottom: 1rem;
   border: 1px solid #ccc;
   border-radius: 20px;
