@@ -31,6 +31,7 @@
               @input="formatCardNumber"
               maxlength="19"
               placeholder="Ingresar..."
+              required
             />
           </div>
 
@@ -42,6 +43,7 @@
               v-model="cardHolder"
               @input="formatCardHolder"
               placeholder="Ingresar el nombre como figura en la tarjeta..."
+              required
             />
           </div>
 
@@ -54,6 +56,7 @@
               @input="formatExpiry"
               maxlength="5"
               placeholder="MM/AA"
+              required
             />
           </div>
 
@@ -65,6 +68,7 @@
               v-model="cvv"
               maxlength="3"
               placeholder="Ingresar..."
+              required
             />
           </div>
 
@@ -158,7 +162,7 @@ const submitForm = () => {
     month > '12' ||
     (parseInt(year) < currentYear || (parseInt(year) === currentYear && parseInt(month) < currentMonth))
   ) {
-    errorMessage.value = 'La fecha de vencimiento debe estar en formato MM/AA, ser válida y no pasada.';
+    errorMessage.value = 'La fecha de vencimiento debe estar en formato MM/AA, ser válida y no vencida.';
     showErrorMessage.value = true;
     return;
   }
@@ -189,8 +193,6 @@ const submitForm = () => {
     showErrorMessage.value = true;
   }
 };
-
-
 
 const closeErrorPopup = () => {
   showErrorMessage.value = false;
