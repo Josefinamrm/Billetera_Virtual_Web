@@ -185,7 +185,7 @@ export default {
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  height: 39vh;
+  height: auto;
   overflow: hidden;
 }
 
