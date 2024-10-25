@@ -147,13 +147,25 @@ const goBack = () => {
   router.back();
 };
 
-// Form submission
 const submitForm = () => {
-  // Get the registered user's name from the store
+  const [month, year] = expiry.value.split('/');
+  const currentYear = new Date().getFullYear() % 100; // Get last two digits
+  const currentMonth = new Date().getMonth() + 1;
+
+  if (
+    !/^\d{2}\/\d{2}$/.test(expiry.value) ||
+    month < '01' ||
+    month > '12' ||
+    (parseInt(year) < currentYear || (parseInt(year) === currentYear && parseInt(month) < currentMonth))
+  ) {
+    errorMessage.value = 'La fecha de vencimiento debe estar en formato MM/AA, ser válida y no pasada.';
+    showErrorMessage.value = true;
+    return;
+  }
+
   const registeredName = `${userStore.userData.nombre} ${userStore.userData.apellido}`.trim().toUpperCase();
   const submittedName = cardHolder.value.trim().toUpperCase();
 
-  // Check if the submitted name matches the registered name
   if (submittedName !== registeredName) {
     errorMessage.value = 'El nombre del titular debe coincidir con el nombre registrado.';
     showErrorMessage.value = true;
@@ -161,7 +173,6 @@ const submitForm = () => {
   }
 
   try {
-    // Create new card object
     const newCard = {
       number: cardNumber.value.replace(/\s/g, ''),
       name: cardHolder.value,
@@ -169,13 +180,8 @@ const submitForm = () => {
       cvv: cvv.value
     };
 
-    // Add card to store
     cardStore.addCard(newCard);
-
-    // Save to localStorage
     cardStore.saveCardsToLocalStorage();
-
-    // Reset form and navigate back
     router.push('/user/tarjetas');
   } catch (error) {
     console.error('Error saving card:', error);
@@ -183,6 +189,8 @@ const submitForm = () => {
     showErrorMessage.value = true;
   }
 };
+
+
 
 const closeErrorPopup = () => {
   showErrorMessage.value = false;
