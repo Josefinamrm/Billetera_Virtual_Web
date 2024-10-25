@@ -16,10 +16,26 @@
         <input type="email" id="email" v-model="email" placeholder="Ingrese su email *" required>
       </div>
       <div class="form-group">
-        <input type="password" id="password" v-model="password" placeholder="Ingrese su contraseña *" required>
+        <div class="password-input-container">
+          <input :type="showPassword ? 'text' : 'password'" id="password" v-model="password" placeholder="Ingrese su contraseña" required />
+          <img
+            :src="showPassword ? viewIcon : hideIcon"
+            alt="Toggle password visibility"
+            class="password-toggle"
+            @click="togglePasswordVisibility"
+          />
+        </div>
       </div>
       <div class="form-group">
-        <input type="password" id="confirmPassword" v-model="confirmPassword" placeholder="Vuelva a ingresar su contraseña *" required>
+        <div class="password-input-container">
+          <input :type="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" v-model="confirmPassword" placeholder="Vuelva a ingresar su contraseña" required />
+          <img
+            :src="showConfirmPassword ? viewIcon : hideIcon"
+            alt="Toggle password visibility"
+            class="password-toggle"
+            @click="toggleConfirmPasswordVisibility"
+          />
+        </div>
       </div>
       <button type="submit">Registrarse</button>
       <h5 class="text-center enter-with">
@@ -33,6 +49,8 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/userStore.js'; // Adjust the path as necessary
+import viewIcon from './icons/view.png';
+import hideIcon from './icons/hide.png';
 
 const nombre = ref('');
 const apellido = ref('');
@@ -40,6 +58,8 @@ const documento = ref('');
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -64,6 +84,14 @@ const handleRegister = () => {
   userStore.setUser(userData);
   console.log('Registro de usuario:', userData);
   router.push('/user/panel');
+};
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value;
+};
+
+const toggleConfirmPasswordVisibility = () => {
+  showConfirmPassword.value = !showConfirmPassword.value;
 };
 </script>
 <style scoped>
@@ -134,5 +162,19 @@ button:hover {
   font-size: 14px;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
 }
 </style>

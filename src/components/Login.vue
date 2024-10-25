@@ -7,13 +7,15 @@
         <input type="email" id="email" v-model="email" placeholder="Ingrese su email" required />
       </div>
       <div class="form-group">
-        <input
-          type="password"
-          id="password"
-          v-model="password"
-          placeholder="Ingrese su contraseña"
-          required
-        />
+        <div class="password-input-container">
+          <input :type="showPassword ? 'text' : 'password'" id="password" v-model="password" placeholder="Ingrese su contraseña" required />
+          <img
+            :src="showPassword ? viewIcon : hideIcon"
+            alt="Toggle password visibility"
+            class="password-toggle"
+            @click="togglePasswordVisibility"
+          />
+        </div>
       </div>
       <button type="submit">Ingresar</button>
       <button type="button" class="register-button" @click="handleRegister">Registrarse</button>
@@ -32,6 +34,8 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/userStore'; // Import userStore
+import viewIcon from './icons/view.png';
+import hideIcon from './icons/hide.png';
 
 const email = ref('');
 const password = ref('');
@@ -39,6 +43,7 @@ const showErrorMessage = ref(false);
 const errorMessage = ref('');
 const router = useRouter();
 const userStore = useUserStore(); // Initialize userStore
+const showPassword = ref(false);
 
 const handleLogin = () => {
   const user = userStore.userData; // Get user data from the store
@@ -57,6 +62,10 @@ const handleRegister = () => {
 
 const closeErrorPopup = () => {
   showErrorMessage.value = false;
+};
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value;
 };
 </script>
 
@@ -161,5 +170,19 @@ button:hover {
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  width: 20px; /* Ajusta según el tamaño de tu imagen */
+  height: 20px; /* Ajusta según el tamaño de tu imagen */
 }
 </style>
