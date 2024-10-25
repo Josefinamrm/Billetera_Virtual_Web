@@ -1,11 +1,100 @@
+<template>
+  <div class="home-page">
+    <div class="financial-dashboard">
+      <div class="left-column">
+        <div class="transfer-section">
+          <transfer-component />
+        </div>
+        <div class="expenses">
+          <h2>Gastos</h2>
+          <p class="label">Gastos Totales (últimos 6 meses)</p>
+          <h3 class="amount">${{ totalExpenses }}</h3>
+          <p class="period">{{ currentPeriod }}</p>
+          <div class="chart">
+            <div
+              v-for="(expense, month) in last6MonthsExpenses"
+              :key="month"
+              class="bar"
+              :style="{ height: `${(expense / maxExpense) * 150}px` }"
+              @mouseover="showTooltip(month, expense, $event)"
+              @mouseout="hideTooltip"
+            ></div>
+          </div>
+          <div class="months">
+            <span v-for="month in Object.keys(last6MonthsExpenses)" :key="month">{{ month }}</span>
+          </div>
+          <div v-if="tooltipVisible" class="tooltip" :style="tooltipStyle">
+            {{ tooltipContent }}
+          </div>
+        </div>
+      </div>
+      <div class="transactions-section">
+        <h2>Actividad</h2>
+        <div class="filters">
+          <div class="search-bar">
+            <input
+              v-model="searchQuery"
+              @input="updateSearchQuery"
+              type="text"
+              placeholder="Buscar..."
+            />
+          </div>
+          <div class="date-filter">
+            <input
+              type="date"
+              v-model="startDate"
+              @change="updateDateRange"
+              placeholder="Fecha inicio"
+            />
+            <input
+              type="date"
+              v-model="endDate"
+              @change="updateDateRange"
+              placeholder="Fecha fin"
+            />
+          </div>
+        </div>
+        <div class="transaction-list">
+          <div v-if="hasTransactions">
+            <div
+              v-for="transaction in activityStore.filteredTransactions"
+              :key="transaction.id"
+              class="transaction-item"
+            >
+              <div class="transaction-info">
+                <img :src="getTransactionIcon(transaction)" :alt="transaction.name" class="avatar" />
+                <div>
+                  <div class="transaction-name">{{ transaction.name }}</div>
+                  <div class="transaction-date">{{ formatDate(transaction.date) }}</div>
+                </div>
+              </div>
+              <div
+                :class="['transaction-amount', transaction.amount > 0 ? 'positive' : 'negative']"
+              >
+                {{ transaction.amount > 0 ? '+' : '' }}${{ Math.abs(transaction.amount).toFixed(2) }}
+              </div>
+            </div>
+          </div>
+          <div v-else>
+            <p>No hay actividad para mostrar</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ConfirmTransferPopup ref="confirmPopup" />
+  </div>
+</template>
+
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useActivityStore } from '@/stores/userActivityStore.js'
+import { useFinancialStore } from '@/stores/userFinancialStore.js'
 import TransferComponent from '@/components/transferComponent.vue'
-import ConfirmTransferPopup from '../confirmTransferPopup.vue'
+import ConfirmTransferPopup from '@/components/confirmTransferPopup.vue'
 
 const confirmPopup = ref(null)
 const activityStore = useActivityStore()
+const financialStore = useFinancialStore()
 
 const searchQuery = ref('')
 const startDate = ref('')
@@ -82,15 +171,19 @@ const formatDate = (dateString) => {
 
 const getTransactionIcon = (transaction) => {
   if (transaction.amount > 0) {
-    return '../../Public/deposit-icon.png'
+    return '/deposit-icon.png'
   } else if (transaction.name.toLowerCase().includes('transferencia')) {
-    return '../../Public/transfer-icon.png'
+    return '/transfer-icon.png'
   } else {
-    return '../../Public/expense-icon.png'
+    return '/expense-icon.png'
   }
 }
 
 const hasTransactions = computed(() => activityStore.filteredTransactions.length > 0)
+
+const totalBalance = computed(() => {
+  return financialStore.balanceTotal + financialStore.inversionTotal
+})
 
 watch(() => activityStore.transactions, () => {
   calculateLast6MonthsExpenses()
@@ -101,100 +194,13 @@ onMounted(() => {
 })
 </script>
 
-<template>
-  <div class="home-page">
-    <div class="financial-dashboard">
-      <div class="left-column">
-        <div class="transfer-section">
-          <transfer-component />
-        </div>
-        <div class="expenses">
-          <h2>Gastos</h2>
-          <p class="label">Gastos Totales (últimos 6 meses)</p>
-          <h3 class="amount">${{ totalExpenses }}</h3>
-          <p class="period">{{ currentPeriod }}</p>
-          <div class="chart">
-            <div
-              v-for="(expense, month) in last6MonthsExpenses"
-              :key="month"
-              class="bar"
-              :style="{ height: `${(expense / maxExpense) * 150}px` }"
-              @mouseover="showTooltip(month, expense, $event)"
-              @mouseout="hideTooltip"
-            ></div>
-          </div>
-          <div class="months">
-            <span v-for="month in Object.keys(last6MonthsExpenses)" :key="month">{{ month }}</span>
-          </div>
-          <div v-if="tooltipVisible" class="tooltip" :style="tooltipStyle">
-            {{ tooltipContent }}
-          </div>
-        </div>
-      </div>
-      <div class="transactions-section">
-        <h2>Actividad</h2>
-        <div class="filters">
-          <div class="search-bar">
-            <input
-              v-model="searchQuery"
-              @input="updateSearchQuery"
-              type="text"
-              placeholder="Buscar..."
-            />
-          </div>
-          <div class="date-filter">
-            <input
-              type="date"
-              v-model="startDate"
-              @change="updateDateRange"
-              placeholder="Fecha inicio"
-            />
-            <input
-              type="date"
-              v-model="endDate"
-              @change="updateDateRange"
-              placeholder="Fecha fin"
-            />
-          </div>
-        </div>
-        <div class="transaction-list">
-          <div v-if="hasTransactions">
-            <div
-              v-for="transaction in activityStore.filteredTransactions"
-              :key="transaction.id"
-              class="transaction-item"
-            >
-              <div class="transaction-info">
-                <img :src="getTransactionIcon(transaction)" :alt="transaction.name" class="avatar" />
-                <div>
-                  <div class="transaction-name">{{ transaction.name }}</div>
-                  <div class="transaction-date">{{ formatDate(transaction.date) }}</div>
-                </div>
-              </div>
-              <div
-                :class="['transaction-amount', transaction.amount > 0 ? 'positive' : 'negative']"
-              >
-                {{ transaction.amount > 0 ? '+' : '' }}${{ Math.abs(transaction.amount) }}
-              </div>
-            </div>
-          </div>
-          <div v-else>
-            <p>No hay actividad para mostrar</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <ConfirmTransferPopup ref="confirmPopup" />
-  </div>
-</template>
-
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 .home-page {
   font-family: 'Inter', sans-serif;
-  height: 100%;
-  overflow: hidden;
+  height: auto;
+  overflow: auto;
   padding: 1rem;
   cursor: default;
 }
@@ -212,10 +218,12 @@ onMounted(() => {
   gap: 0.5rem;
   overflow: hidden;
 }
+
 .transaction-list p {
   text-align: center;
   color: gray;
 }
+
 .transfer-section {
   flex: 0 0 auto;
 }
@@ -230,6 +238,7 @@ onMounted(() => {
   padding: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 55px;
+  max-height: 750px;
 }
 
 .transaction-list {
@@ -270,7 +279,6 @@ h3 {
 .avatar {
   width: 40px;
   height: 40px;
-
 }
 
 .transaction-name {
@@ -294,11 +302,15 @@ h3 {
   color: #f44336;
 }
 
-.expenses {
+.expenses, .balance-section {
   background: white;
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.balance-section {
+  margin-bottom: 1rem;
 }
 
 .amount {
@@ -308,7 +320,7 @@ h3 {
   color: #333;
 }
 
-.period {
+.period, .label {
   color: #666;
   font-size: 0.8rem;
   margin-bottom: 1rem;

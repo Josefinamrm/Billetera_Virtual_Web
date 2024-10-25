@@ -22,14 +22,14 @@
           </div>
           <div class="summary-card">
             <h2>Balance Actual</h2>
-            <p class="profit-amount">{{ currentBalance }}</p> <!-- Use computed property here -->
+            <p class="profit-amount">{{ currentBalance }}</p>
           </div>
         </section>
 
         <div class="right-section">
           <section class="chart-section">
             <div class="chart-header">
-              <h2>Historial de Ganancias</h2>
+              <h2>Historial de Inversiones</h2>
             </div>
             <div class="chart-container">
               <canvas ref="chartCanvas"></canvas>
@@ -62,7 +62,8 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
-import { useFinancialStore } from '@/stores/userFinancialStore.js'; // Import the Pinia store
+import { useFinancialStore } from '@/stores/userFinancialStore.js';
+import { useActivityStore } from '@/stores/userActivityStore.js';
 import Chart from 'chart.js/auto';
 
 const chartCanvas = ref(null);
@@ -70,56 +71,56 @@ const amount = ref('');
 const message = ref('');
 const isSuccess = ref(true);
 
-const financialStore = useFinancialStore(); // Use the Pinia store
+const financialStore = useFinancialStore();
+const activityStore = useActivityStore();
 
-// Map Pinia store values
 const currentBalance = computed(() => {
-  return `$${financialStore.balanceTotal}`; // Will display the total balance
+  return `$${financialStore.balanceTotal.toFixed(2)}`;
 });
 
 const balanceChange = computed(() => {
-  const investment = financialStore.inversionTotal; // Current investment ($2000)
-  const profit = financialStore.gananciasTotales; // Total profit ($300)
-
-  // Calculate the percentage of profit relative to the investment
-  const percentageChange = (profit / investment) * 100;
-
-  // Return formatted result with percentage symbol
+  const investment = financialStore.inversionTotal;
+  const profit = financialStore.gananciasTotales;
+  const percentageChange = investment===0 ? 0 : (profit / investment) * 100;
   return `${percentageChange.toFixed(2)}%`;
 });
 
-
 const isPositiveChange = computed(() => {
-  return balanceChange.value.startsWith('+');
+  return financialStore.gananciasTotales > 0;
 });
 
 const currentInvestment = computed(() => {
-  return `$${financialStore.inversionTotal}`; // Will display current investment
+  return `$${financialStore.inversionTotal.toFixed(2)}`;
 });
 
 const totalProfit = computed(() => {
-  return `$${financialStore.gananciasTotales}`; // Will display total profit
+  return `$${financialStore.gananciasTotales.toFixed(2)}`;
 });
 
 const profitPeriod = ref('Últimos 6 meses');
 
-const chartData = {
-  labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul'],
-  datasets: [{
-    label: 'Ganancias',
-    data: [50000, 55000, 52000, 60000, 58000, 65000, 75000],
-    borderColor: '#10B981',
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-    tension: 0.4,
-    fill: true
-  }]
-};
+let chart = null;
 
-onMounted(() => {
+const updateChart = () => {
   const ctx = chartCanvas.value.getContext('2d');
-  new Chart(ctx, {
+
+  if (chart) {
+    chart.destroy();
+  }
+
+  chart = new Chart(ctx, {
     type: 'line',
-    data: chartData,
+    data: {
+      labels: financialStore.ultimosSeisRegistros.map(registro => registro.fecha),
+      datasets: [{
+        label: 'Valor de la Inversión',
+        data: financialStore.ultimosSeisRegistros.map(registro => registro.valor),
+        borderColor: '#10B981',
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        tension: 0.4,
+        fill: true
+      }]
+    },
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -140,37 +141,60 @@ onMounted(() => {
             display: false
           },
           ticks: {
-            callback: (value) => `$${value / 1000}k`
+            callback: (value) => `$${value}`
           }
         }
       }
     }
   });
+};
+
+onMounted(() => {
+  updateChart();
 });
 
-// Watch for changes to financial store values and log them
-watch(() => financialStore.balanceTotal, (newValue) => {
-  console.log('Updated Balance Total:', `$${newValue}`);
-});
+watch(() => financialStore.historialInversiones, () => {
+  updateChart();
+}, { deep: true });
 
-watch(() => financialStore.inversionTotal, (newValue) => {
-  console.log('Updated Inversion Total:', `$${newValue}`);
-});
 
-watch(() => financialStore.gananciasTotales, (newValue) => {
-  console.log('Updated Ganancias Totales:', `$${newValue}`);
-});
 
 const invest = () => {
-  financialStore.updateInversionTotal(Number(amount.value)); // Update store
-  message.value = `Inversión de $${amount.value} realizada con éxito.`;
+  const investAmount = Number(amount.value);
+  if (investAmount > financialStore.balanceTotal) {
+    message.value = `Saldo insuficiente para invertir $${investAmount}.`;
+    isSuccess.value = false;
+    return;
+  }
+  financialStore.updateInversionTotal(investAmount);
+  financialStore.updateBalance(-investAmount);
+  activityStore.addTransaction({
+    id: Date.now(),
+    name: 'Inversión',
+    amount: -investAmount,
+    date: new Date().toISOString()
+  });
+  message.value = `Inversión de $${investAmount} realizada con éxito.`;
   isSuccess.value = true;
   amount.value = '';
 };
 
 const withdraw = () => {
-  financialStore.updateInversionTotal(-Number(amount.value)); // Update store
-  message.value = `Rescate de $${amount.value} realizado con éxito.`;
+  const withdrawAmount = Number(amount.value);
+  if (withdrawAmount > financialStore.inversionTotal) {
+    message.value = `No puedes retirar más de lo que has invertido.`;
+    isSuccess.value = false;
+    return;
+  }
+  financialStore.updateInversionTotal(-withdrawAmount);
+  financialStore.updateBalance(withdrawAmount);
+  activityStore.addTransaction({
+    id: Date.now(),
+    name: 'Rescate de Inversión',
+    amount: withdrawAmount,
+    date: new Date().toISOString()
+  });
+  message.value = `Rescate de $${withdrawAmount} realizado con éxito.`;
   isSuccess.value = true;
   amount.value = '';
 };
@@ -178,6 +202,7 @@ const withdraw = () => {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 .investment-dashboard {
   font-family: 'Inter', sans-serif;
   max-width: 1800px;
@@ -239,16 +264,17 @@ main {
 .chart-section {
   flex: 1;
   background-color: white;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  margin-bottom: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 3rem;
+  padding: 1rem;
 }
 
 .summary-card {
-  background-color: white;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   height: auto;
   min-height: 180px;
 }
@@ -359,6 +385,7 @@ input {
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s;
 }
+
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }

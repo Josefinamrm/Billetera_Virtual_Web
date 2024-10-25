@@ -1,9 +1,21 @@
-// stores/userActivityStore.js
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
 export const useActivityStore = defineStore('activity', () => {
-  const transactions = ref([])
+  const transactions = ref([
+    {
+      id: 1,
+      name: 'Depósito inicial',
+      amount: 1000,
+      date: '2023-07-01T10:00:00Z'
+    },
+    {
+      id: 2,
+      name: 'Inversión inicial',
+      amount: -2000,
+      date: '2023-07-01T11:00:00Z'
+    }
+  ])
   const searchQuery = ref('')
   const startDate = ref('')
   const endDate = ref('')
