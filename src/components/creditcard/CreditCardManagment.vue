@@ -69,10 +69,12 @@ const confirmRemoveCard = (index) => {
 const removeCard = () => {
   if (cardIndexToRemove.value !== null) {
     cardStore.removeCard(cardIndexToRemove.value); // Use the store method
+    cardStore.saveCardsToLocalStorage(); // Ensure local storage is updated
     cardIndexToRemove.value = null;
   }
   showConfirmDialog.value = false;
 };
+
 
 const cancelRemoveCard = () => {
   cardIndexToRemove.value = null;
