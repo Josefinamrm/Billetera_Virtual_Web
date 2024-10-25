@@ -46,6 +46,7 @@
 import router from '@/router'
 import { useUserStore } from '@/stores/userStore'
 const userStore = useUserStore()
+const currentUser = userStore.getUserData()
 export default {
   name: 'UserData',
   data() {
@@ -53,12 +54,12 @@ export default {
       userData: [
         {
           title: 'Usuario: ',
-          value: userStore.userData.apellido + userStore.userData.nombre,
+          value: currentUser.apellido + currentUser.nombre,
           editable: false
         },
         {
           title: 'Email: ',
-          value: userStore.userData.email,
+          value: currentUser.email,
           editable: false
         },
         {
@@ -74,9 +75,9 @@ export default {
         {
           title: 'Alias: ',
           value:
-            userStore.userData.nombre.toLowerCase() +
+            currentUser.nombre.toLowerCase() +
             '.' +
-            userStore.userData.apellido.toLowerCase(),
+            currentUser.apellido.toLowerCase(),
           editable: false
         }
       ]

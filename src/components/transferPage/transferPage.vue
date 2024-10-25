@@ -155,8 +155,8 @@ import { useCardStore } from '@/stores/cardStore';
 import { useUserStore } from '@/stores/userStore';
 import { useFinancialStore } from '@/stores/userFinancialStore';
 import { useActivityStore } from '@/stores/userActivityStore';
-import TransferComponent from '@/components/TransferComponent.vue';
-import AddContactBtn from '@/components/AddContactBtn.vue';
+import TransferComponent from '../transferComponent.vue';
+import AddContactBtn from '../addContactBtn.vue';
 
 const contactStore = useContactStore();
 const cardStore = useCardStore();

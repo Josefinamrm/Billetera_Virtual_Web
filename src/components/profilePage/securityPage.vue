@@ -45,6 +45,7 @@ import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 
 const userStore = useUserStore();
+const currentUser = userStore.getUserData()
 const visible = ref(false)
 const passError = ref(false)
 const goBack = () => {
@@ -57,7 +58,7 @@ const showForm = () => {
 
 const verifyCurrentPassword = () => {
   const currentPassword = document.getElementById('current-password').value;
-  if (currentPassword !== userStore.userData.password) {
+  if (currentPassword !== currentUser.password) {
     alert('La contraseña actual ingresada es incorrecta');
     return false;
   }
@@ -79,7 +80,7 @@ const submitForm = () => {
     return;
   }
   if (!passError.value) {
-    userStore.userData.password = document.getElementById('new-password').value;
+    userStore.changeUserPassword(document.getElementById('new-password').value);
     console.log('Password changed')
   }
 }

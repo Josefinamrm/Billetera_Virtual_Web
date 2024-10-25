@@ -45,15 +45,23 @@ const router = useRouter();
 const userStore = useUserStore(); // Initialize userStore
 const showPassword = ref(false);
 
+console.log(userStore.users);
+
 const handleLogin = () => {
-  const user = userStore.userData; // Get user data from the store
-  if (user && user.email === email.value && user.password === password.value) {
+  userStore.loadUsers(); // Load users from localStorage
+  const user = userStore.users.find(u => u.email === email.value);
+  if (user && user.password === password.value) {
     console.log('Login successful');
-    router.push('/user/panel');
+    userStore.setUser(user); // Set the current user in the store
+    handleLoginSuccess();
   } else {
     errorMessage.value = 'Error al iniciar sesión: credenciales inválidas.';
     showErrorMessage.value = true;
   }
+};
+
+const handleLoginSuccess = () => {
+  router.push('/user/panel');
 };
 
 const handleRegister = () => {
