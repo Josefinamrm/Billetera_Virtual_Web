@@ -41,22 +41,20 @@ export const useUserStore = defineStore('user', {
       localStorage.removeItem('currentUser');
     },
     isLoggedIn() {
-      return !!this.currentUser;
+      return this.currentUser !== null && this.currentUser !== undefined;
     },
     getUserFullName() {
       return this.currentUser ? `${this.currentUser.nombre} ${this.currentUser.apellido}`.trim() : '';
     },
     getUserData() {
       return this.currentUser;
-    }
-    ,
+    },
     changeUserPassword(newPassword) {
       if (!this.currentUser) {
         console.error('No user is currently logged in');
         return;
       }
 
-      // Update password in the users array
       const userIndex = this.users.findIndex(user => user.email === this.currentUser.email);
       if (userIndex !== -1) {
         this.users[userIndex].password = newPassword;
@@ -64,10 +62,8 @@ export const useUserStore = defineStore('user', {
         console.error('Current user not found in users array');
       }
 
-      // Update password for the current user
       this.currentUser.password = newPassword;
 
-      // Update localStorage
       localStorage.setItem('users', JSON.stringify(this.users));
       localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
     }
