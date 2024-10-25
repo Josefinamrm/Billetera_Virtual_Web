@@ -1,47 +1,73 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+// src/stores/activityStore.js
+import { defineStore } from 'pinia';
+import { ref, computed, watch } from 'vue';
+import { useUserStore } from './userStore';
 
 export const useActivityStore = defineStore('activity', () => {
-  const transactions = ref([
-    {
-      id: 1,
-      name: 'Depósito inicial',
-      amount: 1000,
-      date: '2023-07-01T10:00:00Z'
-    },
-    {
-      id: 2,
-      name: 'Inversión inicial',
-      amount: -2000,
-      date: '2023-07-01T11:00:00Z'
+  const userStore = useUserStore();
+
+  const transactions = ref([]);
+  const searchQuery = ref('');
+  const startDate = ref('');
+  const endDate = ref('');
+
+  const loadTransactionsFromLocalStorage = () => {
+    if (userStore.currentUser) {
+      const data = JSON.parse(
+        localStorage.getItem(`transactions_${userStore.currentUser.email}`)
+      );
+      transactions.value = data || [];
     }
-  ])
-  const searchQuery = ref('')
-  const startDate = ref('')
-  const endDate = ref('')
+  };
+
+  const saveTransactionsToLocalStorage = () => {
+    if (userStore.currentUser) {
+      localStorage.setItem(
+        `transactions_${userStore.currentUser.email}`,
+        JSON.stringify(transactions.value)
+      );
+    }
+  };
 
   const addTransaction = (transaction) => {
-    transactions.value.unshift(transaction)
-  }
+    transactions.value.unshift(transaction);
+    saveTransactionsToLocalStorage();
+  };
 
   const setSearchQuery = (query) => {
-    searchQuery.value = query
-  }
+    searchQuery.value = query;
+  };
 
   const setDateRange = (start, end) => {
-    startDate.value = start
-    endDate.value = end
-  }
+    startDate.value = start;
+    endDate.value = end;
+  };
 
   const filteredTransactions = computed(() => {
-    return transactions.value.filter(transaction => {
-      const matchesSearch = transaction.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-      const transactionDate = new Date(transaction.date)
-      const isInDateRange = (!startDate.value || transactionDate >= new Date(startDate.value)) &&
-        (!endDate.value || transactionDate <= new Date(endDate.value))
-      return matchesSearch && isInDateRange
-    }).sort((a, b) => new Date(b.date) - new Date(a.date))
-  })
+    return transactions.value
+      .filter(transaction => {
+        const matchesSearch = transaction.name
+          .toLowerCase()
+          .includes(searchQuery.value.toLowerCase());
+        const transactionDate = new Date(transaction.date);
+        const isInDateRange =
+          (!startDate.value || transactionDate >= new Date(startDate.value)) &&
+          (!endDate.value || transactionDate <= new Date(endDate.value));
+        return matchesSearch && isInDateRange;
+      })
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+  });
+
+  watch(
+    () => userStore.currentUser,
+    (newUser) => {
+      if (newUser) {
+        loadTransactionsFromLocalStorage();
+      } else {
+        transactions.value = [];
+      }
+    }
+  );
 
   return {
     transactions,
@@ -51,6 +77,8 @@ export const useActivityStore = defineStore('activity', () => {
     addTransaction,
     setSearchQuery,
     setDateRange,
-    filteredTransactions
-  }
-})
+    filteredTransactions,
+    loadTransactionsFromLocalStorage,
+    saveTransactionsToLocalStorage
+  };
+});

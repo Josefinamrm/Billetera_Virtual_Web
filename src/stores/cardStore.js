@@ -1,13 +1,12 @@
 // src/stores/cardStore.js
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
-import { useUserStore } from './userStore' // Ensure you import the user store
-
+import { useUserStore } from './userStore'
 export const useCardStore = defineStore('cardStore', () => {
-  const cards = ref([]) // Initialize with an empty array
+  const cards = ref([])
   const userStore = useUserStore()
 
-  // Load cards for the current user from localStorage
+
   const loadCardsFromLocalStorage = () => {
     if (userStore.currentUser) {
       cards.value =
@@ -15,7 +14,7 @@ export const useCardStore = defineStore('cardStore', () => {
     }
   }
 
-  // Save cards for the current user to localStorage
+
   const saveCardsToLocalStorage = () => {
     if (userStore.currentUser) {
       localStorage.setItem(
@@ -41,7 +40,7 @@ export const useCardStore = defineStore('cardStore', () => {
       if (newUser) {
         loadCardsFromLocalStorage()
       } else {
-        cards.value = [] // Clear cards if no user is logged in
+        cards.value = []
       }
     }
   )

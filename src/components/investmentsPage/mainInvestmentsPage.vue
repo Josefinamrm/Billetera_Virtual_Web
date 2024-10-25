@@ -63,6 +63,7 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { useFinancialStore } from '@/stores/userFinancialStore.js';
 import { useActivityStore } from '@/stores/userActivityStore.js';
+import { useUserStore } from '@/stores/userStore.js';
 import Chart from 'chart.js/auto';
 
 const chartCanvas = ref(null);
@@ -72,6 +73,7 @@ const isSuccess = ref(true);
 
 const financialStore = useFinancialStore();
 const activityStore = useActivityStore();
+const userStore = useUserStore();
 
 const currentBalance = computed(() => {
   return `$${financialStore.balanceTotal.toFixed(2)}`;
@@ -80,7 +82,7 @@ const currentBalance = computed(() => {
 const balanceChange = computed(() => {
   const investment = financialStore.inversionTotal;
   const profit = financialStore.gananciasTotales;
-  const percentageChange = investment===0 ? 0 : (profit / investment) * 100;
+  const percentageChange = investment === 0 ? 0 : (profit / investment) * 100;
   return `${percentageChange.toFixed(2)}%`;
 });
 
@@ -156,15 +158,15 @@ watch(() => financialStore.historialInversiones, () => {
   updateChart();
 }, { deep: true });
 
-
-
+// Manejar inversión
 const invest = () => {
   const investAmount = Number(amount.value);
-  if (investAmount > financialStore.balanceTotal) {
+  if (userStore.currentUser && investAmount > financialStore.balanceTotal) {
     message.value = `Saldo insuficiente para invertir $${investAmount}.`;
     isSuccess.value = false;
     return;
   }
+
   financialStore.updateInversionTotal(investAmount);
   financialStore.updateBalance(-investAmount);
   activityStore.addTransaction({
@@ -178,13 +180,15 @@ const invest = () => {
   amount.value = '';
 };
 
+// Manejar rescate
 const withdraw = () => {
   const withdrawAmount = Number(amount.value);
-  if (withdrawAmount > financialStore.inversionTotal) {
+  if (userStore.currentUser && withdrawAmount > financialStore.inversionTotal) {
     message.value = `No puedes retirar más de lo que has invertido.`;
     isSuccess.value = false;
     return;
   }
+
   financialStore.updateInversionTotal(-withdrawAmount);
   financialStore.updateBalance(withdrawAmount);
   activityStore.addTransaction({
@@ -198,6 +202,7 @@ const withdraw = () => {
   amount.value = '';
 };
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
