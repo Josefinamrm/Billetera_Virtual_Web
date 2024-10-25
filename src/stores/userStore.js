@@ -6,16 +6,25 @@ export const useUserStore = defineStore('user', {
     currentUser: null,
   }),
   actions: {
-    setUser(data) {
-      const existingUserIndex = this.users.findIndex(user => user.email === data.email);
-      if (existingUserIndex !== -1) {
-        this.users[existingUserIndex] = data;
+    registerUser(data) {
+      const existingUser = this.users.find(user => user.email === data.email);
+      if (existingUser) {
+        return false;
       } else {
         this.users.push(data);
+        localStorage.setItem('users', JSON.stringify(this.users));
+        localStorage.setItem('currentUser', JSON.stringify(data));
+        return true;
       }
-      this.currentUser = data;
-      localStorage.setItem('users', JSON.stringify(this.users));
-      localStorage.setItem('currentUser', JSON.stringify(data));
+    },
+    loginUser(email, password) {
+      const user = this.users.find(u => u.email === email && u.password === password);
+      if (user) {
+        this.currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        return true;
+      }
+      return false;
     },
     loadUsers() {
       const usersData = localStorage.getItem('users');

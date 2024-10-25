@@ -42,17 +42,16 @@ const password = ref('');
 const showErrorMessage = ref(false);
 const errorMessage = ref('');
 const router = useRouter();
-const userStore = useUserStore(); // Initialize userStore
+const userStore = useUserStore(); 
 const showPassword = ref(false);
 
 console.log(userStore.users);
 
 const handleLogin = () => {
-  userStore.loadUsers(); // Load users from localStorage
-  const user = userStore.users.find(u => u.email === email.value);
-  if (user && user.password === password.value) {
+  userStore.loadUsers(); 
+  const result = userStore.loginUser(email.value, password.value);
+  if (result) {
     console.log('Login successful');
-    userStore.setUser(user); // Set the current user in the store
     handleLoginSuccess();
   } else {
     errorMessage.value = 'Error al iniciar sesión: credenciales inválidas.';

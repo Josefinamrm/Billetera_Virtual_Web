@@ -39,7 +39,11 @@ const handleRegister = () => {
     password: password.value,
   };
 
-  userStore.setUser(userData);
+  const result = userStore.registerUser(userData);
+  if (!result) {
+    alert('El usuario ya existe');
+    return;
+  }
   console.log('Registro de usuario:', userData);
   router.push('/user/panel');
 };
