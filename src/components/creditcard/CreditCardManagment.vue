@@ -5,7 +5,7 @@
       <add-card-btn @add-card="addNewCard" />
     </header>
 
-    <div v-if="cardStore.cards.length > 0" class="visibility-toggle">
+    <div v-if="userCards.length > 0" class="visibility-toggle">
       <button @click="toggleVisibility" class="toggle-button">
         <EyeIcon v-if="!isHidden" />
         <EyeOffIcon v-else />
@@ -14,8 +14,8 @@
     </div>
 
     <div class="card-scroll-container">
-      <div v-if="cardStore.cards.length > 0" class="card-scroll">
-        <div v-for="(card, index) in cardStore.cards" :key="card.number" class="card-item">
+      <div v-if="userCards.length > 0" class="card-scroll">
+        <div v-for="(card, index) in userCards" :key="card.number" class="card-item">
           <CreditCardDisplay
             :card-number="card.number"
             :card-name="card.name"
@@ -46,16 +46,27 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { EyeIcon, EyeOffIcon, TrashIcon } from 'lucide-vue-next';
 import CreditCardDisplay from './CreditCardDisplay.vue';
 import AddCardBtn from '@/components/addCardBtn.vue';
 import { useCardStore } from '@/stores/cardStore'; // Adjust the path as necessary
+import { useUserStore } from '@/stores/userStore'; // Import userStore
 
 const cardStore = useCardStore();
+const userStore = useUserStore(); // Use userStore to access currentUser
 const isHidden = ref(false);
 const showConfirmDialog = ref(false);
 const cardIndexToRemove = ref(null);
+
+// Computed property to get cards for the current user
+const userCards = computed(() => {
+  // Filter cards based on the current user's context
+  return cardStore.cards.filter(card => {
+    // Assuming that each card has a userId or similar property to match with currentUser
+    return card.userId === userStore.currentUser.id; // Adjust the property as necessary
+  });
+});
 
 const toggleVisibility = () => {
   isHidden.value = !isHidden.value;
@@ -74,7 +85,6 @@ const removeCard = () => {
   }
   showConfirmDialog.value = false;
 };
-
 
 const cancelRemoveCard = () => {
   cardIndexToRemove.value = null;

@@ -2,7 +2,6 @@
   <div class="investment-dashboard">
     <header>
       <h1>Inversiones</h1>
-      <p>Gestiona y consulta tus productos de inversión</p>
     </header>
 
     <main>
