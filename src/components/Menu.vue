@@ -105,7 +105,7 @@
       </a>
     </nav>
     <div class="down">
-      <a class="cerrar-sesion" href="/">
+      <a class="cerrar-sesion" @click="logout">
         <svg
           width="20"
           height="20"
@@ -127,7 +127,23 @@
 </template>
 
 <script>
+import { useUserStore } from '@/stores/userStore';
+import { useRouter } from 'vue-router';
+
 export default {
+  setup() {
+    const userStore = useUserStore();
+    const router = useRouter();
+
+    const logout = () => {
+      userStore.resetUser();
+      router.push({ name: 'login' }); // Asume que tienes una ruta llamada 'login'
+    };
+
+    return {
+      logout
+    };
+  },
   methods: {
     navigateTo(route) {
       this.$router.push({ name: route })

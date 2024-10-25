@@ -2,7 +2,7 @@
   <div class="top-bar">
     <div class="right-content">
       <div @click="navigateTo('perfil')" class="user-profile">
-        <span>{{ userStore.userData.nombre }} {{ userStore.userData.apellido }}</span>
+        <span>{{ userStore.getUserFullName() }}</span>
       </div>
     </div>
   </div>
@@ -10,7 +10,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { useUserStore } from '../stores/userStore'; // Adjust the path as necessary
+import { useUserStore } from '../stores/userStore';
 
 const router = useRouter();
 const userStore = useUserStore();

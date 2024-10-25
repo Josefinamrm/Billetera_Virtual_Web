@@ -23,8 +23,10 @@
 <script>
 import router from '@/router'
 import { useUserStore } from '@/stores/userStore'
+
 const userStore = useUserStore()
-console.log('Hola', userStore.userData)
+const currentUser = userStore.getUserData()
+
 export default {
   name: 'UserInfo',
   data() {
@@ -32,15 +34,15 @@ export default {
       userInfo: [
         {
           title: 'Nombre: ',
-          value: userStore.userData.nombre
+          value: currentUser.nombre
         },
         {
           title: 'Apellido: ',
-          value: userStore.userData.apellido
+          value: currentUser.apellido
         },
         {
           title: 'DNI: ',
-          value: userStore.userData.documento
+          value: currentUser.documento
         },
         {
           title: 'Fecha de Nacimiento: ',
