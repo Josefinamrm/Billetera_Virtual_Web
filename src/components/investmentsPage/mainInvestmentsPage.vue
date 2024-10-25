@@ -10,19 +10,19 @@
         <section class="summary-section">
           <div class="summary-card">
             <h2>Inversión Actual</h2>
-            <p class="balance-amount">{{ inversionTotal }}</p>
+            <p class="balance-amount">{{ currentInvestment }}</p>
             <p class="balance-change" :class="{ 'positive': isPositiveChange, 'negative': !isPositiveChange }">
               {{ balanceChange }}
             </p>
           </div>
           <div class="summary-card">
             <h2>Ganancias Totales</h2>
-            <p class="profit-amount">{{ gananciasTotales }}</p>
+            <p class="profit-amount">{{ totalProfit }}</p>
             <p class="profit-period">{{ profitPeriod }}</p>
           </div>
           <div class="summary-card">
             <h2>Balance Actual</h2>
-            <p class="profit-amount">{{ balanceTotal }}</p>
+            <p class="profit-amount">{{ currentBalance }}</p> <!-- Use computed property here -->
           </div>
         </section>
 
@@ -61,8 +61,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useFinancialStore } from '../../stores/userFinancialStore.js'; // Import the Pinia store
+import { ref, onMounted, computed, watch } from 'vue';
+import { useFinancialStore } from '@/stores/userFinancialStore.js'; // Import the Pinia store
 import Chart from 'chart.js/auto';
 
 const chartCanvas = ref(null);
@@ -73,11 +73,34 @@ const isSuccess = ref(true);
 const financialStore = useFinancialStore(); // Use the Pinia store
 
 // Map Pinia store values
-const currentBalance = computed(() => `$${financialStore.balanceTotal}`);
-const balanceChange = ref('0');  // Placeholder for balance change
-const isPositiveChange = computed(() => balanceChange.value.startsWith('+'));
-const currentInvestment = computed(() => `$${financialStore.inversionTotal}`);
-const totalProfit = computed(() => `$${financialStore.gananciasTotales}`);
+const currentBalance = computed(() => {
+  return `$${financialStore.balanceTotal}`; // Will display the total balance
+});
+
+const balanceChange = computed(() => {
+  const investment = financialStore.inversionTotal; // Current investment ($2000)
+  const profit = financialStore.gananciasTotales; // Total profit ($300)
+
+  // Calculate the percentage of profit relative to the investment
+  const percentageChange = (profit / investment) * 100;
+
+  // Return formatted result with percentage symbol
+  return `${percentageChange.toFixed(2)}%`;
+});
+
+
+const isPositiveChange = computed(() => {
+  return balanceChange.value.startsWith('+');
+});
+
+const currentInvestment = computed(() => {
+  return `$${financialStore.inversionTotal}`; // Will display current investment
+});
+
+const totalProfit = computed(() => {
+  return `$${financialStore.gananciasTotales}`; // Will display total profit
+});
+
 const profitPeriod = ref('Últimos 6 meses');
 
 const chartData = {
@@ -125,6 +148,19 @@ onMounted(() => {
   });
 });
 
+// Watch for changes to financial store values and log them
+watch(() => financialStore.balanceTotal, (newValue) => {
+  console.log('Updated Balance Total:', `$${newValue}`);
+});
+
+watch(() => financialStore.inversionTotal, (newValue) => {
+  console.log('Updated Inversion Total:', `$${newValue}`);
+});
+
+watch(() => financialStore.gananciasTotales, (newValue) => {
+  console.log('Updated Ganancias Totales:', `$${newValue}`);
+});
+
 const invest = () => {
   financialStore.updateInversionTotal(Number(amount.value)); // Update store
   message.value = `Inversión de $${amount.value} realizada con éxito.`;
@@ -139,8 +175,8 @@ const withdraw = () => {
   amount.value = '';
 };
 </script>
-<style scoped>
 
+<style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 .investment-dashboard {
   font-family: 'Inter', sans-serif;
@@ -179,7 +215,6 @@ main {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  flex: 1;
 }
 
 .dashboard-layout {
@@ -217,8 +252,6 @@ main {
   height: auto;
   min-height: 180px;
 }
-
-
 
 .balance-amount, .profit-amount {
   font-size: clamp(1.25rem, 3vw, 1.75rem);
@@ -265,20 +298,14 @@ input {
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 1.5rem;
   font-size: 1rem;
-  transition: border-color 0.3s ease;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  background-color: #f0f0f0;
-}
-
-input:focus {
-  outline: none;
-  border-color: #4CAF50;
+  transition: border-color 0.3s;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.5rem;
 }
 
 .currency-symbol {
   position: absolute;
-  left: 0.75rem;
+  left: 1rem;
   top: 50%;
   transform: translateY(-50%);
   color: #6B7280;
@@ -286,133 +313,53 @@ input:focus {
 
 .button-group {
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-button {
-  padding: 0.75rem 1.5rem;
-  border: none;
+.invest-btn, .withdraw-btn {
+  padding: 0.75rem 1rem;
   border-radius: 0.5rem;
-  font-weight: 600;
+  border: none;
+  color: white;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1rem;
-  flex: 1 1 auto;
+  transition: background-color 0.3s;
 }
 
 .invest-btn {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.invest-btn:hover:not(:disabled) {
-  background-color: #4CAF50;
-  transform: translateY(-2px);
+  background-color: #10B981;
 }
 
 .withdraw-btn {
-  background-color: #4B5563;
-  color: white;
+  background-color: #EF4444;
 }
 
-.withdraw-btn:hover:not(:disabled) {
-  background-color: #374151;
-  transform: translateY(-2px);
-}
-
-button:disabled {
-  opacity: 0.5;
+.invest-btn:disabled, .withdraw-btn:disabled {
+  background-color: #D1D5DB;
   cursor: not-allowed;
 }
 
 .message {
-  padding: 1rem;
+  margin-top: 1rem;
+  padding: 0.5rem;
   border-radius: 0.5rem;
-  font-weight: 500;
-  font-size: 1rem;
-  text-align: center;
+  transition: opacity 0.3s;
 }
 
 .success {
   background-color: #D1FAE5;
-  color: #065F46;
+  color: #059669;
 }
 
 .error {
-  background-color: #FEE2E2;
-  color: #991B1B;
+  background-color: #FECACA;
+  color: #B91C1C;
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition: opacity 0.5s;
 }
-
-.fade-enter-from, .fade-leave-to {
+.fade-enter, .fade-leave-to {
   opacity: 0;
-}
-
-@media (max-width: 1024px) {
-  .dashboard-layout {
-    flex-direction: column;
-  }
-
-  .summary-section {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .summary-card {
-    flex: 1 1 calc(50% - 0.5rem);
-    min-width: 250px;
-  }
-
-  .right-section {
-    width: 100%;
-  }
-}
-
-@media (max-width: 768px) {
-  .investment-dashboard {
-    padding: 1rem;
-  }
-
-  .summary-section {
-    flex-direction: column;
-  }
-
-  .summary-card {
-    width: 100%;
-  }
-
-  .input-group, .button-group {
-    flex-direction: column;
-  }
-
-  button {
-    width: 100%;
-  }
-}
-
-@media (min-width: 1800px) {
-  .investment-dashboard {
-    max-width: 2000px;
-  }
-
-  .dashboard-layout {
-    gap: 2rem;
-  }
-
-  .summary-card {
-    padding: 2rem;
-  }
-
-  .chart-section {
-    padding: 0.5rem;
-  }
-
-  .chart-container {
-    height: 400px;
-  }
 }
 </style>
