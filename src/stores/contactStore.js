@@ -7,27 +7,32 @@ export const useContactStore = defineStore('contactStore', () => {
   const contacts = ref([]);
 
   const loadContacts = () => {
-    // Load initial contacts (optional, can be empty initially)
-    contacts.value = [];
+    const storedContacts = JSON.parse(localStorage.getItem('contacts')) || [];
+    contacts.value = storedContacts;
+  };
+
+  const saveContactsToLocalStorage = () => {
+    localStorage.setItem('contacts', JSON.stringify(contacts.value));
   };
 
   const addContact = (newContact) => {
-    // Add new contact to the contacts array with a unique UUID
     contacts.value.push({
       id: uuidv4(), // Generate a unique ID using uuid
       ...newContact,
     });
+    saveContactsToLocalStorage(); // Save contacts to local storage after adding
   };
 
   const deleteContact = (contactId) => {
-    // Remove the contact by filtering out the contact with the given ID
     contacts.value = contacts.value.filter(contact => contact.id !== contactId);
+    saveContactsToLocalStorage(); // Update local storage after deletion
   };
 
   const updateContact = (updatedContact) => {
     const index = contacts.value.findIndex(contact => contact.id === updatedContact.id);
     if (index !== -1) {
       contacts.value[index] = updatedContact;
+      saveContactsToLocalStorage(); // Save contacts to local storage after updating
     }
   };
 

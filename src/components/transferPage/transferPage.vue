@@ -212,17 +212,18 @@ const userCards = computed(() => {
   return cardStore.cards.filter(card => card.userId === userStore.userData.id);
 });
 
-// Lifecycle hooks
 onMounted(async () => {
   try {
     await contactStore.loadContacts();
+    console.log('Contacts loaded successfully:', contactStore.contacts);
     cardStore.loadCardsFromLocalStorage();
     userStore.loadUser();
-    console.log('Data loaded successfully');
+    console.log('User data loaded successfully');
   } catch (error) {
     console.error('Error loading data:', error);
   }
 });
+
 
 // Methods
 const addContact = async (newContact) => {
@@ -242,7 +243,7 @@ const confirmDelete = (contact) => {
 const deleteContact = async () => {
   if (contactToDelete.value) {
     try {
-      await contactStore.deleteContact(contactToDelete.value.id);
+      await contactStore.deleteContact(contactToDelete.value.id); // Ensure this method removes the contact correctly
       console.log('Contact deleted successfully');
     } catch (error) {
       console.error('Error deleting contact:', error);
@@ -252,6 +253,8 @@ const deleteContact = async () => {
     }
   }
 };
+
+
 
 const cancelDelete = () => {
   showConfirmation.value = false;
