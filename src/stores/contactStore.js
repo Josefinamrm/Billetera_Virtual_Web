@@ -24,10 +24,18 @@ export const useContactStore = defineStore('contactStore', () => {
     contacts.value = contacts.value.filter(contact => contact.id !== contactId);
   };
 
+  const updateContact = (updatedContact) => {
+    const index = contacts.value.findIndex(contact => contact.id === updatedContact.id);
+    if (index !== -1) {
+      contacts.value[index] = updatedContact;
+    }
+  };
+
   return {
     contacts,
     loadContacts,
     addContact,
     deleteContact,
+    updateContact,
   };
 });

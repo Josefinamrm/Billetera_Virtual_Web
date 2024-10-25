@@ -8,7 +8,7 @@
         <form @submit.prevent="agregarContacto">
           <input v-model="nuevoContacto.nombre" type="text" placeholder="Nombre" required>
           <input v-model="nuevoContacto.telefono" type="tel" placeholder="Teléfono" required>
-          <input v-model="nuevoContacto.cbu" type="text" placeholder="CBU" required>
+          <input  v-model="nuevoContacto.cvu" type="text" placeholder="CVU" required>
           <input v-model="nuevoContacto.alias" type="text" placeholder="Alias" required>
           <div class="popup-buttons">
             <button type="button" @click="showPopup = false" class="btn btn-outline">Cancelar</button>
@@ -22,33 +22,28 @@
 
 <script setup>
 import { ref, reactive } from 'vue';
-import { useContactStore } from '@/stores/contactStore'; // Import the Pinia store
+import { useContactStore } from '@/stores/contactStore';
 
 const showPopup = ref(false);
 const nuevoContacto = reactive({
   nombre: '',
   telefono: '',
-  cbu: '',
+  cvu: '',
   alias: ''
 });
 
-// Get the contact store
 const contactStore = useContactStore();
 
-// Function to add a contact using the Pinia store
 const agregarContacto = () => {
-  // Use Pinia to add the new contact
   contactStore.addContact({
     name: nuevoContacto.nombre,
     phone: nuevoContacto.telefono,
-    cbu: nuevoContacto.cbu,
+    cvu: nuevoContacto.cvu,
     alias: nuevoContacto.alias
   });
 
-  // Log the new contact for debugging
   console.log('Nuevo contacto agregado:', nuevoContacto);
 
-  // Reset the form
   Object.keys(nuevoContacto).forEach(key => nuevoContacto[key] = '');
   showPopup.value = false;
 };

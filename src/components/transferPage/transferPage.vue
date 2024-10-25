@@ -6,18 +6,32 @@
           <h2>Contactos</h2>
           <AddContactBtn @add-contact="addContact" />
         </div>
+        <div class="search-bar">
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Buscar contacto "
+            class="search-input"
+          />
+        </div>
         <div class="contacts-list">
-          <ul v-if="contacts && contacts.length">
-            <li v-for="contact in contacts" :key="contact.id">
+          <ul v-if="filteredContacts.length">
+            <li v-for="contact in filteredContacts" :key="contact.id">
               <div class="contact-info">
                 <strong>{{ contact.name }}</strong>
                 <span>{{ contact.phone }}</span>
+                <span class="contact-details">Alias: {{ contact.alias }}</span>
+                <span class="contact-details">CVU: {{ contact.cvu }}</span>
               </div>
-              <button type="button" class="btn btn-primary" @click="sendContact(contact)">Enviar</button>
-              <button type="button" class="btn btn-outline" @click="requestContact(contact)">Solicitar</button>
-              <button type="button" class="btn btn-delete" @click="confirmDelete(contact)">
-                <i class="fas fa-trash-alt"></i>
-              </button>
+              <div class="contact-actions">
+                <button type="button" class="btn btn-primary" @click="selectContact(contact)">Enviar</button>
+                <button type="button" class="btn btn-delete" @click="confirmDelete(contact)">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+                <button type="button" class="btn btn-edit" @click="editContact(contact)">
+                  <i class="fas fa-pencil-alt"></i>
+                </button>
+              </div>
             </li>
           </ul>
           <div v-else class="no-contacts">
@@ -28,7 +42,7 @@
     </div>
     <div class="right-column">
       <div>
-        <transfer-component/>
+        <transfer-component ref="transferComponent" :selected-contact="selectedContact" />
       </div>
       <div class="payments">
         <h2>Pagos de Servicios</h2>
@@ -39,25 +53,25 @@
               {{ service.name }}
             </option>
           </select>
-          <input 
-            v-model.number="paymentAmount" 
-            type="number" 
-            placeholder="Ingrese Monto" 
+          <input
+            v-model.number="paymentAmount"
+            type="number"
+            placeholder="Ingrese Monto"
             class="number-input"
             required
             min="0"
           />
           <div class="payment-methods">
-            <button 
-              type="button" 
-              @click="paymentMethod = 'card'" 
+            <button
+              type="button"
+              @click="paymentMethod = 'card'"
               :class="['btn', paymentMethod === 'card' ? 'btn-primary' : 'btn-outline']"
             >
               Tarjeta
             </button>
-            <button 
-              type="button" 
-              @click="paymentMethod = 'account'" 
+            <button
+              type="button"
+              @click="paymentMethod = 'account'"
               :class="['btn', paymentMethod === 'account' ? 'btn-primary' : 'btn-outline']"
             >
               Crédito en Cuenta
@@ -70,7 +84,6 @@
       </div>
     </div>
 
-    <!-- Confirmation Modal -->
     <Teleport to="body">
       <div v-if="showConfirmation" class="confirmation-popup">
         <div class="confirmation-content">
@@ -82,61 +95,134 @@
         </div>
       </div>
     </Teleport>
+
+    <Teleport to="body">
+      <div v-if="showPaymentConfirmation" class="confirmation-popup">
+        <div class="confirmation-content">
+          <p>¿Estás seguro de que quieres realizar este pago?</p>
+          <p>Servicio: {{ getServiceName(selectedService) }}</p>
+          <p>Monto: ${{ paymentAmount }}</p>
+          <p>Método: {{ paymentMethod === 'card' ? 'Tarjeta' : 'Crédito en Cuenta' }}</p>
+          <div v-if="paymentMethod === 'card'">
+            <p>Seleccione una tarjeta:</p>
+            <select v-model="selectedCard" class="select-input">
+              <option v-for="card in userCards" :key="card.id" :value="card">
+                {{ card.number }}
+              </option>
+            </select>
+            <input
+              v-model="cvv"
+              type="text"
+              placeholder="CVV"
+              class="cvv-input"
+              maxlength="3"
+              required
+            />
+            <p v-if="cvvError" class="error-message">{{ cvvError }}</p>
+          </div>
+          <div class="confirmation-buttons">
+            <button @click="confirmPayment" class="btn confirm-button">Confirmar</button>
+            <button @click="cancelPayment" class="btn cancel-button">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
+    <Teleport to="body">
+      <div v-if="showEditForm" class="confirmation-popup">
+        <div class="confirmation-content">
+          <h2>Editar Contacto</h2>
+          <form @submit.prevent="updateContact">
+            <input v-model="editingContact.name" type="text" placeholder="Nombre" required>
+            <input v-model="editingContact.phone" type="tel" placeholder="Teléfono" required>
+            <input v-model="editingContact.cvu" type="text" placeholder="CVU" required>
+            <input v-model="editingContact.alias" type="text" placeholder="Alias" required>
+            <div class="confirmation-buttons">
+              <button type="submit"   class="btn confirm-button">Guardar</button>
+              <button @click="cancelEdit" class="btn cancel-button">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useContactStore } from '@/stores/contactStore';
-import TransferComponent from '@/components/transferComponent.vue';
-import AddContactBtn from '@/components/addContactBtn.vue';
+import { useCardStore } from '@/stores/cardStore';
+import { useUserStore } from '@/stores/userStore';
+import { useFinancialStore } from '@/stores/userFinancialStore';
+// eslint-disable-next-line no-unused-vars
+import TransferComponent from '@/components/TransferComponent.vue';
+import AddContactBtn from '@/components/AddContactBtn.vue';
 
 const contactStore = useContactStore();
+const cardStore = useCardStore();
+const userStore = useUserStore();
+const financialStore = useFinancialStore();
+const transferComponent = ref(null);
 
 // Reactive states
 const selectedService = ref('');
 const paymentAmount = ref('');
 const paymentMethod = ref('card');
 const showConfirmation = ref(false);
+const showPaymentConfirmation = ref(false);
+const showEditForm = ref(false);
 const contactToDelete = ref(null);
+const searchQuery = ref('');
+const selectedContact = ref(null);
+const selectedCard = ref(null);
+const editingContact = ref({});
+const cvv = ref('');
+const cvvError = ref('');
 
 // Services data
 const services = [
-  { id: 1, name: 'Electricidad' },
-  { id: 2, name: 'Agua' },
+  { id: 1, name: 'Electricity' },
+  { id: 2, name: 'Water' },
   { id: 3, name: 'Gas' },
   { id: 4, name: 'Internet' },
-  { id: 5, name: 'Teléfono' },
+  { id: 5, name: 'Phone' },
 ];
 
 // Computed properties
-const contacts = computed(() => {
-  const storeContacts = contactStore.contacts;
-  console.log('Current contacts:', storeContacts);
-  return storeContacts;
+const contacts = computed(() => contactStore.contacts);
+
+const filteredContacts = computed(() => {
+  const query = searchQuery.value.toLowerCase();
+  return contacts.value.filter(contact =>
+    contact.name.toLowerCase().includes(query) ||
+    contact.phone.toLowerCase().includes(query) ||
+    contact.alias.toLowerCase().includes(query) ||
+    contact.cvu.toLowerCase().includes(query)
+  );
 });
 
 const isPaymentFormValid = computed(() => {
-  return selectedService.value && 
-         paymentAmount.value && 
-         paymentAmount.value > 0 && 
-         paymentMethod.value;
+  return selectedService.value &&
+    paymentAmount.value &&
+    paymentAmount.value > 0 &&
+    paymentMethod.value;
+});
+
+const userCards = computed(() => {
+  return cardStore.cards.filter(card => card.userId === userStore.userData.id);
 });
 
 // Lifecycle hooks
 onMounted(async () => {
   try {
     await contactStore.loadContacts();
-    console.log('Contacts loaded successfully');
+    cardStore.loadCardsFromLocalStorage();
+    userStore.loadUser();
+    console.log('Data loaded successfully');
   } catch (error) {
-    console.error('Error loading contacts:', error);
+    console.error('Error loading data:', error);
   }
 });
-
-// Watch for store changes
-watch(() => contactStore.contacts, (newContacts) => {
-  console.log('Contacts updated:', newContacts);
-}, { deep: true });
 
 // Methods
 const addContact = async (newContact) => {
@@ -172,37 +258,99 @@ const cancelDelete = () => {
   contactToDelete.value = null;
 };
 
-const sendContact = (contact) => {
-  console.log('Sending contact:', contact);
-  // Implement send logic here
+const selectContact = (contact) => {
+  selectedContact.value = contact;
 };
 
-const requestContact = (contact) => {
-  console.log('Requesting contact:', contact);
-  // Implement request logic here
+const editContact = (contact) => {
+  editingContact.value = { ...contact };
+  showEditForm.value = true;
 };
 
-const submitPayment = async () => {
+const updateContact = async () => {
+  try {
+    await contactStore.updateContact(editingContact.value);
+    console.log('Contact updated successfully');
+    showEditForm.value = false;
+  } catch (error) {
+    console.error('Error updating contact:', error);
+  }
+};
+
+const cancelEdit = () => {
+  showEditForm.value = false;
+  editingContact.value = {};
+};
+
+const submitPayment = () => {
   if (!isPaymentFormValid.value) return;
 
+  if (paymentMethod.value === 'card' && userCards.value.length === 0) {
+    alert('You have no registered cards. Please add a card before making a card payment.');
+    return;
+  }
+
+  showPaymentConfirmation.value = true;
+};
+
+const confirmPayment = async () => {
   try {
-    // Implement payment submission logic here
-    console.log('Payment submitted:', {
-      service: selectedService.value,
+    if (paymentMethod.value === 'account') {
+      if (financialStore.balanceTotal < paymentAmount.value) {
+        alert('Insufficient balance to make the payment.');
+        return;
+      }
+      financialStore.updateBalance(-paymentAmount.value);
+    } else if (paymentMethod.value === 'card') {
+      if (!selectedCard.value) {
+        alert('Please select a card to make the payment.');
+        return;
+      }
+      if (!cvv.value || cvv.value.length !== 3 || !/^\d+$/.test(cvv.value)) {
+        cvvError.value = 'Invalid CVV. It must be a 3-digit number.';
+        return;
+      }
+      if (cvv.value !== selectedCard.value.cvv) {
+        cvvError.value = 'Incorrect CVV. Please check and try again.';
+        return;
+      }
+      console.log(`Processing payment with card: ${selectedCard.value.number}`);
+    }
+
+    console.log('Payment confirmed:', {
+      service: getServiceName(selectedService.value),
       amount: paymentAmount.value,
       method: paymentMethod.value,
     });
-    
+
     // Reset form
     selectedService.value = '';
     paymentAmount.value = '';
     paymentMethod.value = 'card';
+    selectedCard.value = null;
+    cvv.value = '';
+    cvvError.value = '';
+    showPaymentConfirmation.value = false;
+
+    alert('Payment successful.');
   } catch (error) {
-    console.error('Error submitting payment:', error);
+    console.error('Error confirming payment:', error);
+    alert('There was an error processing the payment. Please try again.');
   }
 };
-</script>
 
+const cancelPayment = () => {
+  showPaymentConfirmation.value = false;
+  selectedCard.value = null;
+  cvv.value = '';
+  cvvError.value = '';
+};
+
+const getServiceName = (serviceId) => {
+  const service = services.find(s => s.id === serviceId);
+  return service ? service.name : 'Unknown';
+};
+</script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
@@ -313,6 +461,8 @@ input, .select-input {
 
 .contact-info {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .contact-info strong {
@@ -326,10 +476,22 @@ input, .select-input {
   font-size: 0.9rem;
 }
 
+.contact-details {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.contact-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .btn {
   padding: 0.5rem 1rem;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
+
   border-radius: 20px;
 }
 
@@ -367,6 +529,20 @@ input, .select-input {
   color: #ff0000;
 }
 
+.btn-edit {
+  background-color: #ffa500;
+  color: white;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.btn-edit:hover {
+  background-color: #ff8c00;
+}
+
 .payment-methods {
   display: flex;
   gap: 0.5rem;
@@ -392,14 +568,15 @@ input, .select-input {
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
 .confirmation-content {
   background-color: white;
   padding: 2rem;
-  border-radius: 8px;
+  border-radius: 10px;
   text-align: center;
 }
 
@@ -411,12 +588,20 @@ input, .select-input {
 }
 
 .confirm-button {
-  background-color: #ff4d4d;
+  background-color: #5DCE76;
   color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
 }
 
 .cancel-button {
   background-color: #ccc;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
 }
 
 .no-contacts {
@@ -425,15 +610,55 @@ input, .select-input {
   color: #666;
 }
 
-/* Add disabled button styles */
 .btn:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
 
-/* Add loading state styles if needed */
 .loading {
   opacity: 0.7;
   pointer-events: none;
+}
+
+.search-bar {
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 16px;
+  background-color: #f0f0f0;
+}
+.btn-edit {
+  background-color: transparent;
+  color: black;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.btn-edit:hover {
+  background-color: #f0f0f0;
+}
+
+.cvv-input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 16px;
+  background-color: #f0f0f0;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
 }
 </style>

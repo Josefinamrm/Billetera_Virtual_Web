@@ -305,8 +305,8 @@ input {
 
 .currency-symbol {
   position: absolute;
-  left: 1rem;
-  top: 50%;
+  left: 0.8rem;
+  top: 24%;
   transform: translateY(-50%);
   color: #6B7280;
 }

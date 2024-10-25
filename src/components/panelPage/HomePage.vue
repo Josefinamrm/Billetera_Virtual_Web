@@ -29,10 +29,17 @@
         </div>
       </div>
       <div class="transactions-section">
-        <h2>Actividad Reciente</h2>
+        <h2>Actividad</h2>
+        <div class="search-bar">
+          <input
+            v-model="searchQuery"
+            @input="updateSearchQuery"
+            type="text"
+            placeholder="Buscar..."
+          />
+        </div>
         <div class="transaction-list">
-          <div v-for="(group, index) in transactionGroups" :key="index" class="transaction-group">
-            <h3>{{ group.title }}</h3>
+          <div v-for="(group, index) in filteredTransactionGroups" :key="index" class="transaction-group">
             <div v-for="transaction in group.transactions" :key="transaction.id" class="transaction-item">
               <div class="transaction-info">
                 <img :src="transaction.avatar" :alt="transaction.name" class="avatar">
@@ -54,38 +61,21 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
+import { useActivityStore } from '@/stores/userActivityStore.js'
 import TransferComponent from '@/components/transferComponent.vue'
 import ConfirmTransferPopup from '../confirmTransferPopup.vue'
 
 const confirmPopup = ref(null)
+const activityStore = useActivityStore()
 
-const transactionGroups = ref([
-  {
-    title: 'Hoy',
-    transactions: [
-      { id: 1, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' },
-      { id: 2, name: 'Jim Doe', date: 'Agosto 20, 5:25 PM', amount: -88, avatar: '../../Public/img.png' }
-    ]
-  },
-  {
-    title: 'Ayer',
-    transactions: [
-      { id: 3, name: 'Supermercado', date: 'Agosto 19, 6:22 PM', amount: 900, avatar: '../../Public/img.png' },
-      { id: 4, name: 'John Doe', date: 'Agosto 19, 3:12 PM', amount: -88, avatar: '../../Public/img.png' },
-      { id: 5, name: 'Supermercado', date: 'Agosto 19, 2:03 PM', amount: 80, avatar: '../../Public/img.png' }
-    ]
-  },
-  {
-    title: 'Ultima Semana',
-    transactions: [
-      { id: 6, name: 'Cine', date: 'Agosto 20, 6:22 PM', amount: 200, avatar: '../../Public/img.png' },
-      { id: 7, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' },
-      { id: 7, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' },
-      { id: 7, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' }
-    ]
-  }
-])
+const searchQuery = ref('')
+
+const updateSearchQuery = (event) => {
+  activityStore.setSearchQuery(event.target.value)
+}
+
+const filteredTransactionGroups = computed(() => activityStore.filteredTransactionGroups)
 
 const expenses = reactive({
   Ene: 85000,
@@ -117,6 +107,36 @@ const hideTooltip = () => {
 const totalExpenses = computed(() => {
   return Object.values(expenses).reduce((acc, expense) => acc + expense, 0)
 })
+
+onMounted(() => {
+  // Initialize the store with the transaction groups
+  activityStore.setTransactionGroups([
+    {
+      title: 'Hoy',
+      transactions: [
+        { id: 1, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' },
+        { id: 2, name: 'Jim Doe', date: 'Agosto 20, 5:25 PM', amount: -88, avatar: '../../Public/img.png' }
+      ]
+    },
+    {
+      title: 'Ayer',
+      transactions: [
+        { id: 3, name: 'Supermercado', date: 'Agosto 19, 6:22 PM', amount: 900, avatar: '../../Public/img.png' },
+        { id: 4, name: 'John Doe', date: 'Agosto 19, 3:12 PM', amount: -88, avatar: '../../Public/img.png' },
+        { id: 5, name: 'Supermercado', date: 'Agosto 19, 2:03 PM', amount: 80, avatar: '../../Public/img.png' }
+      ]
+    },
+    {
+      title: 'Ultima Semana',
+      transactions: [
+        { id: 6, name: 'Cine', date: 'Agosto 20, 6:22 PM', amount: 200, avatar: '../../Public/img.png' },
+        { id: 7, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' },
+        { id: 8, name: 'Jane Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' },
+        { id: 9, name: 'Jim Smith', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' }
+      ]
+    }
+  ])
+})
 </script>
 
 <style scoped>
@@ -140,7 +160,7 @@ const totalExpenses = computed(() => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .transfer-section {
@@ -279,5 +299,19 @@ h3 {
   pointer-events: none;
   z-index: 1000;
   white-space: pre-wrap;
+}
+
+.search-bar {
+  margin-bottom: 1rem;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 16px;
+  background-color: #f0f0f0;
 }
 </style>
