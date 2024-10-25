@@ -1,11 +1,17 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useFinancialStore } from '@/stores/userFinancialStore.js'; // Import your Pinia store
 import Transferpopup from './confirmTransferPopup.vue';
+
 const confirmPopup = ref(null);
+const financialStore = useFinancialStore(); // Access the Pinia store
+
+// Computed property to get the current balance from the store
+const currentBalance = computed(() => financialStore.balanceTotal); // Adjust according to your store structure
 
 const initiateTransfer = () => {
-  confirmPopup.value.showPopup()
-}
+  confirmPopup.value.showPopup();
+};
 </script>
 
 <template>
@@ -13,7 +19,7 @@ const initiateTransfer = () => {
     <h2>Transferencia Rápida</h2>
     <div class="balance">
       <div>Balance Actual</div>
-      <div class="balance-amount">$20.000</div>
+      <div class="balance-amount">${{ currentBalance }}</div> <!-- Bind the computed balance here -->
     </div>
     <input type="text" placeholder="Ingrese Alias" class="transfer-input">
     <input type="text" placeholder="Ingrese Monto" class="transfer-input">
@@ -51,10 +57,7 @@ const initiateTransfer = () => {
 
 .send-btn, .request-btn {
   padding: 0.75rem 2rem;
-  font-size: 1.2rem;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 .transfer-component {
   background: white;
@@ -67,8 +70,6 @@ h2 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
 }
-
-
 
 .balance {
   background-color: #f0f0f0;
@@ -105,7 +106,7 @@ h2 {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}
+}ß
 
 .send-btn {
   background-color: #5DCE76;
