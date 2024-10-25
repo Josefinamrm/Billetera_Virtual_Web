@@ -11,6 +11,7 @@ export const useUserStore = defineStore('user', {
       if (existingUser) {
         return false;
       } else {
+        this.currentUser = data;
         this.users.push(data);
         localStorage.setItem('users', JSON.stringify(this.users));
         localStorage.setItem('currentUser', JSON.stringify(data));

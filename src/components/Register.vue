@@ -13,6 +13,8 @@ const password = ref('');
 const confirmPassword = ref('');
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
+const cvu = ref('');
+const telefono = ref('');
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -37,8 +39,12 @@ const handleRegister = () => {
     documento: documento.value,
     email: email.value,
     password: password.value,
+    alias: nombre.value.toLowerCase() + "." + apellido.value.toLowerCase(),
+    cvu: cvu.value,
+    telefono: telefono.value
   };
-
+  
+  userStore.loadUsers(); 
   const result = userStore.registerUser(userData);
   if (!result) {
     alert('El usuario ya existe');

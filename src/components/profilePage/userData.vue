@@ -64,20 +64,17 @@ export default {
         },
         {
           title: 'Teléfono: ',
-          value: '',
+          value: currentUser.telefono,
           editable: false
         },
         {
           title: 'CVU: ',
-          value: '',
+          value: currentUser.cvu,
           editable: false
         },
         {
           title: 'Alias: ',
-          value:
-            currentUser.nombre.toLowerCase() +
-            '.' +
-            currentUser.apellido.toLowerCase(),
+          value: currentUser.alias,
           editable: false
         }
       ]
