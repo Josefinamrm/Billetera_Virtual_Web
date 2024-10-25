@@ -9,7 +9,10 @@
         <div class="section" v-for="(data, index) in userInfo" :key="index">
           <div class="info">
             <p>{{ data.title }}</p>
-            <p>{{ data.value }}</p>
+            <div class="emptyInfo" v-if="data.value == ''">
+              <input type="text" v-model="data.value" />
+            </div>
+            <p v-else>{{ data.value }}</p>
           </div>
         </div>
       </div>
@@ -19,9 +22,9 @@
 
 <script>
 import router from '@/router'
-import { useUserStore } from '@/stores/userStore';
-const userStore = useUserStore();
-console.log("Hola", userStore.userData);
+import { useUserStore } from '@/stores/userStore'
+const userStore = useUserStore()
+console.log('Hola', userStore.userData)
 export default {
   name: 'UserInfo',
   data() {
@@ -41,11 +44,11 @@ export default {
         },
         {
           title: 'Fecha de Nacimiento: ',
-          value: '02/01/2003'
+          value: ''
         },
         {
           title: 'Actividad Fiscal: ',
-          value: '???'
+          value: ''
         }
       ]
     }

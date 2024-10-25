@@ -3,7 +3,7 @@
     <div class="financial-dashboard">
       <div class="left-column">
         <div class="transfer-section">
-          <transfer-component/>
+          <transfer-component />
         </div>
         <div class="expenses">
           <h2>Gastos</h2>
@@ -39,16 +39,26 @@
           />
         </div>
         <div class="transaction-list">
-          <div v-for="(group, index) in filteredTransactionGroups" :key="index" class="transaction-group">
-            <div v-for="transaction in group.transactions" :key="transaction.id" class="transaction-item">
+          <div
+            v-for="(group, index) in filteredTransactionGroups"
+            :key="index"
+            class="transaction-group"
+          >
+            <div
+              v-for="transaction in group.transactions"
+              :key="transaction.id"
+              class="transaction-item"
+            >
               <div class="transaction-info">
-                <img :src="transaction.avatar" :alt="transaction.name" class="avatar">
+                <img :src="transaction.avatar" :alt="transaction.name" class="avatar" />
                 <div>
                   <div class="transaction-name">{{ transaction.name }}</div>
                   <div class="transaction-date">{{ transaction.date }}</div>
                 </div>
               </div>
-              <div :class="['transaction-amount', transaction.amount > 0 ? 'positive' : 'negative']">
+              <div
+                :class="['transaction-amount', transaction.amount > 0 ? 'positive' : 'negative']"
+              >
                 {{ transaction.amount > 0 ? '+' : '' }}${{ Math.abs(transaction.amount) }}
               </div>
             </div>
@@ -83,7 +93,7 @@ const expenses = reactive({
   Mar: 50000,
   Abr: 19000,
   May: 36000,
-  Jun: 26000,
+  Jun: 26000
 })
 const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun']
 
@@ -114,25 +124,79 @@ onMounted(() => {
     {
       title: 'Hoy',
       transactions: [
-        { id: 1, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' },
-        { id: 2, name: 'Jim Doe', date: 'Agosto 20, 5:25 PM', amount: -88, avatar: '../../Public/img.png' }
+        {
+          id: 1,
+          name: 'John Doe',
+          date: 'Agosto 20, 6:22 PM',
+          amount: 90,
+          avatar: '../../Public/img.png'
+        },
+        {
+          id: 2,
+          name: 'Jim Doe',
+          date: 'Agosto 20, 5:25 PM',
+          amount: -88,
+          avatar: '../../Public/img.png'
+        }
       ]
     },
     {
       title: 'Ayer',
       transactions: [
-        { id: 3, name: 'Supermercado', date: 'Agosto 19, 6:22 PM', amount: 900, avatar: '../../Public/img.png' },
-        { id: 4, name: 'John Doe', date: 'Agosto 19, 3:12 PM', amount: -88, avatar: '../../Public/img.png' },
-        { id: 5, name: 'Supermercado', date: 'Agosto 19, 2:03 PM', amount: 80, avatar: '../../Public/img.png' }
+        {
+          id: 3,
+          name: 'Supermercado',
+          date: 'Agosto 19, 6:22 PM',
+          amount: 900,
+          avatar: '../../Public/img.png'
+        },
+        {
+          id: 4,
+          name: 'John Doe',
+          date: 'Agosto 19, 3:12 PM',
+          amount: -88,
+          avatar: '../../Public/img.png'
+        },
+        {
+          id: 5,
+          name: 'Supermercado',
+          date: 'Agosto 19, 2:03 PM',
+          amount: 80,
+          avatar: '../../Public/img.png'
+        }
       ]
     },
     {
       title: 'Ultima Semana',
       transactions: [
-        { id: 6, name: 'Cine', date: 'Agosto 20, 6:22 PM', amount: 200, avatar: '../../Public/img.png' },
-        { id: 7, name: 'John Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' },
-        { id: 8, name: 'Jane Doe', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' },
-        { id: 9, name: 'Jim Smith', date: 'Agosto 20, 6:22 PM', amount: 90, avatar: '../../Public/img.png' }
+        {
+          id: 6,
+          name: 'Cine',
+          date: 'Agosto 20, 6:22 PM',
+          amount: 200,
+          avatar: '../../Public/img.png'
+        },
+        {
+          id: 7,
+          name: 'John Doe',
+          date: 'Agosto 20, 6:22 PM',
+          amount: 90,
+          avatar: '../../Public/img.png'
+        },
+        {
+          id: 8,
+          name: 'Jane Doe',
+          date: 'Agosto 20, 6:22 PM',
+          amount: 90,
+          avatar: '../../Public/img.png'
+        },
+        {
+          id: 9,
+          name: 'Jim Smith',
+          date: 'Agosto 20, 6:22 PM',
+          amount: 90,
+          avatar: '../../Public/img.png'
+        }
       ]
     }
   ])
@@ -161,6 +225,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  overflow: scroll;
 }
 
 .transfer-section {
@@ -234,11 +299,11 @@ h3 {
 }
 
 .transaction-amount.positive {
-  color: #4CAF50;
+  color: #4caf50;
 }
 
 .transaction-amount.negative {
-  color: #F44336;
+  color: #f44336;
 }
 
 .expenses {
@@ -272,7 +337,7 @@ h3 {
 
 .bar {
   width: 12%;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   border-radius: 4px 4px 0 0;
   cursor: pointer;
 }

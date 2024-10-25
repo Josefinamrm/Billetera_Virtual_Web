@@ -74,7 +74,7 @@ export default {
   width: 100%;
   max-width: 2000px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0.7rem;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
@@ -91,7 +91,9 @@ export default {
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
   margin-bottom: 20px;
 }
 

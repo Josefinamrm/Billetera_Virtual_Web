@@ -45,7 +45,7 @@
 <script>
 import router from '@/router'
 import { useUserStore } from '@/stores/userStore'
-const userStore = useUserStore();
+const userStore = useUserStore()
 export default {
   name: 'UserData',
   data() {
@@ -63,17 +63,20 @@ export default {
         },
         {
           title: 'Teléfono: ',
-          value: '1234567890',
+          value: '',
           editable: false
         },
         {
           title: 'CVU: ',
-          value: '1234567890123456789012',
+          value: '',
           editable: false
         },
         {
           title: 'Alias: ',
-          value: 'alias',
+          value:
+            userStore.userData.nombre.toLowerCase() +
+            '.' +
+            userStore.userData.apellido.toLowerCase(),
           editable: false
         }
       ]
