@@ -55,6 +55,7 @@
 <script>
 import { ref, watch } from 'vue'
 import { useFinancialStore } from '@/stores/userFinancialStore'
+import { useActivityStore } from '@/stores/userActivityStore'
 import ConfirmTransferPopup from '@/components/confirmTransferPopup.vue'
 
 export default {
@@ -69,6 +70,7 @@ export default {
   },
   setup(props) {
     const financialStore = useFinancialStore()
+    const activityStore = useActivityStore()
     const alias = ref('')
     const amount = ref('')
     const showPopup = ref(false)
@@ -77,7 +79,6 @@ export default {
     const depositAmount = ref('')
     const generatedLink = ref('')
 
-    // Watch for changes in the selectedContact prop
     watch(
       () => props.selectedContact,
       (newContact) => {
@@ -112,6 +113,13 @@ export default {
       if (depositAmount.value && !isNaN(depositAmount.value)) {
         const amount = Number(depositAmount.value)
         financialStore.updateBalance(amount)
+        activityStore.addTransaction({
+          id: Date.now(),
+          name: 'Depósito',
+          date: new Date().toISOString(),
+          amount: amount,
+          avatar: '../../Public/deposit-icon.png'
+        })
         console.log(`Ingresando $${amount} a la cuenta`)
         alert(`Se han ingresado $${amount} a su cuenta.`)
         closePopup()
@@ -145,8 +153,16 @@ export default {
     }
 
     const initiateTransfer = () => {
-      financialStore.updateBalance(-parseFloat(amount.value))
-      alert(`Transferencia de $${amount.value} a ${alias.value} realizada con éxito.`)
+      const transferAmount = parseFloat(amount.value)
+      financialStore.updateBalance(-transferAmount)
+      activityStore.addTransaction({
+        id: Date.now(),
+        name: `Transferencia a ${alias.value}`,
+        date: new Date().toISOString(),
+        amount: -transferAmount,
+        avatar: '../../Public/transfer-icon.png'
+      })
+      alert(`Transferencia de $${transferAmount} a ${alias.value} realizada con éxito.`)
       amount.value = ''
       alias.value = ''
       hideConfirmPopup()

@@ -138,7 +138,7 @@
             <input v-model="editingContact.cvu" type="text" placeholder="CVU" required>
             <input v-model="editingContact.alias" type="text" placeholder="Alias" required>
             <div class="confirmation-buttons">
-              <button type="submit"   class="btn confirm-button">Guardar</button>
+              <button type="submit" class="btn confirm-button">Guardar</button>
               <button @click="cancelEdit" class="btn cancel-button">Cancelar</button>
             </div>
           </form>
@@ -154,7 +154,7 @@ import { useContactStore } from '@/stores/contactStore';
 import { useCardStore } from '@/stores/cardStore';
 import { useUserStore } from '@/stores/userStore';
 import { useFinancialStore } from '@/stores/userFinancialStore';
-// eslint-disable-next-line no-unused-vars
+import { useActivityStore } from '@/stores/userActivityStore';
 import TransferComponent from '@/components/TransferComponent.vue';
 import AddContactBtn from '@/components/AddContactBtn.vue';
 
@@ -162,6 +162,7 @@ const contactStore = useContactStore();
 const cardStore = useCardStore();
 const userStore = useUserStore();
 const financialStore = useFinancialStore();
+const activityStore = useActivityStore();
 const transferComponent = ref(null);
 
 // Reactive states
@@ -181,11 +182,11 @@ const cvvError = ref('');
 
 // Services data
 const services = [
-  { id: 1, name: 'Electricity' },
-  { id: 2, name: 'Water' },
+  { id: 1, name: 'Electricidad' },
+  { id: 2, name: 'Agua' },
   { id: 3, name: 'Gas' },
   { id: 4, name: 'Internet' },
-  { id: 5, name: 'Phone' },
+  { id: 5, name: 'Teléfono' },
 ];
 
 // Computed properties
@@ -224,7 +225,6 @@ onMounted(async () => {
   }
 });
 
-
 // Methods
 const addContact = async (newContact) => {
   try {
@@ -243,7 +243,7 @@ const confirmDelete = (contact) => {
 const deleteContact = async () => {
   if (contactToDelete.value) {
     try {
-      await contactStore.deleteContact(contactToDelete.value.id); // Ensure this method removes the contact correctly
+      await contactStore.deleteContact(contactToDelete.value.id);
       console.log('Contact deleted successfully');
     } catch (error) {
       console.error('Error deleting contact:', error);
@@ -253,8 +253,6 @@ const deleteContact = async () => {
     }
   }
 };
-
-
 
 const cancelDelete = () => {
   showConfirmation.value = false;
@@ -289,7 +287,7 @@ const submitPayment = () => {
   if (!isPaymentFormValid.value) return;
 
   if (paymentMethod.value === 'card' && userCards.value.length === 0) {
-    alert('You have no registered cards. Please add a card before making a card payment.');
+    alert('No tiene tarjetas registradas en tu cuenta. Por favor registra una tarjeta y vuelve a intentar.');
     return;
   }
 
@@ -300,31 +298,39 @@ const confirmPayment = async () => {
   try {
     if (paymentMethod.value === 'account') {
       if (financialStore.balanceTotal < paymentAmount.value) {
-        alert('Insufficient balance to make the payment.');
+        alert('Fondos insuficientes para realizar la transferencia.');
         return;
       }
       financialStore.updateBalance(-paymentAmount.value);
     } else if (paymentMethod.value === 'card') {
       if (!selectedCard.value) {
-        alert('Please select a card to make the payment.');
+        alert('Por favor seleccione una tarjeta para realizar el pago.');
         return;
       }
       if (!cvv.value || cvv.value.length !== 3 || !/^\d+$/.test(cvv.value)) {
-        cvvError.value = 'Invalid CVV. It must be a 3-digit number.';
+        cvvError.value = 'CVV inválido. Debe ser un número de 3 dígitos.';
         return;
       }
       if (cvv.value !== selectedCard.value.cvv) {
-        cvvError.value = 'Incorrect CVV. Please check and try again.';
+        cvvError.value = 'CVV incorrecto. Por favor verifique e intente nuevamente.';
         return;
       }
-      console.log(`Processing payment with card: ${selectedCard.value.number}`);
+      console.log(`Procesando pago con tarjeta: ${selectedCard.value.number}`);
     }
 
-    console.log('Payment confirmed:', {
-      service: getServiceName(selectedService.value),
-      amount: paymentAmount.value,
-      method: paymentMethod.value,
-    });
+    const serviceName = getServiceName(selectedService.value);
+    const paymentDetails = {
+      type: 'Pago de Servicio',
+      name: serviceName,
+      amount: -paymentAmount.value,
+      date: new Date().toISOString(),
+      method: paymentMethod.value === 'card' ? 'Tarjeta' : 'Saldo en Cuenta'
+    };
+
+
+    activityStore.addTransaction(paymentDetails);
+
+    console.log('Pago confirmado:', paymentDetails);
 
     // Reset form
     selectedService.value = '';
@@ -335,10 +341,10 @@ const confirmPayment = async () => {
     cvvError.value = '';
     showPaymentConfirmation.value = false;
 
-    alert('Payment successful.');
+    alert('Pago exitoso');
   } catch (error) {
-    console.error('Error confirming payment:', error);
-    alert('There was an error processing the payment. Please try again.');
+    console.error('Error confirmando el pago:', error);
+    alert('Hubo un error al procesar el pago. Intente de nuevo.');
   }
 };
 
@@ -351,7 +357,7 @@ const cancelPayment = () => {
 
 const getServiceName = (serviceId) => {
   const service = services.find(s => s.id === serviceId);
-  return service ? service.name : 'Unknown';
+  return service ? service.name : 'Desconocido';
 };
 </script>
 <style scoped>
@@ -439,7 +445,7 @@ input, .select-input {
   width: 100%;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  border: 1px solid #ccc;
+  border:  1px solid #ccc;
   border-radius: 20px;
   font-size: 16px;
   background-color: #f0f0f0;
@@ -494,7 +500,6 @@ input, .select-input {
   padding: 0.5rem 1rem;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
-
   border-radius: 20px;
 }
 
@@ -533,8 +538,8 @@ input, .select-input {
 }
 
 .btn-edit {
-  background-color: #ffa500;
-  color: white;
+  background-color: transparent;
+  color: black;
   border: none;
   padding: 0.25rem 0.5rem;
   border-radius: 50%;
@@ -543,7 +548,7 @@ input, .select-input {
 }
 
 .btn-edit:hover {
-  background-color: #ff8c00;
+  background-color: #f0f0f0;
 }
 
 .payment-methods {
@@ -633,19 +638,6 @@ input, .select-input {
   border: 1px solid #ccc;
   border-radius: 20px;
   font-size: 16px;
-  background-color: #f0f0f0;
-}
-.btn-edit {
-  background-color: transparent;
-  color: black;
-  border: none;
-  padding: 0.25rem 0.5rem;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-
-.btn-edit:hover {
   background-color: #f0f0f0;
 }
 

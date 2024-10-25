@@ -1,13 +1,75 @@
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '../stores/userStore.js'; // Adjust the path as necessary
+import viewIcon from './icons/view.png';
+import hideIcon from './icons/hide.png';
+
+const nombre = ref('');
+const apellido = ref('');
+const documento = ref('');
+const email = ref('');
+const password = ref('');
+const confirmPassword = ref('');
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
+
+const router = useRouter();
+const userStore = useUserStore();
+
+const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+
+const handleRegister = () => {
+  nombre.value = capitalizeFirstLetter(nombre.value);
+  apellido.value = capitalizeFirstLetter(apellido.value);
+
+  if (password.value.length < 8) {
+    alert('La contraseña debe tener al menos 8 caracteres');
+    return;
+  }
+  if (password.value !== confirmPassword.value) {
+    alert('Las contraseñas no coinciden');
+    return;
+  }
+  const userData = {
+    nombre: nombre.value,
+    apellido: apellido.value,
+    documento: documento.value,
+    email: email.value,
+    password: password.value,
+  };
+
+  userStore.setUser(userData);
+  console.log('Registro de usuario:', userData);
+  router.push('/user/panel');
+};
+
+const preventNumbers = (event) => {
+  const key = event.key;
+  if (!isNaN(key)) {
+    event.preventDefault();
+  }
+};
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value;
+};
+
+const toggleConfirmPasswordVisibility = () => {
+  showConfirmPassword.value = !showConfirmPassword.value;
+};
+</script>
+
 <template>
   <div class="register-container">
     <h2 class="text-center title">Registrarse</h2>
     <h3 class="text-center subtitle">Bienvenido</h3>
     <form @submit.prevent="handleRegister">
       <div class="form-group">
-        <input type="text" id="nombre" v-model="nombre" placeholder="Ingrese su nombre *" required>
+        <input type="text" id="nombre" v-model="nombre" @keypress="preventNumbers" placeholder="Ingrese su nombre *" required>
       </div>
       <div class="form-group">
-        <input type="text" id="apellido" v-model="apellido" placeholder="Ingrese su apellido *" required>
+        <input type="text" id="apellido" v-model="apellido" @keypress="preventNumbers" placeholder="Ingrese su apellido *" required>
       </div>
       <div class="form-group">
         <input type="number" id="documento" v-model="documento" placeholder="Ingrese su documento *" required>
@@ -44,56 +106,6 @@
     </form>
   </div>
 </template>
-
-<script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useUserStore } from '../stores/userStore.js'; // Adjust the path as necessary
-import viewIcon from './icons/view.png';
-import hideIcon from './icons/hide.png';
-
-const nombre = ref('');
-const apellido = ref('');
-const documento = ref('');
-const email = ref('');
-const password = ref('');
-const confirmPassword = ref('');
-const showPassword = ref(false);
-const showConfirmPassword = ref(false);
-
-const router = useRouter();
-const userStore = useUserStore();
-
-const handleRegister = () => {
-  if (password.value.length < 8) {
-    alert('La contraseña debe tener al menos 8 caracteres');
-    return;
-  }
-  if (password.value !== confirmPassword.value) {
-    alert('Las contraseñas no coinciden');
-    return;
-  }
-  const userData = {
-    nombre: nombre.value,
-    apellido: apellido.value,
-    documento: documento.value,
-    email: email.value,
-    password: password.value,
-  };
-
-  userStore.setUser(userData);
-  console.log('Registro de usuario:', userData);
-  router.push('/user/panel');
-};
-
-const togglePasswordVisibility = () => {
-  showPassword.value = !showPassword.value;
-};
-
-const toggleConfirmPasswordVisibility = () => {
-  showConfirmPassword.value = !showConfirmPassword.value;
-};
-</script>
 <style scoped>
 .register-container {
   width: 400px;

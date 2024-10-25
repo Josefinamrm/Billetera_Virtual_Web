@@ -1,77 +1,5 @@
-<template>
-  <div class="home-page">
-    <div class="financial-dashboard">
-      <div class="left-column">
-        <div class="transfer-section">
-          <transfer-component />
-        </div>
-        <div class="expenses">
-          <h2>Gastos</h2>
-          <p class="label">Gastos Totales</p>
-          <h3 class="amount">${{ totalExpenses }}</h3>
-          <p class="period">6 meses</p>
-          <div class="chart">
-            <div
-              v-for="(expense, month) in expenses"
-              :key="month"
-              class="bar"
-              :style="{ height: `${expense / 1000}px` }"
-              @mouseover="showTooltip(month, expense, $event)"
-              @mouseout="hideTooltip"
-            ></div>
-          </div>
-          <div class="months">
-            <span v-for="month in months" :key="month">{{ month }}</span>
-          </div>
-          <div v-if="tooltipVisible" class="tooltip" :style="tooltipStyle">
-            {{ tooltipContent }}
-          </div>
-        </div>
-      </div>
-      <div class="transactions-section">
-        <h2>Actividad</h2>
-        <div class="search-bar">
-          <input
-            v-model="searchQuery"
-            @input="updateSearchQuery"
-            type="text"
-            placeholder="Buscar..."
-          />
-        </div>
-        <div class="transaction-list">
-          <div
-            v-for="(group, index) in filteredTransactionGroups"
-            :key="index"
-            class="transaction-group"
-          >
-            <div
-              v-for="transaction in group.transactions"
-              :key="transaction.id"
-              class="transaction-item"
-            >
-              <div class="transaction-info">
-                <img :src="transaction.avatar" :alt="transaction.name" class="avatar" />
-                <div>
-                  <div class="transaction-name">{{ transaction.name }}</div>
-                  <div class="transaction-date">{{ transaction.date }}</div>
-                </div>
-              </div>
-              <div
-                :class="['transaction-amount', transaction.amount > 0 ? 'positive' : 'negative']"
-              >
-                {{ transaction.amount > 0 ? '+' : '' }}${{ Math.abs(transaction.amount) }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <ConfirmTransferPopup ref="confirmPopup" />
-  </div>
-</template>
-
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useActivityStore } from '@/stores/userActivityStore.js'
 import TransferComponent from '@/components/transferComponent.vue'
 import ConfirmTransferPopup from '../confirmTransferPopup.vue'
@@ -80,29 +8,53 @@ const confirmPopup = ref(null)
 const activityStore = useActivityStore()
 
 const searchQuery = ref('')
+const startDate = ref('')
+const endDate = ref('')
 
 const updateSearchQuery = (event) => {
   activityStore.setSearchQuery(event.target.value)
 }
 
-const filteredTransactionGroups = computed(() => activityStore.filteredTransactionGroups)
+const updateDateRange = () => {
+  activityStore.setDateRange(startDate.value, endDate.value)
+}
 
-const expenses = reactive({
-  Ene: 85000,
-  Feb: 18000,
-  Mar: 50000,
-  Abr: 19000,
-  May: 36000,
-  Jun: 26000
-})
-const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun']
+const currentDate = new Date()
+const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+
+const last6MonthsExpenses = reactive({})
+
+const calculateLast6MonthsExpenses = () => {
+  const sixMonthsAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 5, 1)
+  const expenses = {}
+
+  for (let i = 0; i < 6; i++) {
+    const month = new Date(sixMonthsAgo.getFullYear(), sixMonthsAgo.getMonth() + i, 1)
+    const monthName = monthNames[month.getMonth()]
+    expenses[monthName] = 0
+  }
+
+  activityStore.transactions.forEach(transaction => {
+    const transactionDate = new Date(transaction.date)
+    if (transactionDate >= sixMonthsAgo && transaction.amount < 0) {
+      const monthName = monthNames[transactionDate.getMonth()]
+      if (Object.prototype.hasOwnProperty.call(expenses, monthName)) {
+        expenses[monthName] += Math.abs(transaction.amount)
+      }
+    }
+  })
+
+  Object.assign(last6MonthsExpenses, expenses)
+}
+
+const maxExpense = computed(() => Math.max(...Object.values(last6MonthsExpenses), 1))
 
 const tooltipVisible = ref(false)
 const tooltipContent = ref('')
 const tooltipStyle = ref({})
 
 const showTooltip = (month, expense, event) => {
-  tooltipContent.value = `${month}: $${expense}`
+  tooltipContent.value = `${month}: $${expense.toFixed(2)}`
   tooltipVisible.value = true
   tooltipStyle.value = {
     left: `${event.clientX + 10}px`,
@@ -115,93 +67,126 @@ const hideTooltip = () => {
 }
 
 const totalExpenses = computed(() => {
-  return Object.values(expenses).reduce((acc, expense) => acc + expense, 0)
+  return Object.values(last6MonthsExpenses).reduce((acc, expense) => acc + expense, 0).toFixed(2)
 })
 
+const currentPeriod = computed(() => {
+  const months = Object.keys(last6MonthsExpenses)
+  return `${months[0]} - ${months[months.length - 1]}`
+})
+
+const formatDate = (dateString) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  return new Date(dateString).toLocaleDateString('es-ES', options)
+}
+
+const getTransactionIcon = (transaction) => {
+  if (transaction.amount > 0) {
+    return '../../Public/deposit-icon.png'
+  } else if (transaction.name.toLowerCase().includes('transferencia')) {
+    return '../../Public/transfer-icon.png'
+  } else {
+    return '../../Public/expense-icon.png'
+  }
+}
+
+const hasTransactions = computed(() => activityStore.filteredTransactions.length > 0)
+
+watch(() => activityStore.transactions, () => {
+  calculateLast6MonthsExpenses()
+}, { deep: true })
+
 onMounted(() => {
-  // Initialize the store with the transaction groups
-  activityStore.setTransactionGroups([
-    {
-      title: 'Hoy',
-      transactions: [
-        {
-          id: 1,
-          name: 'John Doe',
-          date: 'Agosto 20, 6:22 PM',
-          amount: 90,
-          avatar: '../../Public/img.png'
-        },
-        {
-          id: 2,
-          name: 'Jim Doe',
-          date: 'Agosto 20, 5:25 PM',
-          amount: -88,
-          avatar: '../../Public/img.png'
-        }
-      ]
-    },
-    {
-      title: 'Ayer',
-      transactions: [
-        {
-          id: 3,
-          name: 'Supermercado',
-          date: 'Agosto 19, 6:22 PM',
-          amount: 900,
-          avatar: '../../Public/img.png'
-        },
-        {
-          id: 4,
-          name: 'John Doe',
-          date: 'Agosto 19, 3:12 PM',
-          amount: -88,
-          avatar: '../../Public/img.png'
-        },
-        {
-          id: 5,
-          name: 'Supermercado',
-          date: 'Agosto 19, 2:03 PM',
-          amount: 80,
-          avatar: '../../Public/img.png'
-        }
-      ]
-    },
-    {
-      title: 'Ultima Semana',
-      transactions: [
-        {
-          id: 6,
-          name: 'Cine',
-          date: 'Agosto 20, 6:22 PM',
-          amount: 200,
-          avatar: '../../Public/img.png'
-        },
-        {
-          id: 7,
-          name: 'John Doe',
-          date: 'Agosto 20, 6:22 PM',
-          amount: 90,
-          avatar: '../../Public/img.png'
-        },
-        {
-          id: 8,
-          name: 'Jane Doe',
-          date: 'Agosto 20, 6:22 PM',
-          amount: 90,
-          avatar: '../../Public/img.png'
-        },
-        {
-          id: 9,
-          name: 'Jim Smith',
-          date: 'Agosto 20, 6:22 PM',
-          amount: 90,
-          avatar: '../../Public/img.png'
-        }
-      ]
-    }
-  ])
+  calculateLast6MonthsExpenses()
 })
 </script>
+
+<template>
+  <div class="home-page">
+    <div class="financial-dashboard">
+      <div class="left-column">
+        <div class="transfer-section">
+          <transfer-component />
+        </div>
+        <div class="expenses">
+          <h2>Gastos</h2>
+          <p class="label">Gastos Totales (últimos 6 meses)</p>
+          <h3 class="amount">${{ totalExpenses }}</h3>
+          <p class="period">{{ currentPeriod }}</p>
+          <div class="chart">
+            <div
+              v-for="(expense, month) in last6MonthsExpenses"
+              :key="month"
+              class="bar"
+              :style="{ height: `${(expense / maxExpense) * 150}px` }"
+              @mouseover="showTooltip(month, expense, $event)"
+              @mouseout="hideTooltip"
+            ></div>
+          </div>
+          <div class="months">
+            <span v-for="month in Object.keys(last6MonthsExpenses)" :key="month">{{ month }}</span>
+          </div>
+          <div v-if="tooltipVisible" class="tooltip" :style="tooltipStyle">
+            {{ tooltipContent }}
+          </div>
+        </div>
+      </div>
+      <div class="transactions-section">
+        <h2>Actividad</h2>
+        <div class="filters">
+          <div class="search-bar">
+            <input
+              v-model="searchQuery"
+              @input="updateSearchQuery"
+              type="text"
+              placeholder="Buscar..."
+            />
+          </div>
+          <div class="date-filter">
+            <input
+              type="date"
+              v-model="startDate"
+              @change="updateDateRange"
+              placeholder="Fecha inicio"
+            />
+            <input
+              type="date"
+              v-model="endDate"
+              @change="updateDateRange"
+              placeholder="Fecha fin"
+            />
+          </div>
+        </div>
+        <div class="transaction-list">
+          <div v-if="hasTransactions">
+            <div
+              v-for="transaction in activityStore.filteredTransactions"
+              :key="transaction.id"
+              class="transaction-item"
+            >
+              <div class="transaction-info">
+                <img :src="getTransactionIcon(transaction)" :alt="transaction.name" class="avatar" />
+                <div>
+                  <div class="transaction-name">{{ transaction.name }}</div>
+                  <div class="transaction-date">{{ formatDate(transaction.date) }}</div>
+                </div>
+              </div>
+              <div
+                :class="['transaction-amount', transaction.amount > 0 ? 'positive' : 'negative']"
+              >
+                {{ transaction.amount > 0 ? '+' : '' }}${{ Math.abs(transaction.amount) }}
+              </div>
+            </div>
+          </div>
+          <div v-else>
+            <p>No hay actividad para mostrar</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ConfirmTransferPopup ref="confirmPopup" />
+  </div>
+</template>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -226,9 +211,11 @@ onMounted(() => {
   flex-direction: column;
   gap: 0.5rem;
   overflow: hidden;
-
 }
-
+.transaction-list p {
+  text-align: center;
+  color: gray;
+}
 .transfer-section {
   flex: 0 0 auto;
 }
@@ -283,7 +270,7 @@ h3 {
 .avatar {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+
 }
 
 .transaction-name {
@@ -367,17 +354,36 @@ h3 {
   white-space: pre-wrap;
 }
 
-.search-bar {
+.filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
+}
+
+.search-bar {
+  flex: 1;
+  margin-right: 1rem;
 }
 
 .search-bar input {
   width: 100%;
   padding: 0.75rem;
-  margin-bottom: 1rem;
   border: 1px solid #ccc;
   border-radius: 20px;
   font-size: 16px;
   background-color: #f0f0f0;
+}
+
+.date-filter {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.date-filter input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
 }
 </style>
