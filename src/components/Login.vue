@@ -19,23 +19,29 @@
       </div>
       <button type="submit">Ingresar</button>
       <button type="button" class="register-button" @click="handleRegister">Registrarse</button>
-      <h4 class="text-center enter-with">¿Olvido su contraseña?</h4>
     </form>
 
-    <!-- Error Message Popup -->
+    <h4 class="text-center enter-with forgot-password" @click="showForgotPasswordPopup">¿Olvidó su contraseña?</h4>
     <div v-if="showErrorMessage" class="error-popup">
       <p>{{ errorMessage }}</p>
       <button @click="closeErrorPopup">Cerrar</button>
     </div>
+
+    <PasswordResetPopup
+      :show="showForgotPassword"
+      @submit="sendResetEmail"
+      @cancel="hideForgotPasswordPopup"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '@/stores/userStore'; // Import userStore
+import { useUserStore } from '@/stores/userStore';
 import viewIcon from './icons/view.png';
 import hideIcon from './icons/hide.png';
+import PasswordResetPopup from './PasswordResetPopup.vue';
 
 const email = ref('');
 const password = ref('');
@@ -44,8 +50,7 @@ const errorMessage = ref('');
 const router = useRouter();
 const userStore = useUserStore(); 
 const showPassword = ref(false);
-
-console.log(userStore.users);
+const showForgotPassword = ref(false);
 
 const handleLogin = () => {
   userStore.loadUsers(); 
@@ -74,6 +79,28 @@ const closeErrorPopup = () => {
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
 };
+
+const showForgotPasswordPopup = () => {
+  showForgotPassword.value = true;
+};
+
+const hideForgotPasswordPopup = () => {
+  showForgotPassword.value = false;
+};
+
+const sendResetEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    errorMessage.value = 'Por favor, ingrese una dirección de correo electrónico válida.';
+    showErrorMessage.value = true;
+    hideForgotPasswordPopup();
+    return;
+  }
+
+  errorMessage.value = `Se ha enviado un correo de recuperación a ${email}`;
+  showErrorMessage.value = true;
+  hideForgotPasswordPopup();
+};
 </script>
 
 <style scoped>
@@ -91,7 +118,7 @@ const togglePasswordVisibility = () => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: auto; /* Adjust height for flexibility */
+  height: auto;
 }
 
 .form-group {
@@ -101,14 +128,15 @@ const togglePasswordVisibility = () => {
   background-color: #ebebeb;
   border-radius: 30px;
   border: 1px solid black;
-  padding: 7px;
+  padding: 0;
   margin-left: auto;
   margin-right: auto;
+  overflow: hidden;
 }
 
 input {
   width: 100%;
-  padding: 7px;
+  padding: 14px;
   border-radius: 30px;
   background-color: #ebebeb;
   outline: none;
@@ -164,6 +192,7 @@ button:hover {
   border-radius: 8px;
   padding: 20px;
   z-index: 1000;
+  font-size: 14px;
 }
 
 .error-popup p {
@@ -171,7 +200,7 @@ button:hover {
 }
 
 .error-popup button {
-  background-color: #f44336;
+  background-color: #4caf50;
   color: white;
   border: none;
   padding: 10px;
@@ -183,13 +212,19 @@ button:hover {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .password-toggle {
   position: absolute;
-  right: 10px;
+  right: 14px;
   cursor: pointer;
-  width: 20px; /* Ajusta según el tamaño de tu imagen */
-  height: 20px; /* Ajusta según el tamaño de tu imagen */
+  width: 20px;
+  height: 20px;
+}
+
+.forgot-password {
+  cursor: pointer;
+  text-decoration: underline;
 }
 </style>

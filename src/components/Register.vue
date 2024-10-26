@@ -142,14 +142,15 @@ const toggleConfirmPasswordVisibility = () => {
   background-color: #EBEBEB;
   border-radius: 30px;
   border: 1px solid black;
-  padding: 7px;
+  padding: 0;
   margin-left: auto;
   margin-right: auto;
+  overflow: hidden;
 }
 
 input {
   width: 100%;
-  padding: 7px;
+  padding: 14px;
   border-radius: 30px;
   background-color: #EBEBEB;
   outline: none;
@@ -195,11 +196,12 @@ button:hover {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .password-toggle {
   position: absolute;
-  right: 10px;
+  right: 14px;
   cursor: pointer;
   width: 20px;
   height: 20px;

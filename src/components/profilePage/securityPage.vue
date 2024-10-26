@@ -21,6 +21,7 @@
                     @click="toggleCurrentPasswordVisibility"
                   />
                 </div>
+                <h4 class="enter-with forgot-password" @click="showForgotPasswordPopup">¿Olvidó su contraseña?</h4>
               </div>
               <div class="form-group">
                 <label for="new-password">Nueva contraseña</label>
@@ -56,6 +57,10 @@
         </div>
       </div>
     </div>
+    <div v-if="showErrorMessage" class="error-popup">
+      <p>{{ errorMessage }}</p>
+      <button @click="closeErrorPopup">Cerrar</button>
+    </div>
   </div>
 </template>
 
@@ -74,6 +79,9 @@ const successMessage = ref(false)
 const showCurrentPassword = ref(false)
 const showNewPassword = ref(false)
 const showConfirmPassword = ref(false)
+const showErrorMessage = ref(false)
+const errorMessage = ref('');
+
 
 const goBack = () => {
   router.go(-1)
@@ -83,6 +91,16 @@ const showForm = () => {
   visible.value = !visible.value
 }
 
+const showForgotPasswordPopup = () => {
+  errorMessage.value = `Se ha enviado un correo de recuperación a ${currentUser.email}`;
+  showErrorMessage.value = true;
+}
+
+const closeErrorPopup = () => {
+  showErrorMessage.value = false;
+};
+
+
 const verifyCurrentPassword = () => {
   const currentPassword = document.getElementById('current-password').value;
   if (currentPassword !== currentUser.password) {
@@ -90,16 +108,6 @@ const verifyCurrentPassword = () => {
     return false;
   }
   return true;
-}
-
-const passwordsMatchError = () => {
-  const newPassword = document.getElementById('new-password').value
-  const confirmPassword = document.getElementById('confirm-password').value
-  if (newPassword !== confirmPassword) {
-    passError.value = true
-  } else {
-    passError.value = false
-  }
 }
 
 const submitForm = (event) => {
@@ -289,5 +297,53 @@ h4 {
   cursor: pointer;
   font-size: 16px;
   width: 100%;
+}
+
+.error-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.error-popup p {
+  margin: 0 0 10px 0;
+}
+
+.error-popup button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+  font-size: 14px;
+}
+
+.enter-with {
+  color: black;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.forgot-password {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #4caf50;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  text-align: center;
 }
 </style>
