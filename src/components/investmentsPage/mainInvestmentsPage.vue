@@ -39,7 +39,7 @@
             <h2>Invertir o Rescatar</h2>
             <div class="input-group">
               <div class="amount-input">
-                <input v-model="amount" type="number" placeholder="Ingrese el monto" />
+                <input v-model="amount" type="number" placeholder="Ingrese el monto" min="0" @input="validateAmount" />
                 <span class="currency-symbol">$</span>
               </div>
               <div class="button-group">
@@ -101,7 +101,11 @@ const totalProfit = computed(() => {
 const profitPeriod = ref('Últimos 6 meses');
 
 let chart = null;
-
+const validateAmount = () => {
+  if (amount.value < 0) {
+    amount.value = 0;
+  }
+};
 const updateChart = () => {
   const ctx = chartCanvas.value.getContext('2d');
 

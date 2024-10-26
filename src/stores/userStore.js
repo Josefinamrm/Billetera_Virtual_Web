@@ -52,7 +52,6 @@ export const useUserStore = defineStore('user', {
     },
     changeUserPassword(newPassword) {
       if (!this.currentUser) {
-        console.error('No user is currently logged in');
         return;
       }
 
@@ -60,7 +59,7 @@ export const useUserStore = defineStore('user', {
       if (userIndex !== -1) {
         this.users[userIndex].password = newPassword;
       } else {
-        console.error('Current user not found in users array');
+        return;
       }
 
       this.currentUser.password = newPassword;
@@ -69,19 +68,25 @@ export const useUserStore = defineStore('user', {
       localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
     },
     updateUserField(field, value) {
-      if (this.currentUser && this.currentUser.hasOwnProperty(field)) {
-        this.currentUser[field] = value;
-        
-        // Update the user in the users array
-        const userIndex = this.users.findIndex(u => u.email === this.currentUser.email);
-        if (userIndex !== -1) {
-          this.users[userIndex][field] = value;
-        }
+      if (!this.currentUser) return;
 
-        // Save changes to localStorage
-        localStorage.setItem('users', JSON.stringify(this.users));
-        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+      // Verificación de campos válidos en currentUser
+      if (!['nombre', 'apellido', 'documento', 'fechaNacimiento', 'actividadFiscal'].includes(field)) {
+        console.error(`El campo ${field} no es válido`);
+        return;
       }
+
+      this.currentUser[field] = value;
+
+      // Actualización en la lista de usuarios
+      const userIndex = this.users.findIndex(user => user.email === this.currentUser.email);
+      if (userIndex !== -1) {
+        this.users[userIndex][field] = value;
+      }
+
+      // Guardado en localStorage
+      localStorage.setItem('users', JSON.stringify(this.users));
+      localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
     },
   },
 });

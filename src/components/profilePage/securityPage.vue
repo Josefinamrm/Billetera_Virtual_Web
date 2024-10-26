@@ -9,28 +9,48 @@
         <div class="page">
           <div class="section" @click="showForm">Cambiar contraseña</div>
           <div class="change-password-container" v-if="visible">
-            <form class="change-password-form">
+            <form class="change-password-form" @submit.prevent="submitForm">
               <div class="form-group">
                 <label for="current-password">Contraseña actual</label>
-                <input type="password" id="current-password" placeholder="Ingresar..."required/>
-                <h4 class="text-center enter-with">¿Olvido su contraseña?</h4>
+                <div class="password-input-container">
+                  <input :type="showCurrentPassword ? 'text' : 'password'" id="current-password" placeholder="Ingrese su contraseña actual" required />
+                  <img
+                    :src="showCurrentPassword ? viewIcon : hideIcon"
+                    alt="Toggle password visibility"
+                    class="password-toggle"
+                    @click="toggleCurrentPasswordVisibility"
+                  />
+                </div>
               </div>
               <div class="form-group">
                 <label for="new-password">Nueva contraseña</label>
-                <input type="password" id="new-password" placeholder="Ingresar..." required />
+                <div class="password-input-container">
+                  <input :type="showNewPassword ? 'text' : 'password'" id="new-password" placeholder="Ingrese su nueva contraseña" required />
+                  <img
+                    :src="showNewPassword ? viewIcon : hideIcon"
+                    alt="Toggle password visibility"
+                    class="password-toggle"
+                    @click="toggleNewPasswordVisibility"
+                  />
+                </div>
               </div>
               <div class="form-group">
                 <label for="confirm-password">Confirmar nueva contraseña</label>
-                <input
-                  type="password"
-                  id="confirm-password"
-                  placeholder="Ingresar..."
-                  @input="passwordsMatchError"
-                  required
-                />
+                <div class="password-input-container">
+                  <input :type="showConfirmPassword ? 'text' : 'password'" id="confirm-password" placeholder="Confirme su nueva contraseña" required />
+                  <img
+                    :src="showConfirmPassword ? viewIcon : hideIcon"
+                    alt="Toggle password visibility"
+                    class="password-toggle"
+                    @click="toggleConfirmPasswordVisibility"
+                  />
+                </div>
                 <span v-if="passError" class="error">Las contraseñas deben coincidir</span>
               </div>
-              <button class="submit-button" @click="submitForm">Guardar</button>
+              <button type="submit" class="submit-button">Guardar</button>
+              <div v-if="successMessage" class="success-message">
+                <span class="green-tick">✔️</span> Contraseña cambiada con éxito
+              </div>
             </form>
           </div>
         </div>
@@ -43,11 +63,18 @@
 import router from '@/router'
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
+import viewIcon from '@/components/icons/view.png'
+import hideIcon from '@/components/icons/hide.png'
 
 const userStore = useUserStore();
 const currentUser = userStore.getUserData()
 const visible = ref(false)
 const passError = ref(false)
+const successMessage = ref(false)
+const showCurrentPassword = ref(false)
+const showNewPassword = ref(false)
+const showConfirmPassword = ref(false)
+
 const goBack = () => {
   router.go(-1)
 }
@@ -75,14 +102,30 @@ const passwordsMatchError = () => {
   }
 }
 
-const submitForm = () => {
+const submitForm = (event) => {
+  event.preventDefault();
   if (!verifyCurrentPassword()) {
     return;
   }
   if (!passError.value) {
     userStore.changeUserPassword(document.getElementById('new-password').value);
-    console.log('Password changed')
+    successMessage.value = true;
+    setTimeout(() => {
+      successMessage.value = false;
+    }, 3000);
   }
+}
+
+const toggleCurrentPasswordVisibility = () => {
+  showCurrentPassword.value = !showCurrentPassword.value;
+}
+
+const toggleNewPasswordVisibility = () => {
+  showNewPassword.value = !showNewPassword.value;
+}
+
+const toggleConfirmPasswordVisibility = () => {
+  showConfirmPassword.value = !showConfirmPassword.value;
 }
 </script>
 
@@ -167,12 +210,28 @@ label {
   margin-bottom: 5px;
 }
 
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
 input {
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #ccc;
   border-radius: 20px;
-  font-size: 16px;
+  font-size: 13px;
   background-color: #f0f0f0;
+  flex: 1;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
 }
 
 .change-password-container {
@@ -207,6 +266,18 @@ h4 {
   color: red;
   font-size: 0.8rem;
   margin-top: 5px;
+}
+
+.success-message {
+  color: green;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.green-tick {
+  margin-right: 5px;
 }
 
 .submit-button {
