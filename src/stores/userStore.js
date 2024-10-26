@@ -67,6 +67,21 @@ export const useUserStore = defineStore('user', {
 
       localStorage.setItem('users', JSON.stringify(this.users));
       localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-    }
+    },
+    updateUserField(field, value) {
+      if (this.currentUser && this.currentUser.hasOwnProperty(field)) {
+        this.currentUser[field] = value;
+        
+        // Update the user in the users array
+        const userIndex = this.users.findIndex(u => u.email === this.currentUser.email);
+        if (userIndex !== -1) {
+          this.users[userIndex][field] = value;
+        }
+
+        // Save changes to localStorage
+        localStorage.setItem('users', JSON.stringify(this.users));
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+      }
+    },
   },
 });

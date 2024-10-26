@@ -40,7 +40,7 @@ const handleRegister = () => {
     email: email.value,
     password: password.value,
     alias: nombre.value.toLowerCase() + "." + apellido.value.toLowerCase(),
-    cvu: cvu.value,
+    cvu: createCvu(),
     telefono: telefono.value
   };
   
@@ -59,6 +59,11 @@ const preventNumbers = (event) => {
   if (!isNaN(key)) {
     event.preventDefault();
   }
+};
+
+const createCvu = () => {
+  const randomDigits = Math.floor(Math.random() * 10000000000000000000).toString().padStart(19, '0');
+  return '000' + randomDigits;
 };
 
 const togglePasswordVisibility = () => {

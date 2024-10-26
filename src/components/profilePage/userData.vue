@@ -6,13 +6,13 @@
         <h1>Cuenta</h1>
       </div>
       <div class="user-data-content">
-        <div class="section" v-for="(data, index) in userData" :key="index">
+        <div class="section" v-for="(data, key) in userData" :key="key"> 
           <div class="info">
             <p>{{ data.title }}</p>
             <p v-if="!data.editable">{{ data.value }}</p>
-            <input v-else type="text" v-model="data.value" />
+            <input v-else type="text" v-model="data.value" @blur="saveData(key)" />
           </div>
-          <button @click="() => editData(index)">
+          <button @click="() => editData(key)">
             <svg
               v-if="!data.editable"
               xmlns="http://www.w3.org/2000/svg"
@@ -43,49 +43,69 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 import router from '@/router'
 import { useUserStore } from '@/stores/userStore'
-const userStore = useUserStore()
-const currentUser = userStore.getUserData()
+
 export default {
   name: 'UserData',
-  data() {
-    return {
-      userData: [
-        {
-          title: 'Usuario: ',
-          value: currentUser.apellido + currentUser.nombre,
-          editable: false
-        },
-        {
-          title: 'Email: ',
-          value: currentUser.email,
-          editable: false
-        },
-        {
-          title: 'Teléfono: ',
-          value: currentUser.telefono,
-          editable: false
-        },
-        {
-          title: 'CVU: ',
-          value: currentUser.cvu,
-          editable: false
-        },
-        {
-          title: 'Alias: ',
-          value: currentUser.alias,
-          editable: false
-        }
-      ]
+  setup() {
+    const userStore = useUserStore()
+    const currentUser = userStore.getUserData()
+
+    const userData = ref({
+      username: {
+        title: 'Usuario: ',
+        value: `${currentUser.apellido} ${currentUser.nombre}`,
+        editable: false,
+        key: 'username'
+      },
+      email: {
+        title: 'Email: ',
+        value: currentUser.email,
+        editable: false,
+        key: 'email'
+      },
+      telefono: {
+        title: 'Teléfono: ',
+        value: currentUser.telefono,
+        editable: true,
+        key: 'telefono'
+      },
+      cvu: {
+        title: 'CVU: ',
+        value: currentUser.cvu,
+        editable: false,
+        key: 'cvu'
+      },
+      alias: {
+        title: 'Alias: ',
+        value: currentUser.alias,
+        editable: true,
+        key: 'alias'
+      }
+    })
+
+    const editData = (key) => {
+      userData.value[key].editable = !userData.value[key].editable
     }
-  },
-  methods: {
-    editData(index) {
-      this.userData[index].editable = !this.userData[index].editable
-    },
-    goBack() {
+
+    const saveData = (key) => {
+      if (userData.value[key].editable) {
+        userStore.updateUserField(key, userData.value[key].value)
+        userData.value[key].editable = false
+      }
+    }
+
+    const goBack = () => {
       router.go(-1)
+    }
+
+    return {
+      userData,
+      editData,
+      saveData,
+      goBack
     }
   }
 }
