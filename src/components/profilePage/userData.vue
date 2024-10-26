@@ -56,7 +56,7 @@ export default {
     const userData = ref({
       username: {
         title: 'Usuario: ',
-        value: `${currentUser.apellido} ${currentUser.nombre}`,
+        value: `${currentUser.apellido}${currentUser.nombre}`,
         editable: false,
         key: 'username'
       },
