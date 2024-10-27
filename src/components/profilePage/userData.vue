@@ -6,15 +6,14 @@
         <h1>Cuenta</h1>
       </div>
       <div class="user-data-content">
-        <div class="section" v-for="(data, key) in userData" :key="key"> 
+        <div class="section" v-for="(data, key) in userData" :key="key">
           <div class="info">
             <p>{{ data.title }}</p>
-            <p v-if="!data.editable">{{ data.value }}</p>
-            <input v-else type="text" v-model="data.value" @blur="saveData(key)" />
+            <p>{{ data.value }}</p>
           </div>
-          <button @click="() => editData(key)">
+          <button v-if="data.editable" @click="() => editData(key)">
             <svg
-              v-if="!data.editable"
+              v-if="!data.editing"
               xmlns="http://www.w3.org/2000/svg"
               height="24px"
               viewBox="0 -960 960 960"
@@ -58,6 +57,7 @@ export default {
         title: 'Usuario: ',
         value: `${currentUser.apellido}${currentUser.nombre}`,
         editable: false,
+        editing: false,
         key: 'username'
       },
       email: {
@@ -70,6 +70,7 @@ export default {
         title: 'Teléfono: ',
         value: currentUser.telefono,
         editable: true,
+        editing: false,
         key: 'telefono'
       },
       cvu: {
@@ -82,19 +83,22 @@ export default {
         title: 'Alias: ',
         value: currentUser.alias,
         editable: true,
+        editing: false,
         key: 'alias'
       }
     })
 
     const editData = (key) => {
-      userData.value[key].editable = !userData.value[key].editable
+      if (userData.value[key].editable) {
+        userData.value[key].editing = !userData.value[key].editing
+        if (!userData.value[key].editing) {
+          saveData(key)
+        }
+      }
     }
 
     const saveData = (key) => {
-      if (userData.value[key].editable) {
-        userStore.updateUserField(key, userData.value[key].value)
-        userData.value[key].editable = false
-      }
+      userStore.updateUserField(key, userData.value[key].value)
     }
 
     const goBack = () => {
@@ -104,7 +108,6 @@ export default {
     return {
       userData,
       editData,
-      saveData,
       goBack
     }
   }
@@ -129,6 +132,7 @@ h1 {
   align-items: flex-start;
   font-family: 'Inter', sans-serif;
 }
+
 .title {
   display: flex;
   flex-direction: row;
@@ -139,7 +143,11 @@ h1 {
 button {
   font-weight: bolder;
   font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
+
 .user-data-content {
   display: flex;
   flex-direction: column;
@@ -151,6 +159,7 @@ button {
   flex-direction: row;
   gap: 10px;
   align-items: center;
+  flex-grow: 1;
 }
 
 .section {
@@ -167,7 +176,6 @@ button {
 .user-data-container {
   display: flex;
   flex-direction: column;
-  /* font-family: Arial, sans-serif; */
   width: 100%;
   max-width: 1350px;
   padding: 20px;

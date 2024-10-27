@@ -1,12 +1,12 @@
 <template>
   <div class="transfer-component transfers-section">
-    <h2>Transferencia Rápida</h2>
+    <h2>Transferencia rápida</h2>
     <div class="balance">
-      <div>Balance Actual</div>
+      <div>Balance actual</div>
       <div class="balance-amount">${{ financialStore.balanceTotal }}</div>
     </div>
-    <input type="text" v-model="alias" placeholder="Ingrese Alias" class="transfer-input" />
-    <input type="number" v-model="amount" placeholder="Ingrese Monto" class="transfer-input" />
+    <input type="text" v-model="alias" placeholder="Ingrese alias" class="transfer-input" />
+    <input type="number" v-model="amount" placeholder="Ingrese monto" class="transfer-input" />
     <div class="transfer-buttons">
       <button @click="showConfirmPopup" class="send-btn">Enviar</button>
       <button @click="showOptions" class="options-btn">Más opciones</button>

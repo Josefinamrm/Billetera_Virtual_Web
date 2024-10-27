@@ -1,6 +1,6 @@
 <template>
   <div class="agregar-contacto">
-    <button @click="showPopup = true" class="btn btn-primary">+ Agregar Contacto</button>
+    <button @click="showPopup = true" class="btn btn-primary">+ Agregar contacto</button>
 
     <div v-if="showPopup" class="popup-overlay">
       <div class="popup">

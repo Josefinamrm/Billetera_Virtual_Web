@@ -56,7 +56,7 @@
           <input
             v-model.number="paymentAmount"
             type="number"
-            placeholder="Ingrese Monto"
+            placeholder="Ingrese monto"
             class="number-input"
             required
             min="0"
@@ -74,7 +74,7 @@
               @click="paymentMethod = 'account'"
               :class="['btn', paymentMethod === 'account' ? 'btn-primary' : 'btn-outline']"
             >
-              Crédito en Cuenta
+              Crédito en cuenta
             </button>
           </div>
           <button type="submit" class="btn submit-btn" :disabled="!isPaymentFormValid">
@@ -131,7 +131,7 @@
     <Teleport to="body">
       <div v-if="showEditForm" class="confirmation-popup">
         <div class="confirmation-content">
-          <h2>Editar Contacto</h2>
+          <h2>Editar contacto</h2>
           <form @submit.prevent="updateContact">
             <input v-model="editingContact.name" type="text" placeholder="Nombre" required>
             <input v-model="editingContact.phone" type="tel" placeholder="Teléfono" required>
@@ -155,6 +155,7 @@ import { useCardStore } from '@/stores/cardStore';
 import { useUserStore } from '@/stores/userStore';
 import { useFinancialStore } from '@/stores/userFinancialStore';
 import { useActivityStore } from '@/stores/userActivityStore';
+// eslint-disable-next-line no-unused-vars
 import TransferComponent from '../transferComponent.vue';
 import AddContactBtn from '../addContactBtn.vue';
 
@@ -584,26 +585,36 @@ input, .select-input {
 
 .confirmation-buttons {
   display: flex;
-  gap: 1rem;
   justify-content: center;
   margin-top: 1rem;
+  gap: 1rem;
+}
+
+.confirm-button,
+.cancel-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .confirm-button {
-  background-color: #5DCE76;
+  background-color: #f44336;
   color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
+}
+
+.confirm-button:hover {
+  background-color: #d32f2f;
 }
 
 .cancel-button {
-  background-color: #ccc;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.cancel-button:hover {
+  background-color: #e0e0e0;
 }
 
 .no-contacts {

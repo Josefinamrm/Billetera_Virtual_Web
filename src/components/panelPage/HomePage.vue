@@ -7,7 +7,7 @@
         </div>
         <div class="expenses">
           <h2>Gastos</h2>
-          <p class="label">Gastos Totales (últimos 6 meses)</p>
+          <p class="label">Gastos totales (últimos 6 meses)</p>
           <h3 class="amount">${{ totalExpenses }}</h3>
           <p class="period">{{ currentPeriod }}</p>
           <div class="chart">

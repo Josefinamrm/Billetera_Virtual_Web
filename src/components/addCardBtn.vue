@@ -10,7 +10,7 @@ function goToNewCardPage() {
 
 <template>
 
-  <button @click="goToNewCardPage" class="add-card-btn">+ Agregar Tarjetas</button>
+  <button @click="goToNewCardPage" class="add-card-btn">+ Agregar tarjetas</button>
 </template>
 
 <style scoped>

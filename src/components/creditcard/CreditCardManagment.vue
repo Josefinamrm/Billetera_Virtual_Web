@@ -9,7 +9,7 @@
       <button @click="toggleVisibility" class="toggle-button">
         <EyeIcon v-if="!isHidden" />
         <EyeOffIcon v-else />
-        {{ isHidden ? ' Mostrar' : ' Ocultar' }} Detalles de las Tarjetas
+        {{ isHidden ? ' Mostrar' : ' Ocultar' }} detalles de las tarjetas
       </button>
     </div>
 
@@ -50,21 +50,21 @@ import { ref, computed } from 'vue';
 import { EyeIcon, EyeOffIcon, TrashIcon } from 'lucide-vue-next';
 import CreditCardDisplay from './CreditCardDisplay.vue';
 import AddCardBtn from '@/components/addCardBtn.vue';
-import { useCardStore } from '@/stores/cardStore'; // Adjust the path as necessary
-import { useUserStore } from '@/stores/userStore'; // Import userStore
+import { useCardStore } from '@/stores/cardStore';
+import { useUserStore } from '@/stores/userStore';
 
 const cardStore = useCardStore();
-const userStore = useUserStore(); // Use userStore to access currentUser
+const userStore = useUserStore();
 const isHidden = ref(false);
 const showConfirmDialog = ref(false);
 const cardIndexToRemove = ref(null);
 
-// Computed property to get cards for the current user
+
 const userCards = computed(() => {
-  // Filter cards based on the current user's context
+
   return cardStore.cards.filter(card => {
-    // Assuming that each card has a userId or similar property to match with currentUser
-    return card.userId === userStore.currentUser.id; // Adjust the property as necessary
+
+    return card.userId === userStore.currentUser.id;
   });
 });
 
@@ -79,8 +79,8 @@ const confirmRemoveCard = (index) => {
 
 const removeCard = () => {
   if (cardIndexToRemove.value !== null) {
-    cardStore.removeCard(cardIndexToRemove.value); // Use the store method
-    cardStore.saveCardsToLocalStorage(); // Ensure local storage is updated
+    cardStore.removeCard(cardIndexToRemove.value);
+    cardStore.saveCardsToLocalStorage();
     cardIndexToRemove.value = null;
   }
   showConfirmDialog.value = false;
@@ -115,6 +115,7 @@ const addNewCard = (newCard) => {
   font-size: 2.5rem;
   font-weight: bold;
   color: #333;
+  margin-top: 0px;
 }
 
 .add-button {
@@ -262,7 +263,7 @@ const addNewCard = (newCard) => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px; /* Adjust height as needed */
+  height: 200px;
   font-size: 1.5rem;
   color: #666;
 }

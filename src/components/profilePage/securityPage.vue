@@ -139,32 +139,21 @@ const toggleConfirmPasswordVisibility = () => {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 .background-wrapper {
   min-height: 70vh;
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow: hidden;
 }
 
-.title {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  gap: 15px;
-}
-
-button {
-  font-weight: bolder;
-  font-size: 20px;
-}
 .viewport {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex: 1;
   width: 100%;
   max-width: 2000px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0.7rem;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
@@ -179,24 +168,41 @@ button {
   box-sizing: border-box;
 }
 
+.title {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 6px;
+}
+.back-button{
+  font-size: 1.4rem;
+  color: black;
+}
 h1 {
   font-size: 24px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
+}
+
+
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .section {
-  font-weight: bold;
-  gap: 15px;
   background-color: #d9d9d9;
   border-radius: 8px;
   padding: 15px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   text-align: left;
   width: 100%;
   border: none;
   font-weight: 400;
+  font-size: 18px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -205,12 +211,22 @@ h1 {
   background-color: #c0c0c0;
 }
 
+.change-password-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.change-password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
-  align-items: center;
   width: 100%;
-  padding-bottom: 20px;
 }
 
 label {
@@ -226,12 +242,12 @@ label {
 }
 
 input {
+  width: 100%;
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 20px;
   font-size: 13px;
   background-color: #f0f0f0;
-  flex: 1;
 }
 
 .password-toggle {
@@ -240,52 +256,6 @@ input {
   cursor: pointer;
   width: 20px;
   height: 20px;
-}
-
-.change-password-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.security-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-h4 {
-  font-size: 14px;
-  color: #2c3e50;
-  margin-top: 5px;
-}
-
-.error {
-  color: red;
-  font-size: 0.8rem;
-  margin-top: 5px;
-}
-
-.success-message {
-  color: green;
-  font-size: 0.9rem;
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.green-tick {
-  margin-right: 5px;
 }
 
 .submit-button {
@@ -297,6 +267,20 @@ h4 {
   cursor: pointer;
   font-size: 16px;
   width: 100%;
+}
+
+.error, .success-message, .error-message {
+  font-size: 0.9rem;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.error {
+  color: red;
+}
+
+.success-message, .error-message {
+  color: #4caf50;
 }
 
 .error-popup {
@@ -323,27 +307,50 @@ h4 {
   border-radius: 20px;
   cursor: pointer;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
   width: fit-content;
   font-size: 14px;
-}
-
-.enter-with {
-  color: black;
-  font-size: 14px;
-  margin-top: 20px;
 }
 
 .forgot-password {
   cursor: pointer;
   text-decoration: underline;
-}
-
-.error-message {
-  color: #4caf50;
-  font-size: 0.9rem;
+  font-size: 14px;
   margin-top: 10px;
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  .security-container {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .section {
+    padding: 12px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .security-container {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .section {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .back-button {
+    font-size: 1.5rem;
+  }
 }
 </style>

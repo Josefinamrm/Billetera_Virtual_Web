@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <h2 class="text-center title">Iniciar Sesión</h2>
+    <h2 class="text-center title">Iniciar sesión</h2>
     <h3 class="text-center subtitle">Bienvenido</h3>
     <form @submit.prevent="handleLogin">
       <div class="form-group">

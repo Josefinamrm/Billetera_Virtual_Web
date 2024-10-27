@@ -8,19 +8,19 @@
       <div class="dashboard-layout">
         <section class="summary-section">
           <div class="summary-card">
-            <h2>Inversión Actual</h2>
+            <h2>Inversión actual</h2>
             <p class="balance-amount">{{ currentInvestment }}</p>
             <p class="balance-change" :class="{ 'positive': isPositiveChange, 'negative': !isPositiveChange }">
               {{ balanceChange }}
             </p>
           </div>
           <div class="summary-card">
-            <h2>Ganancias Totales</h2>
+            <h2>Ganancias totales</h2>
             <p class="profit-amount">{{ totalProfit }}</p>
             <p class="profit-period">{{ profitPeriod }}</p>
           </div>
           <div class="summary-card">
-            <h2>Balance Actual</h2>
+            <h2>Balance actual</h2>
             <p class="profit-amount">{{ currentBalance }}</p>
           </div>
         </section>
@@ -28,7 +28,7 @@
         <div class="right-section">
           <section class="chart-section">
             <div class="chart-header">
-              <h2>Historial de Inversiones</h2>
+              <h2>Historial de inversiones</h2>
             </div>
             <div class="chart-container">
               <canvas ref="chartCanvas"></canvas>
@@ -229,6 +229,7 @@ h1 {
   margin-bottom: 0.5rem;
   font-size: 2.5rem;
   font-weight: bold;
+  margin-left: 20px;
   color: #333;
 }
 
