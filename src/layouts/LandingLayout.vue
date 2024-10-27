@@ -1,16 +1,14 @@
 <template>
   <div class="layout-container">
-    <!-- Logo -->
     <div class="logo-container">
-      <RouterLink to="/" class="inline-block"> <!-- Use RouterLink to navigate to the landing page -->
-        <img src="../components/icons/vecteezy_green-lettuce-illustration_.jpg" alt="Company Logo" class="logo" />
+      <RouterLink to="/" class="logo-link">
+        <div class="logo-wrapper">
+          <img src="../components/icons/vecteezy_green-lettuce-illustration_.jpg" alt="Company Logo" class="logo" />
+          <h3 class="logo-text">Lupay</h3>
+        </div>
       </RouterLink>
     </div>
-
-    <!-- Main content area that will render child routes -->
     <RouterView />
-
-    <!-- Wave background -->
     <div class="wave-container">
       <svg class="wave wave-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
         <path
@@ -31,7 +29,7 @@
 </template>
 
 <script setup>
-// No additional script setup needed for this component
+// No changes needed in the script section
 </script>
 
 <style scoped>
@@ -49,13 +47,32 @@
 .logo-container {
   position: absolute;
   top: 15px;
-  left: 70px; /* Increase the left value to move the logo towards the center */
+  left: 15px;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.logo-link {
+  text-decoration: none;
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
 }
 
 .logo {
   width: 60px;
   height: auto;
+}
+
+.logo-text {
+  margin-left: 10px;
+  color: black;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .wave-container {
@@ -98,6 +115,10 @@
 
   .logo {
     width: 40px;
+  }
+
+  .logo-text {
+    font-size: 1.2rem;
   }
 }
 </style>
