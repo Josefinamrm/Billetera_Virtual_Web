@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '../stores/userStore.js'; // Adjust the path as necessary
+import { useUserStore } from '../stores/userStore.js';
 import viewIcon from './icons/view.png';
 import hideIcon from './icons/hide.png';
 
@@ -13,7 +13,6 @@ const password = ref('');
 const confirmPassword = ref('');
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
-const cvu = ref('');
 const telefono = ref('');
 
 const router = useRouter();

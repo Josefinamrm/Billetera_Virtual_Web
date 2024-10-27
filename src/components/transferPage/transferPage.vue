@@ -164,8 +164,6 @@ const userStore = useUserStore();
 const financialStore = useFinancialStore();
 const activityStore = useActivityStore();
 const transferComponent = ref(null);
-
-// Reactive states
 const selectedService = ref('');
 const paymentAmount = ref('');
 const paymentMethod = ref('card');
@@ -180,7 +178,6 @@ const editingContact = ref({});
 const cvv = ref('');
 const cvvError = ref('');
 
-// Services data
 const services = [
   { id: 1, name: 'Electricidad' },
   { id: 2, name: 'Agua' },
@@ -189,7 +186,6 @@ const services = [
   { id: 5, name: 'Teléfono' },
 ];
 
-// Computed properties
 const contacts = computed(() => contactStore.contacts);
 
 const filteredContacts = computed(() => {
@@ -225,7 +221,6 @@ onMounted(async () => {
   }
 });
 
-// Methods
 const addContact = async (newContact) => {
   try {
     await contactStore.addContact(newContact);
@@ -332,7 +327,6 @@ const confirmPayment = async () => {
 
     console.log('Pago confirmado:', paymentDetails);
 
-    // Reset form
     selectedService.value = '';
     paymentAmount.value = '';
     paymentMethod.value = 'card';

@@ -68,7 +68,6 @@ export default {
   setup() {
     const userStore = useUserStore()
 
-    // Función para sincronizar `userInfo` con `currentUser`
     const loadUserInfo = () => {
       const currentUser = userStore.getUserData() || {}
       userInfo.value = [
@@ -82,13 +81,11 @@ export default {
 
     const userInfo = ref([])
 
-    // Cargar datos cuando el componente se monta
     onMounted(() => {
       userStore.loadUsers()
       loadUserInfo()
     })
 
-    // Escuchar cambios en `currentUser` para actualizar `userInfo`
     watch(
       () => userStore.currentUser,
       () => {
