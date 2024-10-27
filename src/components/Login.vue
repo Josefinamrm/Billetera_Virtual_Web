@@ -56,7 +56,6 @@ const handleLogin = () => {
   userStore.loadUsers(); 
   const result = userStore.loginUser(email.value, password.value);
   if (result) {
-    console.log('Login successful');
     handleLoginSuccess();
   } else {
     errorMessage.value = 'Error al iniciar sesión: credenciales inválidas.';
@@ -96,7 +95,6 @@ const sendResetEmail = (email) => {
     hideForgotPasswordPopup();
     return;
   }
-
   errorMessage.value = `Se ha enviado un correo de recuperación a ${email}`;
   showErrorMessage.value = true;
   hideForgotPasswordPopup();

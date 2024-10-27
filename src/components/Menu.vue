@@ -137,7 +137,7 @@ export default {
 
     const logout = () => {
       userStore.resetUser();
-      router.push({ name: 'login' }); // Asume que tienes una ruta llamada 'login'
+      router.push({ name: 'landing' });
     };
 
     return {
@@ -217,7 +217,7 @@ svg {
   margin-right: 0.3rem;
 }
 .logo {
-  max-width: 50px; /* Adjusted to make the image smaller */
+  max-width: 50px;
   height: auto;
   border-radius: 50%;
   transition: transform 0.3s;

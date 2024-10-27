@@ -6,6 +6,7 @@ export const useUserStore = defineStore('user', {
     currentUser: null,
   }),
   actions: {
+
     registerUser(data) {
       const existingUser = this.users.find(user => user.email === data.email);
       if (existingUser) {
@@ -70,7 +71,7 @@ export const useUserStore = defineStore('user', {
     updateUserField(field, value) {
       if (!this.currentUser) return;
 
-      // Verificación de campos válidos en currentUser
+
       if (!['nombre', 'apellido', 'documento', 'fechaNacimiento', 'actividadFiscal'].includes(field)) {
         console.error(`El campo ${field} no es válido`);
         return;
@@ -78,7 +79,7 @@ export const useUserStore = defineStore('user', {
 
       this.currentUser[field] = value;
 
-      // Actualización en la lista de usuarios
+
       const userIndex = this.users.findIndex(user => user.email === this.currentUser.email);
       if (userIndex !== -1) {
         this.users[userIndex][field] = value;

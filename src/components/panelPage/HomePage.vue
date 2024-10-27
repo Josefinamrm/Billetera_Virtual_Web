@@ -40,18 +40,26 @@
             />
           </div>
           <div class="date-filter">
-            <input
-              type="date"
-              v-model="startDate"
-              @change="updateDateRange"
-              placeholder="Fecha inicio"
-            />
-            <input
-              type="date"
-              v-model="endDate"
-              @change="updateDateRange"
-              placeholder="Fecha fin"
-            />
+            <div class="date-filter-item">
+              <label for="start-date">Desde</label>
+              <input
+                id="start-date"
+                type="date"
+                v-model="startDate"
+                @change="updateDateRange"
+                placeholder="Fecha inicio"
+              />
+            </div>
+            <div class="date-filter-item">
+              <label for="end-date">Hasta</label>
+              <input
+                id="end-date"
+                type="date"
+                v-model="endDate"
+                @change="updateDateRange"
+                placeholder="Fecha fin"
+              />
+            </div>
           </div>
         </div>
         <div class="transaction-list">
@@ -88,13 +96,12 @@
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useActivityStore } from '@/stores/userActivityStore.js'
-import { useFinancialStore } from '@/stores/userFinancialStore.js'
 import TransferComponent from '@/components/transferComponent.vue'
 import ConfirmTransferPopup from '@/components/confirmTransferPopup.vue'
 
 const confirmPopup = ref(null)
 const activityStore = useActivityStore()
-const financialStore = useFinancialStore()
+
 
 const searchQuery = ref('')
 const startDate = ref('')
@@ -300,15 +307,17 @@ h3 {
   color: #f44336;
 }
 
-.expenses, .balance-section {
+.expenses {
   background: white;
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.balance-section {
-  margin-bottom: 1rem;
+.date-filter-item label {
+  font-size: 0.8rem;
+  color: #666;
+  margin-right: 3px;
 }
 
 .amount {

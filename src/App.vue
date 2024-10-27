@@ -1,12 +1,11 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import { useRouter } from 'vue-router'
-import { onMounted } from 'vue'
 
-const router = useRouter()
+import { onMounted } from 'vue'
+import router from '@/router/index.js'
 
 onMounted(() => {
-  router.push('/')
+  router.push({ name: 'landing' });
 })
 </script>
 
