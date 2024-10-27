@@ -20,8 +20,8 @@ import Menu from '../components/Menu.vue'
 <style>
 .app-container {
   display: flex;
-  height: 100vh;
-  overflow: hidden;
+  height: auto;
+  overflow: auto;
 }
 
 .sidebar {
@@ -39,9 +39,10 @@ import Menu from '../components/Menu.vue'
   margin-top: 70px;
   margin-left: 250px;
   width: calc(100% - 250px);
-  height: 100vh;
+  height: auto;
   flex: 1;
   display: flex;
+  overflow: auto;
   flex-direction: column;
 }
 

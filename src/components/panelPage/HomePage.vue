@@ -212,12 +212,12 @@ onMounted(() => {
 
 .financial-dashboard {
   display: flex;
+  flex-direction: column;
   gap: 2rem;
   height: 100%;
 }
 
 .left-column {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -234,7 +234,6 @@ onMounted(() => {
 }
 
 .transactions-section {
-  flex: 1;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -259,6 +258,7 @@ onMounted(() => {
 
 h2 {
   margin-bottom: 1rem;
+  font-size: 1.5rem;
 }
 
 h3 {
@@ -375,14 +375,13 @@ h3 {
 
 .filters {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
   margin-bottom: 1rem;
 }
 
 .search-bar {
-  flex: 1;
-  margin-right: 1rem;
+  width: 100%;
 }
 
 .search-bar input {
@@ -396,6 +395,7 @@ h3 {
 
 .date-filter {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
@@ -404,5 +404,74 @@ h3 {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
+  flex: 1;
+  min-width: 120px;
+}
+
+@media (min-width: 768px) {
+  .financial-dashboard {
+    flex-direction: row;
+  }
+
+  .left-column {
+    flex: 1;
+  }
+
+  .transactions-section {
+    flex: 1;
+  }
+
+  .filters {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .search-bar {
+    flex: 1;
+    margin-right: 1rem;
+  }
+
+  .date-filter {
+    flex: 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .home-page {
+    padding: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  .amount {
+    font-size: 1.5rem;
+  }
+
+  .chart {
+    height: 100px;
+  }
+
+  .transaction-info {
+    gap: 0.5rem;
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .transaction-name {
+    font-size: 0.9rem;
+  }
+
+  .transaction-date {
+    font-size: 0.7rem;
+  }
+
+  .transaction-amount {
+    font-size: 0.9rem;
+  }
 }
 </style>

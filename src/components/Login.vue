@@ -63,7 +63,6 @@ const handleLogin = async () => {
   }
 };
 
-
 const handleLoginSuccess = () => {
   router.push('/user/panel');
 };
@@ -103,13 +102,9 @@ const sendResetEmail = (email) => {
 </script>
 
 <style scoped>
-.title {
-  font-size: 24px;
-  font-weight: bold;
-}
-
 .login-container {
-  width: 400px;
+  width: 90%;
+  max-width: 400px;
   background-color: rgba(108, 210, 130, 0.18);
   margin: auto;
   padding: 20px;
@@ -118,11 +113,18 @@ const sendResetEmail = (email) => {
   left: 50%;
   transform: translate(-50%, -50%);
   height: auto;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .form-group {
   font-size: 12px;
-  width: 80%;
+  width: 100%;
+  max-width: 320px;
   margin-bottom: 20px;
   background-color: #ebebeb;
   border-radius: 30px;
@@ -140,11 +142,13 @@ input {
   background-color: #ebebeb;
   outline: none;
   border: none;
+  box-sizing: border-box;
 }
 
 button {
   font-size: 12px;
-  width: 80%;
+  width: 100%;
+  max-width: 320px;
   padding: 10px;
   background-color: #5dce76;
   color: black;
@@ -171,7 +175,7 @@ button {
 }
 
 button:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
   transition: transform 0.2s;
 }
 
@@ -192,6 +196,8 @@ button:hover {
   padding: 20px;
   z-index: 1000;
   font-size: 14px;
+  width: 90%;
+  max-width: 300px;
 }
 
 .error-popup p {
@@ -225,5 +231,28 @@ button:hover {
 .forgot-password {
   cursor: pointer;
   text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+
+  .form-group, button {
+    max-width: 100%;
+  }
+
+  input {
+    padding: 12px;
+  }
 }
 </style>

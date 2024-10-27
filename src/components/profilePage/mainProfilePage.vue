@@ -61,6 +61,7 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 .background-wrapper {
   min-height: 70vh;
   display: flex;
@@ -152,13 +153,25 @@ p {
   z-index: -1;
 }
 
-@media (max-width: 768px) {
+.title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 15px;
+}
+
+.change-profile:hover {
+  color: #4caf50;
+}
+
+@media (max-width: 1024px) {
   .profile-container {
     padding: 15px;
   }
 
   h1 {
-    font-size: 20px;
+    font-size: 2rem;
   }
 
   .profile-section {
@@ -170,7 +183,41 @@ p {
   }
 
   p {
+    font-size: 13px;
+  }
+
+  .background-shape {
+    width: 250px;
+    height: 250px;
+    bottom: -75px;
+    right: -75px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 10px;
+
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .profile-section {
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 15px;
+  }
+
+  p {
     font-size: 12px;
+  }
+
+  .arrow {
+    font-size: 20px;
   }
 
   .background-shape {
@@ -182,16 +229,20 @@ p {
 }
 
 @media (max-width: 480px) {
+  .viewport {
+    padding: 0.5rem;
+  }
+
   .profile-container {
-    padding: 10px;
+    padding: 5px;
   }
 
   h1 {
-    font-size: 18px;
+    font-size: 1.5rem;
   }
 
   .profile-section {
-    padding: 10px;
+    padding: 8px;
   }
 
   h2 {
@@ -212,17 +263,5 @@ p {
     bottom: -30px;
     right: -30px;
   }
-}
-
-.title {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 15px;
-}
-
-.change-profile:hover {
-  color: #4caf50;
 }
 </style>

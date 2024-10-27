@@ -42,14 +42,13 @@ const handleRegister = () => {
     cvu: createCvu(),
     telefono: telefono.value
   };
-  
-  userStore.loadUsers(); 
+
+  userStore.loadUsers();
   const result = userStore.registerUser(userData);
   if (!result) {
     alert('El usuario ya existe');
     return;
   }
-  console.log('Registro de usuario:', userData);
   router.push('/user/panel');
 };
 
@@ -75,120 +74,146 @@ const toggleConfirmPasswordVisibility = () => {
 </script>
 
 <template>
-  <div class="register-container">
-    <h2 class="text-center title">Registrarse</h2>
-    <h3 class="text-center subtitle">Bienvenido</h3>
-    <form @submit.prevent="handleRegister">
-      <div class="form-group">
-        <input type="text" id="nombre" v-model="nombre" @keypress="preventNumbers" placeholder="Ingrese su nombre *" required>
-      </div>
-      <div class="form-group">
-        <input type="text" id="apellido" v-model="apellido" @keypress="preventNumbers" placeholder="Ingrese su apellido *" required>
-      </div>
-      <div class="form-group">
-        <input type="number" id="documento" v-model="documento" placeholder="Ingrese su documento *" required>
-      </div>
-      <div class="form-group">
-        <input type="email" id="email" v-model="email" placeholder="Ingrese su email *" required>
-      </div>
-      <div class="form-group">
-        <div class="password-input-container">
-          <input :type="showPassword ? 'text' : 'password'" id="password" v-model="password" placeholder="Ingrese su contraseña" required />
-          <img
-            :src="showPassword ? viewIcon : hideIcon"
-            alt="Toggle password visibility"
-            class="password-toggle"
-            @click="togglePasswordVisibility"
-          />
+  <div class="register-wrapper">
+    <div class="register-container">
+      <h2 class="text-center title">Registrarse</h2>
+      <h3 class="text-center subtitle">Bienvenido</h3>
+      <form @submit.prevent="handleRegister">
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" id="nombre" v-model="nombre" @keypress="preventNumbers" placeholder="Nombre *" required>
+          </div>
+          <div class="form-group">
+            <input type="text" id="apellido" v-model="apellido" @keypress="preventNumbers" placeholder="Apellido *" required>
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <div class="password-input-container">
-          <input :type="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" v-model="confirmPassword" placeholder="Vuelva a ingresar su contraseña" required />
-          <img
-            :src="showConfirmPassword ? viewIcon : hideIcon"
-            alt="Toggle password visibility"
-            class="password-toggle"
-            @click="toggleConfirmPasswordVisibility"
-          />
+        <div class="form-group">
+          <input type="number" id="documento" v-model="documento" placeholder="Documento *" required>
         </div>
-      </div>
-      <button type="submit">Registrarse</button>
-      <h5 class="text-center enter-with">
-        <router-link to="/login" class="login-link">¿Ya tienes una cuenta?</router-link>
-      </h5>
-    </form>
+        <div class="form-group">
+          <input type="email" id="email" v-model="email" placeholder="Email *" required>
+        </div>
+        <div class="form-group">
+          <div class="password-input-container">
+            <input :type="showPassword ? 'text' : 'password'" id="password" v-model="password" placeholder="Contraseña" required />
+            <img
+              :src="showPassword ? viewIcon : hideIcon"
+              alt="Toggle password visibility"
+              class="password-toggle"
+              @click="togglePasswordVisibility"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="password-input-container">
+            <input :type="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" v-model="confirmPassword" placeholder="Confirmar contraseña" required />
+            <img
+              :src="showConfirmPassword ? viewIcon : hideIcon"
+              alt="Toggle password visibility"
+              class="password-toggle"
+              @click="toggleConfirmPasswordVisibility"
+            />
+          </div>
+        </div>
+        <button type="submit">Registrarse</button>
+        <h5 class="text-center enter-with">
+          <router-link to="/login" class="login-link">¿Ya tienes una cuenta?</router-link>
+        </h5>
+      </form>
+    </div>
   </div>
 </template>
+
 <style scoped>
+.register-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
 .register-container {
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
   background-color: rgba(108, 210, 130, 0.18);
   padding: 20px;
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 100;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
 }
 
 .form-group {
   font-size: 12px;
-  width: 80%;
+  width: 100%;
   margin-bottom: 10px;
   background-color: #EBEBEB;
   border-radius: 30px;
   border: 1px solid black;
   padding: 0;
-  margin-left: auto;
-  margin-right: auto;
   overflow: hidden;
 }
 
 input {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   border-radius: 30px;
   background-color: #EBEBEB;
   outline: none;
   border: none;
+  font-size: 14px;
 }
 
 button {
-  width: 80%;
-  padding: 10px;
+  width: 100%;
+  padding: 12px;
   background-color: #333;
   color: white;
   border: none;
   border-radius: 20px;
   cursor: pointer;
   display: block;
-  margin: 10px auto;
-  font-size: 12px;
+  margin: 15px auto;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
   background-color: black;
-  color: white;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 10px;
 }
 
 .subtitle {
   color: black;
-  font-size: 14px;
-  margin-top: 3px;
-  margin-bottom: 8px;
+  font-size: 18px;
+  margin-top: 5px;
+  margin-bottom: 20px;
 }
 
 .login-link {
   color: black;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
+
+.login-link:hover {
+  color: #333;
+}
+
 .enter-with {
   color: black;
   font-size: 14px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 15px;
+  margin-bottom: 0;
 }
 
 .password-input-container {
@@ -204,5 +229,70 @@ button:hover {
   cursor: pointer;
   width: 20px;
   height: 20px;
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    padding: 15px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+  }
+
+  input {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
+
+@media (max-height: 600px) {
+  .register-wrapper {
+    align-items: flex-start;
+  }
+
+  .register-container {
+    margin-top: 10px;
+  }
+
+  .title {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  input {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  button {
+    padding: 8px;
+    font-size: 12px;
+    margin: 10px auto;
+  }
+
+  .enter-with {
+    font-size: 12px;
+    margin-top: 10px;
+  }
 }
 </style>

@@ -90,7 +90,7 @@
 .wave {
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: 70%;
   bottom: 0;
   left: 0;
 }
@@ -103,22 +103,95 @@
   bottom: 0;
 }
 
-@media (max-width: 480px), (max-height: 600px) {
-  .wave-container {
-    height: 30%;
+@media (max-width: 768px) {
+  .logo {
+    width: 45px;
   }
 
+  .logo-text {
+    font-size: 1.2rem;
+  }
+
+  .wave-container {
+    height: 35%;
+  }
+}
+
+@media (max-width: 480px) {
   .logo-container {
     top: 10px;
     left: 10px;
   }
 
   .logo {
-    width: 40px;
+    width: 35px;
   }
 
   .logo-text {
-    font-size: 1.2rem;
+    font-size: 1rem;
+  }
+
+  .wave-container {
+    height: 5%;
+  }
+}
+
+@media (max-width: 360px) {
+  .logo-container {
+    top: 5px;
+    left: 5px;
+  }
+
+  .logo {
+    width: 25px;
+  }
+
+  .logo-text {
+    font-size: 0.8rem;
+    margin-left: 5px;
+  }
+
+  .wave-container {
+    height: 5%;
+  }
+}
+
+@media (max-height: 600px) {
+  .logo-container {
+    top: 5px;
+    left: 5px;
+  }
+
+  .logo {
+    width: 30px;
+  }
+
+  .logo-text {
+    font-size: 0.9rem;
+  }
+
+  .wave-container {
+    height: 5%;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .logo-container {
+    top: 5px;
+    left: 5px;
+  }
+
+  .logo {
+    width: 30px;
+  }
+
+  .logo-text {
+    font-size: 0.7rem;
+    margin-left: 5px;
+  }
+
+  .wave-container {
+    height: 7%;
   }
 }
 </style>
