@@ -28,16 +28,20 @@ export const useUserStore = defineStore('user', {
       }
       return false;
     },
-    loadUsers() {
+    async loadUsers() {
+      console.log("Cargando usuarios desde localStorage...");
       const usersData = localStorage.getItem('users');
       const currentUserData = localStorage.getItem('currentUser');
       if (usersData) {
         this.users = JSON.parse(usersData);
+        console.log("Usuarios cargados:", this.users);
       }
       if (currentUserData) {
         this.currentUser = JSON.parse(currentUserData);
+        console.log("Usuario actual cargado:", this.currentUser);
       }
     },
+
     resetUser() {
       this.currentUser = null;
       localStorage.removeItem('currentUser');
@@ -84,8 +88,6 @@ export const useUserStore = defineStore('user', {
       if (userIndex !== -1) {
         this.users[userIndex][field] = value;
       }
-
-      // Guardado en localStorage
       localStorage.setItem('users', JSON.stringify(this.users));
       localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
     },

@@ -65,7 +65,7 @@ router.beforeEach(async (to, from, next) => {
   const publicRoutes = ['landing', 'login', 'register'];
 
   if (publicRoutes.includes(to.name)) {
-    next(); // Allow access to public routes without checking login
+    next();
     return;
   }
 

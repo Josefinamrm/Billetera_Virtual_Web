@@ -48,12 +48,12 @@ const password = ref('');
 const showErrorMessage = ref(false);
 const errorMessage = ref('');
 const router = useRouter();
-const userStore = useUserStore(); 
+const userStore = useUserStore();
 const showPassword = ref(false);
 const showForgotPassword = ref(false);
 
-const handleLogin = () => {
-  userStore.loadUsers(); 
+const handleLogin = async () => {
+  await userStore.loadUsers(); // Asegura que loadUsers se complete antes del login
   const result = userStore.loginUser(email.value, password.value);
   if (result) {
     handleLoginSuccess();
@@ -62,6 +62,7 @@ const handleLogin = () => {
     showErrorMessage.value = true;
   }
 };
+
 
 const handleLoginSuccess = () => {
   router.push('/user/panel');
