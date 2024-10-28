@@ -221,9 +221,11 @@ const withdraw = () => {
 }
 
 header {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0rem; /* or 0 for no bottom space */
+  margin-left: -1rem; /* moves it slightly to the left */
   text-align: left;
 }
+
 
 h1 {
   margin-bottom: 0.5rem;
@@ -235,7 +237,7 @@ h1 {
 
 h2 {
   font-size: clamp(1rem, 2vw, 1.25rem);
-  color: #374151;
+  color: #000000;
   margin-bottom: 1rem;
   font-weight: 600;
 }
