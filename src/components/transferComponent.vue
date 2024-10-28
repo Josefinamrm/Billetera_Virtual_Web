@@ -5,7 +5,7 @@
       <div>Balance actual</div>
       <div class="balance-amount">${{ financialStore.balanceTotal }}</div>
     </div>
-    <input type="text" v-model="alias" placeholder="Ingrese alias" class="transfer-input" />
+    <input type="text" v-model="alias" placeholder="Ingrese alias o cvu" class="transfer-input" />
     <input type="number" v-model="amount" placeholder="Ingrese monto" class="transfer-input" />
     <div class="transfer-buttons">
       <button @click="showConfirmPopup" class="send-btn">Enviar</button>
